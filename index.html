@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Pyramid Counter</title>
+
+  <!-- Make it behave like an installed web app on iPhone -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Pyramid Counter">
+
+  <style>
+    /* Simple, clean, touch-friendly UI */
+    :root{
+      --bg:#f6f7f9;
+      --card:#ffffff;
+      --accent:#2b6cb0; /* pleasant blue */
+      --accent-dark:#244d85;
+      --muted:#7b8794;
+      --danger:#e74c3c;
+      --radius:14px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      background:linear-gradient(180deg,var(--bg),#eef2f6);
+      -webkit-font-smoothing:antialiased;
+      color:#112;
+    }
+    .app {
+      max-width:520px;
+      margin:18px auto;
+      padding:18px;
+    }
+    .card {
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:0 8px 22px rgba(15,20,30,0.06);
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    header h1{font-size:18px;margin:0;}
+    .controls {display:flex; gap:8px; align-items:center;}
+
+    .top-row {display:flex; gap:12px; align-items:center; margin-bottom:14px;}
+    label {font-size:13px;color:var(--muted);}
+
+    input[type="number"]{
+      width:84px;
+      padding:8px 10px;
+      border-radius:10px;
+      border:1px solid #e3e7ea;
+      font-size:16px;
+      -moz-appearance:textfield;
+    }
+
+    /* Main big counter button */
+    .counter-wrap {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+      padding:18px 12px;
+    }
+    .big-button {
+      width:88vw;
+      max-width:420px;
+      height:88vw;
+      max-height:420px;
+      border-radius:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(180deg,var(--accent),var(--accent-dark));
+      color:white;
+      font-weight:700;
+      font-size:72px;
+      box-shadow: 0 10px 30px rgba(43,108,176,0.28);
+      border:none;
+      touch-action:manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
+    }
+    .big-button:active{ transform: translateY(2px); box-shadow:0 6px 18px rgba(43,108,176,0.24); }
+
+    .meta-row {display:flex; gap:14px; align-items:center; justify-content:center; width:100%;}
+    .small-btn{
+      padding:10px 12px;border-radius:10px;border:none;background:#f3f6fa;font-weight:600;
+    }
+
+    .progress-bar {
+      height:12px;
+      width:100%;
+      background:linear-gradient(90deg,#e6eef9,#f6f7fb);
+      border-radius:999px;
+      overflow:hidden;
+      margin-top:6px;
+    }
+    .progress {height:100%; background:linear-gradient(90deg,#73b6ff,#2b6cb0); width:0%; transition:width 220ms linear;}
+
+    .footer {margin-top:12px; font-size:13px; color:var(--muted); text-align:center;}
+    .danger{background:var(--danger); color:#fff;}
+    @media (min-width:700px){
+      .big-button{ border-radius:36px; }
+    }
+    /* Accessibility focus */
+    button:focus, input:focus { outline:3px solid rgba(43,108,176,0.18); outline-offset:2px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card" role="application" aria-labelledby="appTitle">
+      <header>
+        <h1 id="appTitle">Pyramid Counter</h1>
+        <div class="controls">
+          <button class="small-btn" id="resetBtn" title="Reset to 1">Reset</button>
+        </div>
+      </header>
+
+      <div class="top-row" aria-hidden="false">
+        <div>
+          <label for="maxInput">Max (n)</label><br/>
+          <input id="maxInput" type="number" min="1" value="10" aria-label="Maximum pyramid number">
+        </div>
+
+        <div>
+          <label for="soundToggle">Sound</label><br/>
+          <button id="soundToggle" class="small-btn" aria-pressed="false" title="Toggle sound">Off</button>
+        </div>
+
+        <div>
+          <label for="vibToggle">Vibration</label><br/>
+          <button id="vibToggle" class="small-btn" aria-pressed="false" title="Toggle vibration">Off</button>
+        </div>
+      </div>
+
+      <div class="counter-wrap">
+        <div aria-live="polite" style="text-align:center; margin-bottom:6px;">
+          <div style="font-size:14px;color:var(--muted);" id="statusText">Current step</div>
+        </div>
+
+        <button id="mainBtn" class="big-button" aria-label="Tap to advance pyramid">1</button>
+
+        <div style="width:100%;max-width:520px;">
+          <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--muted); margin-top:8px;">
+            <div id="counterText">1 / 10</div>
+            <div id="directionText">Direction: up</div>
+          </div>
+
+          <div class="progress-bar" aria-hidden="true">
+            <div class="progress" id="progress"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">Tap the big circle each repetition. Add to Home Screen for a native-like app.</div>
+    </div>
+  </div>
+
+  <script>
+    // Pyramid counter app script
+    (function(){
+      // Elements
+      const mainBtn = document.getElementById('mainBtn');
+      const maxInput = document.getElementById('maxInput');
+      const counterText = document.getElementById('counterText');
+      const directionText = document.getElementById('directionText');
+      const progressEl = document.getElementById('progress');
+      const resetBtn = document.getElementById('resetBtn');
+      const soundToggle = document.getElementById('soundToggle');
+      const vibToggle = document.getElementById('vibToggle');
+      const statusText = document.getElementById('statusText');
+
+      // State
+      let max = 10;
+      let current = 1;
+      let dir = +1; // +1 up, -1 down
+      let soundOn = false;
+      let vibOn = false;
+
+      // Simple click sound
+      const clickSound = typeof Audio !== 'undefined' ? new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=') : null;
+      // (tiny silent WAV used to allow audio auto init; can be replaced with real short 'tick' data URI)
+
+      // Persist/load from localStorage
+      function saveState(){
+        try{
+          localStorage.setItem('pyr.max', String(max));
+          localStorage.setItem('pyr.current', String(current));
+          localStorage.setItem('pyr.dir', String(dir));
+          localStorage.setItem('pyr.sound', soundOn ? '1' : '0');
+          localStorage.setItem('pyr.vib', vibOn ? '1' : '0');
+        }catch(e){}
+      }
+      function loadState(){
+        try{
+          const lm = parseInt(localStorage.getItem('pyr.max'));
+          if (!isNaN(lm) && lm >= 1) max = lm;
+          const lc = parseInt(localStorage.getItem('pyr.current'));
+          if (!isNaN(lc) && lc >= 1 && lc <= max) current = lc;
+          const ld = parseInt(localStorage.getItem('pyr.dir'));
+          if (ld === 1 || ld === -1) dir = ld;
+          soundOn = localStorage.getItem('pyr.sound') === '1';
+          vibOn = localStorage.getItem('pyr.vib') === '1';
+        }catch(e){}
+      }
+
+      // UI update
+      function render(){
+        mainBtn.textContent = String(current);
+        counterText.textContent = current + ' / ' + max;
+        directionText.textContent = 'Direction: ' + (dir === 1 ? 'up' : 'down');
+        const pct = Math.round(((current - 1) / Math.max(1, max - 1)) * 100);
+        progressEl.style.width = pct + '%';
+        soundToggle.textContent = soundOn ? 'On' : 'Off';
+        soundToggle.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+        vibToggle.textContent = vibOn ? 'On' : 'Off';
+        vibToggle.setAttribute('aria-pressed', vibOn ? 'true' : 'false');
+      }
+
+      // Core step function
+      function doStep(){
+        // compute tentative next
+        const tentative = current + dir;
+        if (tentative > max || tentative < 1) {
+          dir = -dir; // flip
+        }
+        current = current + dir;
+        // UI feedback
+        if (soundOn && clickSound) {
+          // play short beep - some browsers restrict play until user gesture; this is triggered by tap, so OK
+          try { clickSound.currentTime = 0; clickSound.play(); } catch(e){}
+        }
+        if (vibOn && navigator.vibrate) {
+          try { navigator.vibrate(20); } catch(e){}
+        }
+        saveState();
+        render();
+      }
+
+      // Reset to 1 and up direction
+      function reset(){
+        current = 1;
+        dir = 1;
+        saveState();
+        render();
+      }
+
+      // Init
+      loadState();
+      maxInput.value = String(max);
+      render();
+
+      // Event handlers
+      // Use both touchstart and click for best responsiveness on mobile
+      mainBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        doStep();
+      });
+      mainBtn.addEventListener('touchstart', function(e){
+        // prevent ghost click on some browsers
+        e.preventDefault();
+        doStep();
+      }, {passive:false});
+
+      // allow keyboard Enter/Space on focused button
+      mainBtn.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          doStep();
+        }
+      });
+
+      // Update max when the user changes input
+      maxInput.addEventListener('change', function(){
+        const v = parseInt(maxInput.value, 10);
+        if (!isNaN(v) && v >= 1) {
+          // If new max < current, clamp current to new max, keep direction
+          max = v;
+          if (current > max) current = max;
+          saveState();
+          render();
+        } else {
+          // invalid input, reset to previous
+          maxInput.value = String(max);
+        }
+      });
+
+      // Reset button
+      resetBtn.addEventListener('click', function(){ reset(); });
+
+      // Sound and vibration toggles
+      soundToggle.addEventListener('click', function(){
+        soundOn = !soundOn;
+        // attempt quick audio init on first on
+        if (soundOn && clickSound) try { clickSound.play().then(()=>clickSound.pause()); } catch(e){}
+        saveState();
+        render();
+      });
+      vibToggle.addEventListener('click', function(){
+        vibOn = !vibOn;
+        saveState();
+        render();
+      });
+
+      // store current when user leaves page
+      window.addEventListener('pagehide', saveState);
+
+      // long press support: hold to auto-step
+      let holdTimer = null;
+      let holdInterval = null;
+      function startHold(autoDelay=600){
+        // start initial delay then faster interval
+        if (holdTimer) clearTimeout(holdTimer);
+        holdTimer = setTimeout(()=> {
+          // start repeating
+          doStep();
+          holdInterval = setInterval(doStep, 160);
+        }, autoDelay);
+      }
+      function stopHold(){
+        if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+        if (holdInterval) { clearInterval(holdInterval); holdInterval = null; }
+      }
+      mainBtn.addEventListener('touchstart', ()=> startHold());
+      mainBtn.addEventListener('mousedown', ()=> startHold());
+      window.addEventListener('touchend', stopHold);
+      window.addEventListener('mouseup', stopHold);
+      window.addEventListener('mouseleave', stopHold);
+
+      // Prevent accidental double-tap zoom on iOS by disabling double-tap to zoom - not included here,
+      // but spacing/scale should be fine due to viewport meta.
+
+      // Expose a small debug on long press on reset (for developer)
+      resetBtn.addEventListener('contextmenu', function(e){ e.preventDefault(); alert('state:\\n' + JSON.stringify({max,current,dir,soundOn,vibOn},null,2)); });
+
+    })();
+  </script>
+</body>
+</html>
