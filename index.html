@@ -1,162 +1,237 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Pyramid Counter</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      font-family: -apple-system, sans-serif;
-      background-color: #121212;
-      color: #f0f0f0;
-      margin: 0;
-    }
-    h1 {
-      font-size: 32px;
-      margin-bottom: 20px;
-      color: #ffffff;
-    }
-    #counter {
-      font-size: 64px;
-      font-weight: bold;
-      margin: 20px;
-      transition: color 0.3s ease;
-    }
-    #step {
-      font-size: 22px;
-      margin-bottom: 20px;
-      color: #cccccc;
-    }
-    button {
-      border: 1px solid white; /* thin white outline */
-      margin: 10px;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-      transition: background-color 0.2s, transform 0.1s;
-    }
-    #nextBtn {
-      background-color: #007BFF;
-      color: white;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%; /* circle */
-      font-size: 36px;
-      font-weight: bold;
-    }
-    #nextBtn:active {
-      background-color: #0056b3;
-      transform: scale(0.95);
-    }
-    #resetBtn {
-      background-color: #444;
-      color: #fff;
-      padding: 16px 32px;
-      border-radius: 12px;
-      font-size: 22px;
-    }
-    #resetBtn:active {
-      background-color: #333;
-    }
-    input {
-      font-size: 24px;
-      padding: 10px;
-      width: 100px;
-      text-align: center;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      border: 1px solid #444;
-      background-color: #222;
-      color: #f0f0f0;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>Pyramid Counter — Pro</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<style>
+  :root{
+    --bg-1: #071017;
+    --bg-2: #0f1720;
+    --muted: #9fa6ad;
+    --accent-blue: #0b84ff;
+    --accent-blue-700: #0466d6;
+    --outline-white: rgba(255,255,255,0.12);
+    --card-shadow: 0 14px 46px rgba(2,6,23,0.66);
+    font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  html,body{height:100%;margin:0;background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(11,118,255,0.04), transparent 8%),
+    radial-gradient(900px 400px at 95% 85%, rgba(255,40,96,0.03), transparent 6%),
+    linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    color:#eef2f3;-webkit-font-smoothing:antialiased;overflow:hidden;}
+
+  .bg-noise{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.06;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(255,255,255,0.02) 0, transparent 20%),
+      radial-gradient(circle at 80% 80%, rgba(255,255,255,0.02) 0, transparent 18%);
+    mix-blend-mode:screen; animation: floatNoise 20s linear infinite;}
+  @keyframes floatNoise{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+
+  .wrap{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box;}
+  .card{width:100%;max-width:640px;border-radius:20px;padding:16px 16px 20px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:var(--card-shadow);border:1px solid rgba(255,255,255,0.03);backdrop-filter: blur(8px) saturate(120%);}
+
+  .header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;}
+  .title{display:flex;flex-direction:column;}
+  .title h1{margin:0;font-size:18px;}
+
+  .controls{display:flex;gap:8px;align-items:center;}
+
+  .main{display:flex;flex-direction:column;align-items:center;gap:12px;padding:6px;}
+
+  .meta-row{display:flex;gap:10px;align-items:center;justify-content:center;width:100%;}
+  input[type=number], select, .customBase {
+    background: rgba(255,255,255,0.02);
+    border:1px solid rgba(255,255,255,0.04);
+    padding:10px 12px;border-radius:12px;color:#fff;width:120px;text-align:center;font-size:16px;
+  }
+
+  @media (max-width:420px){ input[type=number], select, .customBase{ width:96px; } }
+
+  .btn-wrap{position:relative;display:flex;align-items:center;justify-content:center;margin:6px 0 6px 0;}
+  .ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;width:calc(min(78vw,520px));max-width:520px;height:auto;filter: drop-shadow(0 6px 18px rgba(3,18,35,0.6));}
+  .ring circle{ stroke-width:8; }
+
+  .big-btn{
+    position:relative;z-index:2;display:grid;place-items:center;width:220px;height:220px;border-radius:50%;
+    background:linear-gradient(180deg,var(--accent-blue),var(--accent-blue-700));color:white;font-size:60px;font-weight:900;
+    border:1px solid rgba(255,255,255,0.12);box-shadow:0 28px 70px rgba(4,20,40,0.72), inset 0 6px 22px rgba(255,255,255,0.03);
+    touch-action:manipulation; user-select:none; -webkit-tap-highlight-color:transparent; transition: transform 120ms, box-shadow 120ms;}
+  .big-btn:active{ transform: translateY(3px) scale(0.985); box-shadow:0 16px 42px rgba(4,20,40,0.6); }
+  .big-btn.pulse{ animation: pulse 900ms ease-out; }
+  @keyframes pulse{0%{box-shadow:0 44px 120px rgba(11,132,255,0.28);transform:translateY(-2px) scale(1.02)}60%{transform:translateY(0) scale(1)}100%{box-shadow:0 28px 70px rgba(4,20,40,0.72)}}
+
+  .ripple{position:absolute;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,0.12);pointer-events:none;animation:ripple 700ms ease-out;}
+  @keyframes ripple{to{transform:translate(-50%,-50%) scale(3.2);opacity:0;}}
+
+  .info{display:flex;gap:14px;align-items:center;justify-content:center;width:100%;}
+  .counter-number{font-size:96px;font-weight:900;letter-spacing:0.3px;transition:color 240ms linear, transform 120ms;text-shadow:0 12px 40px rgba(2,6,23,0.65);}
+  @media (max-width:420px){ .big-btn{width:260px;height:260px;font-size:72px} .counter-number{font-size:68px} }
+
+  .step-text{color:var(--muted);font-size:16px;margin-top:2px}
+  .actions{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:10px}
+  .btn{padding:12px 18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:#fff;border:1px solid rgba(255,255,255,0.12);font-weight:700;font-size:16px;cursor:pointer}
+  .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06)}
+  .btn:active{transform:translateY(2px)}
+  .outline-white{border:1px solid rgba(255,255,255,0.12)}
+
+  /* Help popup */
+  #helpIcon{
+    position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);
+    display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:20px;color:#fff;background:rgba(0,0,0,0.2);cursor:pointer;z-index:10;
+  }
+  #helpPopup{
+    display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);color:#fff;padding:24px;box-sizing:border-box;overflow-y:auto;z-index:20;
+  }
+  #helpPopup h2{margin-top:0;}
+  #helpPopup button{margin-top:16px;padding:10px 14px;border-radius:12px;border:none;background:var(--accent-blue);color:#fff;font-size:16px;cursor:pointer;}
+</style>
 </head>
 <body>
-  <h1>Pyramid Counter</h1>
-  <input type="number" id="maxNumber" placeholder="Max" min="1" value="10">
-  <div id="counter">0</div>
-  <div id="step">Step 0 of 19</div>
-  <button id="nextBtn">Next</button>
-  <button id="resetBtn">Reset</button>
+  <div class="bg-noise" aria-hidden="true"></div>
 
-  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+  <div id="helpIcon" title="Help">?</div>
+  <div id="helpPopup" role="dialog" aria-modal="true">
+    <h2>Pyramid Counter Manual</h2>
+    <p>Welcome to the Pyramid Counter app! This tool helps you do pyramid workouts with any exercise like squats, push-ups, pull-ups, or burpees.</p>
+    <p><strong>Max Number:</strong> Set the maximum number for your pyramid (e.g., 10). The app will count up to this number, then back down.</p>
+    <p><strong>Manual Mode:</strong> Tap the large button to go to the next number. The number color goes from green to red as it increases. Each tap represents one set of repetitions.</p>
+    <p><strong>Auto Mode:</strong> Tap "Auto" to automatically progress through the pyramid. Each number has an exercise time and a rest time (based on the number). The main button shows the countdown during rest.</p>
+    <p><strong>Sounds:</strong> - Manual mode plays a click sound. <br>- Auto mode plays a progress sound when the number changes.</p>
+    <p><strong>Modes:</strong> Choose an exercise type from the dropdown. Custom mode allows you to adjust seconds per rep and rest per rep.</p>
+    <p>Enjoy your pyramid workout! Stay consistent and follow the numbers as they appear.</p>
+    <button id="closeHelp">Close</button>
+  </div>
 
-  <script>
-    let current = 0;
-    let maxNum = 10;
-    let ascending = true;
-    let stepCount = 0;
+  <div class="wrap">
+    <div class="card" role="application" aria-labelledby="appTitle">
+      <div class="header">
+        <div class="title">
+          <h1 id="appTitle">Pyramid Counter</h1>
+        </div>
+      </div>
 
-    const counterDisplay = document.getElementById("counter");
-    const stepDisplay = document.getElementById("step");
-    const maxInput = document.getElementById("maxNumber");
-    const nextBtn = document.getElementById("nextBtn");
-    const resetBtn = document.getElementById("resetBtn");
-    const clickSound = document.getElementById("clickSound");
+      <main class="main">
+        <div class="meta-row">
+          <select id="modeSelect" class="outline-white" aria-label="Choose exercise mode">
+            <option value="squats">Squats</option>
+            <option value="pushups">Push-ups</option>
+            <option value="pullups">Pull-ups</option>
+            <option value="burpees">Burpees</option>
+            <option value="custom">Custom</option>
+          </select>
 
-    function updateMax() {
-      const val = parseInt(maxInput.value);
-      if (!isNaN(val) && val > 0) {
-        maxNum = val;
-        resetCounter();
-      }
+          <input id="maxInput" type="number" min="1" value="10" aria-label="Maximum pyramid number" />
+          <input id="customSecondsPerRep" class="customBase outline-white" type="number" placeholder="sec/rep" style="display:none" />
+          <input id="restPerRepSec" class="customBase outline-white" type="number" placeholder="rest/sec" value="10" />
+        </div>
+
+        <div class="btn-wrap">
+          <svg class="ring" viewBox="0 0 120 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00ff7f"/>
+                <stop offset="50%" stop-color="#ffd400"/>
+                <stop offset="100%" stop-color="#ff3b3b"/>
+              </linearGradient>
+            </defs>
+            <g transform="translate(60,60)">
+              <circle r="52" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="8"/>
+              <circle id="prog" r="52" fill="none" stroke="url(#ringGradient)" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" transform="rotate(-90)"></circle>
+            </g>
+          </svg>
+
+          <button id="bigBtn" class="big-btn outline-white" aria-label="Advance pyramid" title="Tap to advance">Start</button>
+          <div id="rippleContainer" aria-hidden="true"></div>
+        </div>
+
+        <div class="info">
+          <div class="counter-number" id="counterNumber" aria-live="polite">0</div>
+        </div>
+
+        <div class="step-text" id="stepText">Step 0 of 19</div>
+
+        <div class="actions">
+          <button id="resetBtn" class="btn secondary outline-white">Reset</button>
+          <button id="autoBtn" class="btn outline-white">Auto</button>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <audio id="clickButtonAudio" src="click-button.mp3" preload="auto"></audio>
+  <audio id="progressSoundAudio" src="progress-sound.mp3" preload="auto"></audio>
+
+<script>
+(function(){
+  const maxInput = document.getElementById('maxInput');
+  const bigBtn = document.getElementById('bigBtn');
+  const counterNumber = document.getElementById('counterNumber');
+  const stepText = document.getElementById('stepText');
+  const prog = document.getElementById('prog');
+  const rippleContainer = document.getElementById('rippleContainer');
+  const resetBtn = document.getElementById('resetBtn');
+  const autoBtn = document.getElementById('autoBtn');
+  const clickButtonAudio = document.getElementById('clickButtonAudio');
+  const progressSoundAudio = document.getElementById('progressSoundAudio');
+  const modeSelect = document.getElementById('modeSelect');
+  const customSecondsPerRep = document.getElementById('customSecondsPerRep');
+  const restPerRepSec = document.getElementById('restPerRepSec');
+
+  const helpIcon = document.getElementById('helpIcon');
+  const helpPopup = document.getElementById('helpPopup');
+  const closeHelp = document.getElementById('closeHelp');
+
+  let max = 10, current = 0, dir = 1, stepCount = 0;
+  let autoRunning = false;
+  let phase = 'idle';
+  let phaseTimerId = null;
+  let phaseStart = 0, phaseDuration = 0;
+  const CIRC = 2 * Math.PI * 52;
+  prog.style.strokeDasharray = `${CIRC}`;
+
+  const MODES = {
+    squats: { label:'Squats', secPerRep: 1.0, baseExtra:0.3 },
+    pushups:{ label:'Push-ups', secPerRep: 0.75, baseExtra:0.25 },
+    pullups:{ label:'Pull-ups', secPerRep: 1.4, baseExtra:0.4 },
+    burpees:{ label:'Burpees', secPerRep: 1.2, baseExtra:0.4 },
+    custom:{ label:'Custom', secPerRep: 1.0, baseExtra:0.3 }
+  };
+
+  function load(){
+    maxInput.value = String(max);
+    customSecondsPerRep.style.display = (modeSelect.value === 'custom') ? 'inline-block' : 'none';
+    updateUI();
+  }
+
+  function colorFor(val, maxV){
+    if (maxV <= 1) return 'hsl(120,100%,45%)';
+    const ratio = Math.max(0, Math.min(1, val / maxV));
+    const hue = 120 - (120 * ratio);
+    return `hsl(${hue},100%,50%)`;
+  }
+
+  function getModeConfig(){
+    const mode = modeSelect.value;
+    if (mode === 'custom'){
+      const sec = parseFloat(customSecondsPerRep.value);
+      return { secPerRep: (isNaN(sec) || sec <= 0) ? MODES.custom.secPerRep : sec, baseExtra: MODES.custom.baseExtra };
     }
+    return MODES[mode] || MODES.squats;
+  }
 
-    function resetCounter() {
-      current = 0;
-      ascending = true;
-      stepCount = 0;
-      updateCounterDisplay();
-    }
-
-    function getGradientColor(value, max) {
-      const ratio = value / max;
-      let r, g;
-      if (ratio < 0.5) {
-        r = Math.round(510 * ratio);
-        g = 255;
-      } else {
-        r = 255;
-        g = Math.round(510 * (1 - ratio));
-      }
-      return `rgb(${r},${g},0)`;
-    }
-
-    function updateCounterDisplay() {
-      counterDisplay.textContent = current;
-      stepDisplay.textContent = `Step ${stepCount} of ${maxNum * 2 - 1}`;
-      counterDisplay.style.color = getGradientColor(current, maxNum);
-    }
-
-    maxInput.addEventListener("change", updateMax);
-
-    nextBtn.addEventListener("click", () => {
-      if (navigator.vibrate) navigator.vibrate(40);
-      clickSound.currentTime = 0;
-      clickSound.play().catch(e => console.log("Sound blocked:", e));
-
-      if (ascending) {
-        current++;
-        if (current >= maxNum) ascending = false;
-      } else {
-        current--;
-        if (current <= 1) ascending = true;
-      }
-
-      stepCount++;
-      updateCounterDisplay();
-    });
-
-    resetBtn.addEventListener("click", () => {
-      if (navigator.vibrate) navigator.vibrate(80);
-      resetCounter();
-    });
-
-    resetCounter();
-  </script>
-</body>
-</html>
+  function computeExerciseMs(n){
+    const cfg = getModeConfig();
+    const extra = Math.floor(n / 6) * 0.15 * n;
+    const seconds = (cfg.secPerRep * n) + extra;
+    return Math.round(seconds * 1000);
+  }
+  function computeRestMs(n){
+    const restUnit = parseFloat(restPerRepSec.value);
+    const r = (isNaN(restUnit) || restUnit <= 0) ? 10 : rest
