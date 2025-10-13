@@ -11,7 +11,6 @@
     --muted:#9fa6ad;
     --accent-a:#0b84ff;--accent-b:#3299ff;
     --outline:rgba(255,255,255,0.08);
-    --glass:rgba(255,255,255,0.02);
     --input-bg: rgba(255,255,255,0.035);
     --input-border: rgba(255,255,255,0.10);
   }
@@ -19,19 +18,23 @@
   .center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;}
   .card{width:100%;max-width:var(--card-w);border-radius:18px;padding:12px 14px 20px;box-sizing:border-box;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid var(--outline);box-shadow:0 18px 50px rgba(2,6,23,0.65);position:relative;}
 
-  /* TOP BAR: icons only (right aligned) */
+  /* TOP BAR: icons only (right) */
   .topbar{display:flex;align-items:center;padding:8px 6px 6px;}
   .topbar .spacer{flex:1}
   .icons-right{display:flex;gap:8px;align-items:center}
   .icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--outline);background:rgba(0,0,0,0.22);cursor:pointer;font-size:18px;box-shadow:0 6px 18px rgba(0,0,0,0.45);}
 
-  /* BELOW TOP BAR: inputs row (brighter inputs) */
-  .inputs-row{display:flex;align-items:center;gap:12px;padding:8px 6px 12px;justify-content:center;}
+  /* INPUTS ROW: labels */
+  .inputs-row{display:flex;align-items:center;gap:14px;padding:8px 6px 12px;justify-content:center;flex-wrap:wrap;}
+  .input-col{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+  .input-label{font-size:13px;color:var(--muted)}
   .inputs-row input[type=number], .inputs-row select{
     padding:10px 12px;border-radius:10px;border:1px solid var(--input-border);
-    background:var(--input-bg);color:#fff;font-size:15px;min-width:110px;
+    background:var(--input-bg);color:#fff;font-size:15px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.45) inset;
   }
+  /* max input fits two digits */
+  #maxInput{ width:56px; text-align:center; }
 
   /* main area */
   .main{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:6px;margin-bottom:6px;flex-direction:column}
@@ -52,6 +55,11 @@
 
   .digital{width:calc(100% - 24px);margin:8px auto;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));border:1px solid var(--outline);text-align:center}
   .digital .time{font-size:24px;font-weight:800}
+  .subrow{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:8px}
+  .small-box{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);min-width:120px;text-align:center}
+  .small-title{font-size:12px;color:var(--muted);margin-bottom:4px}
+  .small-val{font-weight:700}
+
   .step{ text-align:center;color:var(--muted);font-size:13px;margin-top:8px }
 
   .actions{display:flex;gap:10px;justify-content:center;margin-top:10px}
@@ -69,6 +77,7 @@
     button.big{width:170px;height:170px;font-size:44px}
     .btn-area{width:200px;height:200px}
     .ring-svg{width:250px;height:250px}
+    #maxInput{ width:66px; }
   }
 
   /* small ripple */
@@ -90,17 +99,23 @@
         </div>
       </div>
 
-      <!-- INPUTS ROW: under top bar (centered) -->
+      <!-- INPUTS ROW: under top bar with labels -->
       <div class="inputs-row">
-        <input id="maxInput" type="number" min="1" value="10" aria-label="Maximum pyramid number" />
-        <select id="modeSelect" aria-label="Mode">
-          <option value="squats">Squats</option>
-          <option value="pushups">Push-ups</option>
-          <option value="pullups">Pull-ups</option>
-          <option value="situps">Sit-ups</option>
-          <option value="burpees">Burpees</option>
-          <option value="custom">Custom</option>
-        </select>
+        <div class="input-col">
+          <div class="input-label">Max rep</div>
+          <input id="maxInput" type="number" min="1" max="99" value="10" aria-label="Maximum pyramid number" />
+        </div>
+        <div class="input-col">
+          <div class="input-label">Exercise type</div>
+          <select id="modeSelect" aria-label="Mode">
+            <option value="squats">Squats</option>
+            <option value="pushups">Push-ups</option>
+            <option value="pullups">Pull-ups</option>
+            <option value="situps">Sit-ups</option>
+            <option value="burpees">Burpees</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
       </div>
 
       <!-- instruction -->
@@ -128,6 +143,17 @@
         <div class="digital" id="digitalClock">
           <div class="time" id="countdown">00:00</div>
           <div class="label" id="countdownLabel">Remaining / Stopwatch</div>
+
+          <div class="subrow" style="margin-top:10px">
+            <div class="small-box">
+              <div class="small-title">Level</div>
+              <div class="small-val" id="levelDisplay">Beginner</div>
+            </div>
+            <div class="small-box">
+              <div class="small-title">Elapsed</div>
+              <div class="small-val" id="elapsedDisplay">00:00</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -215,6 +241,9 @@
   const customExerciseNameInput = document.getElementById('customExerciseName');
   const levelRadios = document.querySelectorAll('input[name="level"]');
 
+  const levelDisplay = document.getElementById('levelDisplay');
+  const elapsedDisplay = document.getElementById('elapsedDisplay');
+
   // state
   let max = Math.max(1, parseInt(maxInput.value) || 10);
   let current = 0;
@@ -228,6 +257,11 @@
   let manualElapsedSec = 0;
   let manualFinished = false;
 
+  // overall elapsed timer
+  let overallTimer = null;
+  let overallStart = 0;
+  let overallElapsedSec = 0;
+
   // ring constants (r=54)
   const R = 54;
   const CIRC = 2 * Math.PI * R;
@@ -239,8 +273,8 @@
   function colorFor(val,maxv){ if (maxv<=1) return 'hsl(120,100%,50%)'; const ratio = Math.max(0,Math.min(1,val/maxv)); const hue = 120 - (120*ratio); return `hsl(${hue},100%,45%)`; }
 
   // save/load
-  function saveState(){ const s={ max, current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, customExerciseName: customExerciseNameInput.value, soundOn }; try{ localStorage.setItem('pyr_v_final2', JSON.stringify(s)); }catch(e){} }
-  function loadState(){ try{ const s = JSON.parse(localStorage.getItem('pyr_v_final2')||'{}'); if(s && s.max){ max = s.max; maxInput.value = max; } if(s && typeof s.current==='number'){ current = s.current; dir = s.dir || 1; } if(s && s.userLevel) userLevel = s.userLevel; if(s && s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s && s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s && s.customExerciseName) customExerciseNameInput.value = s.customExerciseName; if(s && typeof s.soundOn==='boolean') soundOn = s.soundOn; soundIcon.textContent = soundOn ? '🔊' : '🔇'; levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} }
+  function saveState(){ const s={ max, current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, customExerciseName: customExerciseNameInput.value, soundOn }; try{ localStorage.setItem('pyr_v_final3', JSON.stringify(s)); }catch(e){} }
+  function loadState(){ try{ const s = JSON.parse(localStorage.getItem('pyr_v_final3')||'{}'); if(s && s.max){ max = s.max; maxInput.value = max; } if(s && typeof s.current==='number'){ current = s.current; dir = s.dir || 1; } if(s && s.userLevel) userLevel = s.userLevel; if(s && s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s && s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s && s.customExerciseName) customExerciseNameInput.value = s.customExerciseName; if(s && typeof s.soundOn==='boolean') soundOn = s.soundOn; soundIcon.textContent = soundOn ? '🔊' : '🔇'; levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} updateLevelDisplay(); }
 
   // timings
   function baseSecondsPerRepForMode(){ const m = modeSelect.value; if(m==='squats') return 3.0; if(m==='pushups') return 2.0; if(m==='pullups') return 2.5; if(m==='situps') return 2.5; if(m==='burpees') return 3.0; if(m==='custom'){ const v=parseFloat(customSecondsPerRepInput.value); return (isFinite(v)&&v>0)?v:2.0 } return 2.0; }
@@ -253,7 +287,15 @@
   function showInstruction(n){ instrCount.textContent = n===0?'-':n; instrExercise.textContent = n===0?'-':currentExerciseName(); instructionText.classList.remove('fade'); void instructionText.offsetWidth; instructionText.classList.add('fade'); }
 
   // update UI
-  function updateUI(){ showInstruction(current); stepText.textContent = `Step ${current===0?0:current} of ${max*2-1}`; if(!autoRunning){ const pct = Math.max(0,Math.min(1,(current/Math.max(1,max)))); prog.style.strokeDashoffset = CIRC*(1-pct); prog.style.stroke = colorFor(current,max); if(!manualTimer) countdownEl.textContent='00:00'; bigBtn.classList.remove('disabled'); bigBtn.textContent = current===0? 'Start' : String(current); } else { bigBtn.classList.add('disabled'); bigBtn.textContent = current===0? '—' : String(current); } saveState(); }
+  function updateUI(){ showInstruction(current); stepText.textContent = `Step ${current===0?0:current} of ${max*2-1}`; if(!autoRunning){ const pct = Math.max(0,Math.min(1,(current/Math.max(1,max)))); prog.style.strokeDashoffset = CIRC*(1-pct); prog.style.stroke = colorFor(current,max); if(!manualTimer) countdownEl.textContent='00:00'; bigBtn.classList.remove('disabled'); bigBtn.textContent = current===0? 'Start' : String(current); } else { bigBtn.classList.add('disabled'); bigBtn.textContent = current===0? '—' : String(current); } saveState(); updateLevelDisplay(); }
+
+  // show level on main screen
+  function updateLevelDisplay(){ levelDisplay.textContent = userLevel.charAt(0).toUpperCase() + userLevel.slice(1); }
+
+  // overall elapsed timer functions
+  function startOverallTimer(){ stopOverallTimer(); overallStart = performance.now(); overallElapsedSec = 0; elapsedDisplay.textContent = fmtSecondsMMSS(0); overallTimer = setInterval(()=>{ const s = Math.floor((performance.now() - overallStart)/1000); if (s !== overallElapsedSec){ overallElapsedSec = s; elapsedDisplay.textContent = fmtSecondsMMSS(overallElapsedSec); } }, 300); }
+  function stopOverallTimer(){ if (overallTimer){ clearInterval(overallTimer); overallTimer = null; } }
+  function resetOverallTimer(){ stopOverallTimer(); overallElapsedSec = 0; elapsedDisplay.textContent = fmtSecondsMMSS(0); }
 
   // audio
   function playIfOn(audioEl){ if(!soundOn) return; try{ audioEl.currentTime=0; audioEl.play().catch(()=>{});}catch(e){} }
@@ -262,10 +304,11 @@
   function startManualStopwatch(){ stopManualStopwatch(); manualStart = performance.now(); manualElapsedSec = 0; countdownEl.textContent = fmtSecondsMMSS(0); manualTimer = setInterval(()=>{ const elapsedMs = performance.now()-manualStart; const elapsedSec = Math.floor(elapsedMs/1000); if(elapsedSec !== manualElapsedSec){ manualElapsedSec = elapsedSec; countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec); } },200); }
   function stopManualStopwatch(){ if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } }
 
-  // manual behaviour
+  // manual behaviour (1..max..1 then stop). If finished and user taps again => reset
   function manualAdvance_StartOrNext(){
     if(manualFinished){ doReset(); return; }
-    if(current===0){ current=1; dir=1; playIfOn(clickAudio); startManualStopwatch(); updateUI(); return; }
+    if(current===0){ current=1; dir=1; playIfOn(clickAudio); startManualStopwatch(); startOverallTimer(); updateUI(); return; }
+    // finished current step
     playIfOn(clickAudio);
     stopManualStopwatch();
     if(dir===1 && current<max){ current=current+1; startManualStopwatch(); updateUI(); return; }
@@ -273,9 +316,9 @@
     if(dir===-1 && current>1){ current=current+dir; startManualStopwatch(); updateUI(); return; }
     if(dir===-1 && current===1){ finishManual(); return; }
   }
-  function finishManual(){ stopManualStopwatch(); manualFinished=true; bigBtn.textContent='Done'; current=1; dir=1; updateUI(); }
+  function finishManual(){ stopManualStopwatch(); manualFinished=true; stopOverallTimer(); bigBtn.textContent='Done'; current=1; dir=1; updateUI(); }
 
-  // auto sequence
+  // build pyramid sequence 1..max..1
   function buildPyramidSequence(maxN){ const seq=[]; for(let i=1;i<=maxN;i++) seq.push(i); for(let j=maxN-1;j>=1;j--) seq.push(j); return seq; }
 
   // auto run once
@@ -284,6 +327,7 @@
     manualFinished=false;
     if(current===0) current=1;
     autoRunning=true; autoBtn.textContent='Stop'; bigBtn.classList.add('disabled');
+    startOverallTimer();
     const seq = buildPyramidSequence(max); let idx = seq.indexOf(current); if(idx<0) idx=0;
     function runNext(){
       if(!autoRunning) return;
@@ -311,11 +355,23 @@
     runNext();
   }
 
-  function stopAutoAndReset(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00'; prog.style.strokeDashoffset = CIRC; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start'; updateUI(); }
-  function stopAuto(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; bigBtn.classList.remove('disabled'); countdownEl.textContent='00:00'; updateUI(); }
+  function stopAutoAndReset(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00'; prog.style.strokeDashoffset = CIRC; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start'; stopOverallTimer(); resetOverallTimer(); updateUI(); }
+  function stopAuto(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; bigBtn.classList.remove('disabled'); countdownEl.textContent='00:00'; stopOverallTimer(); updateUI(); }
 
   // reset helper
-  function doReset(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00'; prog.style.strokeDashoffset = CIRC; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start'; updateUI(); }
+  function doReset(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00'; prog.style.strokeDashoffset = CIRC; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start'; stopOverallTimer(); resetOverallTimer(); updateUI(); }
+
+  // clamp max input to 1..99 (two digits)
+  function clampMaxInput(){
+    let v = parseInt(maxInput.value, 10);
+    if (!isFinite(v) || v < 1) v = 1;
+    if (v > 99) v = 99;
+    max = v;
+    maxInput.value = String(v);
+    if (current > max) current = max;
+    prog.style.strokeDashoffset = CIRC * (1 - (current / Math.max(1, max)));
+    updateUI();
+  }
 
   // events
   bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; manualAdvance_StartOrNext(); });
@@ -329,15 +385,25 @@
   settingsIcon.addEventListener('click', ()=>{ settingsPopup.style.display='block'; });
   closeSettings.addEventListener('click', ()=>{ settingsPopup.style.display='none'; });
 
-  levelRadios.forEach(r=> r.addEventListener('change', ()=>{ if(r.checked){ userLevel = r.value; saveState(); } }));
+  levelRadios.forEach(r=> r.addEventListener('change', ()=>{ if(r.checked){ userLevel = r.value; updateLevelDisplay(); saveState(); } }));
   customSecondsPerRepInput.addEventListener('change', ()=> saveState());
   restPerRepSecInput.addEventListener('change', ()=> saveState());
   customExerciseNameInput.addEventListener('change', ()=> saveState());
   modeSelect.addEventListener('change', ()=>{ updateUI(); saveState(); });
-  maxInput.addEventListener('change', ()=>{ max = Math.max(1, parseInt(maxInput.value)||1); if(current>max) current=max; prog.style.strokeDashoffset = CIRC*(1-(current/Math.max(1,max))); updateUI(); });
+
+  // clamp on change / blur / input (prevents large pastes)
+  maxInput.addEventListener('change', clampMaxInput);
+  maxInput.addEventListener('blur', clampMaxInput);
+  maxInput.addEventListener('input', ()=> {
+    // allow typing but keep value numeric-ish; enforce 2 digits visually
+    const v = maxInput.value.replace(/[^\d]/g, '').slice(0,2);
+    maxInput.value = v === '' ? '' : String(parseInt(v,10));
+  });
 
   // init
   loadState();
+  // ensure max respects clamp at startup
+  clampMaxInput();
   updateUI();
   prog.style.stroke = colorFor(current, max);
 })();
