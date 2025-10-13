@@ -21,41 +21,42 @@
   .card{width:100%;max-width:var(--card-w);border-radius:20px;padding:18px;box-sizing:border-box;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid var(--outline); box-shadow: 0 18px 50px rgba(2,6,23,0.65); position:relative;}
 
   /* icons */
-  .icon { position:absolute; width:38px;height:38px;border-radius:50%;display:grid;place-items:center; border:1px solid var(--outline); background:rgba(0,0,0,0.24); cursor:pointer; font-size:18px; box-shadow:0 6px 18px rgba(0,0,0,0.45); }
+  .icon { position:absolute; width:36px;height:36px;border-radius:50%;display:grid;place-items:center; border:1px solid var(--outline); background:rgba(0,0,0,0.24); cursor:pointer; font-size:18px; box-shadow:0 6px 18px rgba(0,0,0,0.45); }
   #soundIcon{left:14px;top:14px} #settingsIcon{left:64px;top:14px} #helpIcon{right:14px;top:14px}
 
   /* labeled inputs compact */
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
   .label{font-size:13px;color:var(--muted);min-width:90px}
   .field{flex:1;display:flex;flex-direction:column;gap:6px}
-  input[type=number], select { padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:#fff;font-size:15px; }
+  input[type=number], select, input[type=text] { padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:#fff;font-size:15px; }
 
   /* main area */
   .main{display:flex;gap:14px;align-items:center;justify-content:center;margin-top:6px;margin-bottom:8px}
   @media (max-width:420px){ .main{flex-direction:column;gap:12px} }
 
-  .btn-area{ position:relative; width:240px; height:240px; display:flex;align-items:center;justify-content:center; }
+  .btn-area{ position:relative; width:200px; height:200px; display:flex;align-items:center;justify-content:center; }
+  /* main button reduced */
   button.big {
-    width:220px;height:220px;border-radius:50%;border:1px solid var(--outline);font-size:54px;font-weight:800;
+    width:180px;height:180px;border-radius:50%;border:1px solid var(--outline);font-size:44px;font-weight:800;
     color:white;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));
-    box-shadow: 0 30px 70px rgba(2,6,23,0.7), inset 0 6px 22px rgba(255,255,255,0.03);
+    box-shadow: 0 20px 46px rgba(2,6,23,0.65), inset 0 6px 16px rgba(255,255,255,0.03);
     transition: transform 140ms, box-shadow 140ms; touch-action:manipulation;
   }
-  button.big:active{ transform:translateY(3px) scale(0.986); box-shadow:0 16px 46px rgba(2,6,23,0.55); }
+  button.big:active{ transform:translateY(3px) scale(0.986); box-shadow:0 12px 34px rgba(2,6,23,0.55); }
   button.big.disabled { opacity:0.78; pointer-events:none; }
 
-  /* ring sits on edge of button, thinner stroke */
-  .ring-svg{ position:absolute; width:300px; height:300px; left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; }
-  .ring-svg circle{ transition: stroke 120ms linear; stroke-width:6; } /* thinner */
+  /* ring sits on edge of button, much thinner */
+  .ring-svg{ position:absolute; width:240px; height:240px; left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; }
+  .ring-svg circle{ transition: stroke 120ms linear; stroke-width:4; } /* much thinner */
 
-  /* dedicated instruction / current-number display */
+  /* instruction big (double size) */
   .instruction {
-    text-align:center; font-weight:700; font-size:16px; color:#cfefff; margin-bottom:8px;
-    min-height:22px; display:flex;align-items:center;justify-content:center;
+    text-align:center; font-weight:800; font-size:32px; color:#cfefff; margin-bottom:8px;
+    min-height:38px; display:flex;align-items:center;justify-content:center;
   }
-  .instruction .verb { color:#fff; font-weight:800; margin-right:6px; }
-  .instruction .count { color:#fff; font-weight:900; margin-right:6px; font-size:18px; }
-  .instruction .exercise { color:#ffdca3; font-weight:800; }
+  .instruction .verb { color:#fff; font-weight:800; margin-right:8px; }
+  .instruction .count { color:#fff; font-weight:900; margin-right:8px; font-size:36px; }
+  .instruction .exercise { color:#ffdca3; font-weight:900; font-size:34px; }
 
   /* fade animation for instruction */
   .fade {
@@ -85,9 +86,12 @@
 
   @media (max-width:420px){
     .card{ padding:14px; }
-    .btn-area{ width:280px; height:280px; }
-    button.big{ width:260px;height:260px;font-size:68px }
-    .ring-svg{ width:320px; height:320px; }
+    .btn-area{ width:240px; height:240px; }
+    button.big{ width:220px;height:220px;font-size:56px }
+    .ring-svg{ width:280px; height:280px; }
+    .instruction{ font-size:28px }
+    .instruction .count{ font-size:30px } 
+    .instruction .exercise{ font-size:28px }
   }
   /* small ripple */
   .ripple{position:absolute;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,0.12);pointer-events:none;animation:ripple 700ms ease-out;}
@@ -125,14 +129,14 @@
         </div>
       </div>
 
-      <!-- instruction text (updates to "Complete X <exercise>") -->
+      <!-- instruction text (big) -->
       <div class="instruction" id="instructionText" aria-live="polite">
         <span class="verb">Complete</span>
         <span class="count" id="instrCount">-</span>
         <span class="exercise" id="instrExercise">-</span>
       </div>
 
-      <!-- MAIN: ring + big button + digital timer + instruction -->
+      <!-- MAIN: ring + big button + digital timer -->
       <div class="main" role="region" aria-label="Counter area">
         <div class="btn-column">
           <div class="btn-area" aria-hidden="false">
@@ -145,8 +149,8 @@
                 </linearGradient>
               </defs>
               <g transform="translate(80,80)">
-                <circle id="baseRing" r="72" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="6"/>
-                <circle id="prog" r="72" fill="none" stroke="url(#rg)" stroke-width="6" stroke-linecap="round"
+                <circle id="baseRing" r="72" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="4"/>
+                <circle id="prog" r="72" fill="none" stroke="url(#rg)" stroke-width="4" stroke-linecap="round"
                         stroke-dasharray="452" stroke-dashoffset="452" transform="rotate(-90)"/>
               </g>
             </svg>
@@ -175,30 +179,18 @@
         <button id="autoBtn" class="btn primary" aria-label="Toggle Auto">Auto</button>
       </div>
 
-      <!-- POPUPS: Help (detailed) and Settings -->
+      <!-- Help and Settings popups -->
       <div id="helpPopup" class="overlay" role="dialog" aria-modal="true">
         <div class="panel">
           <h2>Pyramid Counter — Help</h2>
-          <p>This app guides you through pyramid sets. Set the <strong>Max number</strong> (top of your pyramid). Choose a mode (Squats, Push-ups, etc.).</p>
-          <h3>Manual mode</h3>
-          <ul>
-            <li>Tap the big round button to start a step; the clock becomes a stopwatch.</li>
-            <li>When you finish reps for the step, tap the button again to stop stopwatch and start the next step's stopwatch (until you reach Max).</li>
-            <li>The instruction above the button tells you exactly what to do (e.g. "Complete 5 squats").</li>
-          </ul>
-          <h3>Auto mode</h3>
-          <ul>
-            <li>Tap <strong>Auto</strong> to automatically cycle through the pyramid (exercise + rest). The clock shows remaining time.</li>
-            <li>While Auto runs the big button is disabled to avoid accidental taps.</li>
-            <li>When Auto completes the pyramid (up and down), it will stop and reset (no loop).</li>
-          </ul>
+          <p>Set the Max number (top of your pyramid). Choose Mode. Manual: tap button to start/finish the step. Auto: press Auto to run one full pyramid (1..max..1).</p>
           <div style="text-align:right"><button id="closeHelp" class="btn primary">Close</button></div>
         </div>
       </div>
 
       <div id="settingsPopup" class="overlay" role="dialog" aria-modal="true">
         <div class="panel">
-          <h2>Settings — User level & custom timings</h2>
+          <h2>Settings</h2>
           <div style="display:flex;flex-direction:column;gap:12px">
             <div>
               <strong>User level</strong><br>
@@ -219,14 +211,14 @@
             <div>
               <strong>Custom exercise name</strong><br>
               <input id="customExerciseName" type="text" placeholder="e.g. 'glute bridges' or 'lateral raises'"/>
-              <div style="font-size:13px;color:var(--muted)">Used when Mode = Custom. Leave empty to use "exercise".</div>
+              <div style="font-size:13px;color:var(--muted)">Used if Mode = Custom</div>
             </div>
             <div style="text-align:right"><button id="closeSettings" class="btn primary">Close</button></div>
           </div>
         </div>
       </div>
 
-      <!-- audio files (place them next to index.html in the repo) -->
+      <!-- audio -->
       <audio id="clickAudio" src="click-button.mp3" preload="auto"></audio>
       <audio id="progressAudio" src="progress-sound.mp3" preload="auto"></audio>
       <audio id="helpAudio" src="help-button.mp3" preload="auto"></audio>
@@ -271,16 +263,16 @@
   // State
   let max = Math.max(1, parseInt(maxInput.value) || 10);
   let current = 0;
-  let dir = 1; // for auto pyramid progression
+  let dir = 1; // manual direction for pyramid
   let autoRunning = false;
   let tickTimer = null;
   let soundOn = true;
   let userLevel = 'beginner';
 
   // Manual stopwatch specific
-  let manualTimer = null;           // interval id for manual stopwatch
-  let manualStart = 0;              // performance.now() when stopwatch started
-  let manualElapsedSec = 0;         // seconds elapsed (integer, for display)
+  let manualTimer = null;
+  let manualStart = 0;
+  let manualElapsedSec = 0;
 
   // Ring constants (r=72 matches SVG)
   const R = 72;
@@ -311,11 +303,11 @@
       customExerciseName: customExerciseNameInput.value,
       soundOn
     };
-    try { localStorage.setItem('pyr_v4', JSON.stringify(s)); } catch(e){}
+    try { localStorage.setItem('pyr_v5', JSON.stringify(s)); } catch(e){}
   }
   function loadState(){
     try{
-      const s = JSON.parse(localStorage.getItem('pyr_v4') || '{}');
+      const s = JSON.parse(localStorage.getItem('pyr_v5') || '{}');
       if(s && s.max){ max = s.max; maxInput.value = max; }
       if(s && typeof s.current === 'number'){ current = s.current; dir = s.dir || 1; }
       if(s && s.userLevel) userLevel = s.userLevel;
@@ -328,7 +320,7 @@
     }catch(e){}
   }
 
-  // Mode base sec per rep
+  // Mode / timing
   function baseSecondsPerRepForMode(){
     const m = modeSelect.value;
     if (m === 'squats') return 3.0;
@@ -342,7 +334,6 @@
     }
     return 2.0;
   }
-
   function levelMultiplier(){
     switch(userLevel){
       case 'athlete': return 0.75;
@@ -352,11 +343,7 @@
       default: return 1.0;
     }
   }
-
-  function exerciseSecondsForNumber(n){
-    const base = baseSecondsPerRepForMode();
-    return base * levelMultiplier() * n;
-  }
+  function exerciseSecondsForNumber(n){ return baseSecondsPerRepForMode() * levelMultiplier() * n; }
   function restSecondsForNumber(n){
     const restUnit = parseFloat(restPerRepSecInput.value);
     const r = (isFinite(restUnit) && restUnit > 0) ? restUnit : 10;
@@ -364,56 +351,48 @@
     return r * lvlFactor * n;
   }
 
-  // Build instruction text like "Complete 5 squats"
+  // instruction text
   function currentExerciseName(){
     const mode = modeSelect.value;
     if (mode === 'custom'){
       const t = (customExerciseNameInput.value || '').trim();
       return t ? t : 'exercise';
     }
-    // use the select label text for clarity
     const opt = modeSelect.options[modeSelect.selectedIndex];
-    return opt ? opt.text : mode;
+    return opt ? opt.text.toLowerCase() : mode;
   }
   function showInstruction(n){
-    // Update text and animate fade
     instrCount.textContent = n === 0 ? '-' : n;
     instrExercise.textContent = (n === 0) ? '-' : currentExerciseName();
-    // animate
     instructionText.classList.remove('fade');
-    // force reflow to restart animation
     void instructionText.offsetWidth;
     instructionText.classList.add('fade');
   }
 
-  // Update UI - keep digital clock consistent
+  // Update UI
   function updateUI(){
     showInstruction(current);
     manualRepsEl.textContent = 'Reps for this step: ' + (current === 0 ? '-' : current);
     stepText.textContent = `Step ${current === 0 ? 0 : current} of ${max * 2 - 1}`;
     if (!autoRunning){
-      // manual ring shows current/max progress
-      const pct = max > 0 ? (current / max) : 0;
+      const pct = Math.max(0, Math.min(1, (current / Math.max(1, max))));
       prog.style.strokeDashoffset = CIRC * (1 - pct);
       prog.style.stroke = colorFor(current, max);
       if (!manualTimer) countdownEl.textContent = '00:00';
       bigBtn.classList.remove('disabled');
-      if (current === 0) bigBtn.textContent = 'Start';
-      else bigBtn.textContent = current;
+      bigBtn.textContent = current === 0 ? 'Start' : String(current);
     } else {
-      // disable big button during auto
+      // show current number while auto (button disabled)
       bigBtn.classList.add('disabled');
+      bigBtn.textContent = current === 0 ? '—' : String(current);
     }
     saveState();
   }
 
-  // Play audio helper
-  function playIfOn(audioEl){
-    if(!soundOn) return;
-    try{ audioEl.currentTime = 0; audioEl.play().catch(()=>{}); } catch(e){}
-  }
+  // audio helper
+  function playIfOn(audioEl){ if(!soundOn) return; try{ audioEl.currentTime = 0; audioEl.play().catch(()=>{}); }catch(e){} }
 
-  // Manual stopwatch functions
+  // Manual stopwatch
   function startManualStopwatch(){
     stopManualStopwatch();
     manualStart = performance.now();
@@ -428,41 +407,75 @@
       }
     }, 200);
   }
-
   function stopManualStopwatch(){
-    if (manualTimer){
-      clearInterval(manualTimer);
-      manualTimer = null;
-    }
+    if (manualTimer){ clearInterval(manualTimer); manualTimer = null; }
   }
 
-  // Manual advance logic (non-looping: stops at max)
+  // Manual advance with pyramid direction (1..max..1) then stop
   function manualAdvance_StartOrNext(){
     if (current === 0){
       current = 1;
+      dir = 1;
       playIfOn(clickAudio);
       startManualStopwatch();
       updateUI();
       return;
     }
-    // user finished current step -> stop stopwatch
+
+    // user finished current step
     playIfOn(clickAudio);
     stopManualStopwatch();
-    // if current < max -> advance to next number and start stopwatch
-    if (current < max){
+
+    // if ascending and not yet at max -> go up
+    if (dir === 1 && current < max){
       current = current + 1;
       startManualStopwatch();
       updateUI();
-    } else {
-      // current === max -> final step finished; show Done state
-      current = max;
-      countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec || 0);
+      return;
+    }
+
+    // if ascending and at max -> switch direction to descending
+    if (dir === 1 && current === max){
+      dir = -1;
+      // if max>1, start descending
+      if (max > 1){
+        current = current + dir; // max-1
+        startManualStopwatch();
+        updateUI();
+        return;
+      } else {
+        // max ==1 -> finished immediately
+        finishManual();
+        return;
+      }
+    }
+
+    // if descending and current > 1 -> continue descending
+    if (dir === -1 && current > 1){
+      current = current + dir;
+      startManualStopwatch();
       updateUI();
-      bigBtn.textContent = 'Done';
+      return;
+    }
+
+    // if descending and current ===1 -> finished pyramid
+    if (dir === -1 && current === 1){
+      finishManual();
+      return;
     }
   }
 
-  // Build pyramid sequence 1..max..1
+  function finishManual(){
+    // stop everything and mark done
+    stopManualStopwatch();
+    bigBtn.textContent = 'Done';
+    // keep current = 1 (final)
+    current = 1;
+    dir = 1;
+    updateUI();
+  }
+
+  // build pyramid sequence 1..max..1
   function buildPyramidSequence(maxN){
     const seq = [];
     for(let i=1;i<=maxN;i++) seq.push(i);
@@ -470,7 +483,7 @@
     return seq;
   }
 
-  // Auto loop: goes through sequence, then stops & resets
+  // Auto: runs sequence once then stop & reset
   function startAuto(){
     stopManualStopwatch();
     if (current === 0) current = 1;
@@ -485,16 +498,14 @@
     function runNext(){
       if (!autoRunning) return;
       const n = seq[idx];
-      // animate this step: exercise+rest total
       const ex = exerciseSecondsForNumber(n);
       const rest = restSecondsForNumber(n);
-      const total = Math.max(200, Math.round((ex + rest) * 1000)); // ms
+      const total = Math.max(200, Math.round((ex + rest) * 1000));
       const interval = 100;
       const steps = Math.max(1, Math.round(total / interval));
       let step = 0;
 
       playIfOn(progressAudio);
-      // set UI for this step
       current = n;
       updateUI();
       manualRepsEl.textContent = 'Reps for this step: ' + n;
@@ -506,27 +517,17 @@
         const pct = Math.min(1, step / steps);
         prog.style.strokeDashoffset = CIRC * (1 - pct);
         prog.style.stroke = colorFor(n, max);
-
         const remainingMs = Math.max(0, Math.round(total - step * interval));
         countdownEl.textContent = fmtSecondsMMSS(Math.ceil(remainingMs / 1000));
-
         if (step < steps){
           tickTimer = setTimeout(tick, interval);
         } else {
-          // finished this number
           idx++;
-          if (idx >= seq.length){
-            // finished entire pyramid -> stop and reset
-            stopAutoAndReset();
-            return;
-          } else {
-            // short gap then next
-            tickTimer = setTimeout(()=>{ runNext(); }, 140);
-          }
+          if (idx >= seq.length){ stopAutoAndReset(); return; }
+          tickTimer = setTimeout(()=>{ runNext(); }, 140);
         }
       }
 
-      // init and start
       countdownEl.textContent = fmtSecondsMMSS(Math.ceil(total / 1000));
       prog.style.stroke = colorFor(n, max);
       tick();
@@ -539,15 +540,14 @@
     if (tickTimer) { clearTimeout(tickTimer); tickTimer = null; }
     autoRunning = false;
     autoBtn.textContent = 'Auto';
-    // reset to initial state
     current = 0; dir = 1;
     countdownEl.textContent = '00:00';
     manualRepsEl.textContent = 'Reps for this step: -';
     prog.style.strokeDashoffset = CIRC;
     bigBtn.classList.remove('disabled');
+    bigBtn.textContent = 'Start';
     updateUI();
   }
-
   function stopAuto(){
     if (tickTimer) { clearTimeout(tickTimer); tickTimer = null; }
     autoRunning = false;
@@ -557,7 +557,7 @@
     updateUI();
   }
 
-  // Event listeners
+  // Events
   bigBtn.addEventListener('pointerdown', (ev) => {
     ev.preventDefault();
     // ripple
@@ -569,15 +569,12 @@
     const y = (ev.clientY - rect.top) || rect.height/2;
     r.style.left = x + 'px';
     r.style.top = y + 'px';
-    r.style.width = '20px';
-    r.style.height = '20px';
+    r.style.width = '18px';
+    r.style.height = '18px';
     rc.appendChild(r);
     r.addEventListener('animationend', ()=> r.remove());
 
-    // disabled during Auto
-    if (autoRunning) return;
-
-    // manual behavior
+    if (autoRunning) return; // disabled in auto
     manualAdvance_StartOrNext();
   });
 
@@ -589,7 +586,6 @@
     current = 0; dir = 1;
     countdownEl.textContent = '00:00';
     manualRepsEl.textContent = 'Reps for this step: -';
-    instructionText.classList.remove('fade');
     instrCount.textContent = '-';
     instrExercise.textContent = '-';
     prog.style.strokeDashoffset = CIRC;
@@ -609,12 +605,11 @@
     saveState();
   });
 
-  // help popup
+  // help/settings
   helpIcon.addEventListener('click', () => { playIfOn(helpAudio); helpPopup.style.display = 'block'; });
   closeHelp.addEventListener('click', () => { helpPopup.style.display = 'none'; });
   helpPopup.addEventListener('click', (e) => { if (e.target === helpPopup) helpPopup.style.display = 'none'; });
 
-  // settings popup
   settingsIcon.addEventListener('click', () => { settingsPopup.style.display = 'block'; });
   closeSettings.addEventListener('click', () => { settingsPopup.style.display = 'none'; });
   settingsPopup.addEventListener('click', (e) => { if (e.target === settingsPopup) settingsPopup.style.display = 'none'; });
@@ -633,14 +628,10 @@
     updateUI();
   });
 
-  // load initial state
+  // init
   loadState();
   updateUI();
   prog.style.stroke = colorFor(current, max);
-
-  // Ensure big button label is 'Start' initially
-  if (current === 0) bigBtn.textContent = 'Start';
-
 })();
 </script>
 
