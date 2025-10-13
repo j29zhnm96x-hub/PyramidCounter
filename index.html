@@ -1,237 +1,260 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>Pyramid Counter — Pro</title>
-
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pyramid Counter</title>
 <style>
-  :root{
-    --bg-1: #071017;
-    --bg-2: #0f1720;
-    --muted: #9fa6ad;
-    --accent-blue: #0b84ff;
-    --accent-blue-700: #0466d6;
-    --outline-white: rgba(255,255,255,0.12);
-    --card-shadow: 0 14px 46px rgba(2,6,23,0.66);
-    font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
+body {
+  margin:0; font-family:sans-serif; background: radial-gradient(circle at center, #1a1a1a, #121212); color:#fff;
+  display:flex; justify-content:center; align-items:center; height:100vh; overflow:hidden;
+}
+.card {
+  position:relative; width:360px; padding:24px; background:#1e1e1e; border-radius:24px;
+  text-align:center; box-shadow:0 12px 24px rgba(0,0,0,0.6);
+  transition: transform 0.3s ease;
+}
+.card:hover { transform: scale(1.02); }
 
-  html,body{height:100%;margin:0;background:
-    radial-gradient(1200px 600px at 10% 10%, rgba(11,118,255,0.04), transparent 8%),
-    radial-gradient(900px 400px at 95% 85%, rgba(255,40,96,0.03), transparent 6%),
-    linear-gradient(180deg,var(--bg-1),var(--bg-2));
-    color:#eef2f3;-webkit-font-smoothing:antialiased;overflow:hidden;}
+#bigBtn {
+  width:200px; height:200px; border-radius:50%; border:2px solid #fff;
+  background: linear-gradient(145deg, #0b84ff, #3299ff); color:#fff;
+  font-size:64px; cursor:pointer; margin-bottom:20px; box-shadow:0 8px 16px rgba(0,0,0,0.4);
+  transition: all 0.2s ease;
+}
+#bigBtn:hover { transform: scale(1.05) translateY(-2px); box-shadow:0 12px 20px rgba(0,0,0,0.6); }
+#bigBtn:active { transform: scale(0.98) translateY(1px); box-shadow:0 4px 8px rgba(0,0,0,0.4); }
 
-  .bg-noise{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.06;
-    background-image:
-      radial-gradient(circle at 10% 20%, rgba(255,255,255,0.02) 0, transparent 20%),
-      radial-gradient(circle at 80% 80%, rgba(255,255,255,0.02) 0, transparent 18%);
-    mix-blend-mode:screen; animation: floatNoise 20s linear infinite;}
-  @keyframes floatNoise{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+#prog {
+  width:150px; height:150px; position:absolute; top:36px; left:105px; transform:rotate(-90deg);
+  filter: drop-shadow(0 0 8px rgba(0,255,0,0.7));
+}
+#stepText { margin-top:10px; font-size:16px; }
 
-  .wrap{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box;}
-  .card{width:100%;max-width:640px;border-radius:20px;padding:16px 16px 20px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:var(--card-shadow);border:1px solid rgba(255,255,255,0.03);backdrop-filter: blur(8px) saturate(120%);}
+#maxInput, #customSecondsPerRep, #restPerRepSec, #modeSelect {
+  margin:6px 0; width:100%; padding:8px; border-radius:10px; border:none; font-size:16px;
+  background: #2a2a2a; color:#fff;
+}
 
-  .header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;}
-  .title{display:flex;flex-direction:column;}
-  .title h1{margin:0;font-size:18px;}
+button { margin:6px; padding:10px 16px; border:none; border-radius:16px; font-size:16px; cursor:pointer; transition:all 0.2s ease; }
+button:hover { transform: scale(1.05); box-shadow:0 6px 12px rgba(0,0,0,0.4); }
 
-  .controls{display:flex;gap:8px;align-items:center;}
+#autoBtn { background: linear-gradient(145deg, #0b84ff, #3299ff); color:#fff; }
+#resetBtn { background:#555; color:#fff; }
 
-  .main{display:flex;flex-direction:column;align-items:center;gap:12px;padding:6px;}
+#soundIcon, #settingsIcon, #helpIcon {
+  position:absolute; width:36px; height:36px; border-radius:50%; border:1px solid rgba(255,255,255,0.12);
+  display:flex; align-items:center; justify-content:center; font-size:20px; cursor:pointer; background:rgba(0,0,0,0.25);
+  box-shadow:0 4px 8px rgba(0,0,0,0.4); transition:all 0.2s ease;
+}
+#soundIcon:hover, #settingsIcon:hover, #helpIcon:hover { transform: scale(1.1); background:rgba(0,0,0,0.35); }
 
-  .meta-row{display:flex;gap:10px;align-items:center;justify-content:center;width:100%;}
-  input[type=number], select, .customBase {
-    background: rgba(255,255,255,0.02);
-    border:1px solid rgba(255,255,255,0.04);
-    padding:10px 12px;border-radius:12px;color:#fff;width:120px;text-align:center;font-size:16px;
-  }
+#soundIcon { top:16px; left:16px; }
+#settingsIcon { top:16px; left:64px; }
+#helpIcon { top:16px; right:16px; }
 
-  @media (max-width:420px){ input[type=number], select, .customBase{ width:96px; } }
+#helpPopup, #settingsPopup {
+  display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.95); color:#fff; padding:24px; box-sizing:border-box; overflow-y:auto; z-index:20; border-radius:0;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease;
+}
 
-  .btn-wrap{position:relative;display:flex;align-items:center;justify-content:center;margin:6px 0 6px 0;}
-  .ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;width:calc(min(78vw,520px));max-width:520px;height:auto;filter: drop-shadow(0 6px 18px rgba(3,18,35,0.6));}
-  .ring circle{ stroke-width:8; }
+#closeHelp, #closeSettings {
+  margin-top:16px; padding:10px 14px; border-radius:12px; border:none;
+  background: linear-gradient(145deg, #0b84ff, #3299ff); color:#fff; font-size:16px; cursor:pointer;
+}
 
-  .big-btn{
-    position:relative;z-index:2;display:grid;place-items:center;width:220px;height:220px;border-radius:50%;
-    background:linear-gradient(180deg,var(--accent-blue),var(--accent-blue-700));color:white;font-size:60px;font-weight:900;
-    border:1px solid rgba(255,255,255,0.12);box-shadow:0 28px 70px rgba(4,20,40,0.72), inset 0 6px 22px rgba(255,255,255,0.03);
-    touch-action:manipulation; user-select:none; -webkit-tap-highlight-color:transparent; transition: transform 120ms, box-shadow 120ms;}
-  .big-btn:active{ transform: translateY(3px) scale(0.985); box-shadow:0 16px 42px rgba(4,20,40,0.6); }
-  .big-btn.pulse{ animation: pulse 900ms ease-out; }
-  @keyframes pulse{0%{box-shadow:0 44px 120px rgba(11,132,255,0.28);transform:translateY(-2px) scale(1.02)}60%{transform:translateY(0) scale(1)}100%{box-shadow:0 28px 70px rgba(4,20,40,0.72)}}
-
-  .ripple{position:absolute;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,0.12);pointer-events:none;animation:ripple 700ms ease-out;}
-  @keyframes ripple{to{transform:translate(-50%,-50%) scale(3.2);opacity:0;}}
-
-  .info{display:flex;gap:14px;align-items:center;justify-content:center;width:100%;}
-  .counter-number{font-size:96px;font-weight:900;letter-spacing:0.3px;transition:color 240ms linear, transform 120ms;text-shadow:0 12px 40px rgba(2,6,23,0.65);}
-  @media (max-width:420px){ .big-btn{width:260px;height:260px;font-size:72px} .counter-number{font-size:68px} }
-
-  .step-text{color:var(--muted);font-size:16px;margin-top:2px}
-  .actions{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:10px}
-  .btn{padding:12px 18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:#fff;border:1px solid rgba(255,255,255,0.12);font-weight:700;font-size:16px;cursor:pointer}
-  .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06)}
-  .btn:active{transform:translateY(2px)}
-  .outline-white{border:1px solid rgba(255,255,255,0.12)}
-
-  /* Help popup */
-  #helpIcon{
-    position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);
-    display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:20px;color:#fff;background:rgba(0,0,0,0.2);cursor:pointer;z-index:10;
-  }
-  #helpPopup{
-    display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);color:#fff;padding:24px;box-sizing:border-box;overflow-y:auto;z-index:20;
-  }
-  #helpPopup h2{margin-top:0;}
-  #helpPopup button{margin-top:16px;padding:10px 14px;border-radius:12px;border:none;background:var(--accent-blue);color:#fff;font-size:16px;cursor:pointer;}
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
 </style>
 </head>
 <body>
-  <div class="bg-noise" aria-hidden="true"></div>
 
-  <div id="helpIcon" title="Help">?</div>
-  <div id="helpPopup" role="dialog" aria-modal="true">
-    <h2>Pyramid Counter Manual</h2>
-    <p>Welcome to the Pyramid Counter app! This tool helps you do pyramid workouts with any exercise like squats, push-ups, pull-ups, or burpees.</p>
-    <p><strong>Max Number:</strong> Set the maximum number for your pyramid (e.g., 10). The app will count up to this number, then back down.</p>
-    <p><strong>Manual Mode:</strong> Tap the large button to go to the next number. The number color goes from green to red as it increases. Each tap represents one set of repetitions.</p>
-    <p><strong>Auto Mode:</strong> Tap "Auto" to automatically progress through the pyramid. Each number has an exercise time and a rest time (based on the number). The main button shows the countdown during rest.</p>
-    <p><strong>Sounds:</strong> - Manual mode plays a click sound. <br>- Auto mode plays a progress sound when the number changes.</p>
-    <p><strong>Modes:</strong> Choose an exercise type from the dropdown. Custom mode allows you to adjust seconds per rep and rest per rep.</p>
-    <p>Enjoy your pyramid workout! Stay consistent and follow the numbers as they appear.</p>
+<div class="card">
+  <button id="bigBtn">0</button>
+  <svg id="prog"><circle cx="75" cy="75" r="52" fill="none" stroke="#0b84ff" stroke-width="8" /></svg>
+
+  <input id="maxInput" type="number" value="10" placeholder="Max Number">
+  <select id="modeSelect">
+    <option value="squats">Squats</option>
+    <option value="pushups">Push-ups</option>
+    <option value="pullups">Pull-ups</option>
+    <option value="burpees">Burpees</option>
+    <option value="custom">Custom</option>
+  </select>
+  <input id="customSecondsPerRep" type="number" placeholder="Seconds per rep" style="display:none;">
+  <input id="restPerRepSec" type="number" value="10" placeholder="Rest per rep (sec)">
+
+  <button id="autoBtn">Auto</button>
+  <button id="resetBtn">Reset</button>
+  <div id="stepText">Step 0</div>
+
+  <div id="soundIcon">🔊</div>
+  <div id="settingsIcon">⚙️</div>
+  <div id="helpIcon">?</div>
+
+  <!-- Help Popup -->
+  <div id="helpPopup">
+    <h2>Help</h2>
+    <p>Manual / Auto modes, adjust max number, choose exercise, toggle sound and set your user level in settings.</p>
     <button id="closeHelp">Close</button>
   </div>
 
-  <div class="wrap">
-    <div class="card" role="application" aria-labelledby="appTitle">
-      <div class="header">
-        <div class="title">
-          <h1 id="appTitle">Pyramid Counter</h1>
-        </div>
-      </div>
-
-      <main class="main">
-        <div class="meta-row">
-          <select id="modeSelect" class="outline-white" aria-label="Choose exercise mode">
-            <option value="squats">Squats</option>
-            <option value="pushups">Push-ups</option>
-            <option value="pullups">Pull-ups</option>
-            <option value="burpees">Burpees</option>
-            <option value="custom">Custom</option>
-          </select>
-
-          <input id="maxInput" type="number" min="1" value="10" aria-label="Maximum pyramid number" />
-          <input id="customSecondsPerRep" class="customBase outline-white" type="number" placeholder="sec/rep" style="display:none" />
-          <input id="restPerRepSec" class="customBase outline-white" type="number" placeholder="rest/sec" value="10" />
-        </div>
-
-        <div class="btn-wrap">
-          <svg class="ring" viewBox="0 0 120 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <defs>
-              <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#00ff7f"/>
-                <stop offset="50%" stop-color="#ffd400"/>
-                <stop offset="100%" stop-color="#ff3b3b"/>
-              </linearGradient>
-            </defs>
-            <g transform="translate(60,60)">
-              <circle r="52" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="8"/>
-              <circle id="prog" r="52" fill="none" stroke="url(#ringGradient)" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" transform="rotate(-90)"></circle>
-            </g>
-          </svg>
-
-          <button id="bigBtn" class="big-btn outline-white" aria-label="Advance pyramid" title="Tap to advance">Start</button>
-          <div id="rippleContainer" aria-hidden="true"></div>
-        </div>
-
-        <div class="info">
-          <div class="counter-number" id="counterNumber" aria-live="polite">0</div>
-        </div>
-
-        <div class="step-text" id="stepText">Step 0 of 19</div>
-
-        <div class="actions">
-          <button id="resetBtn" class="btn secondary outline-white">Reset</button>
-          <button id="autoBtn" class="btn outline-white">Auto</button>
-        </div>
-
-      </main>
-    </div>
+  <!-- Settings Popup -->
+  <div id="settingsPopup">
+    <h2>Settings / User Level</h2>
+    <p>Select your workout intensity:</p>
+    <label><input type="radio" name="level" value="athlete"> Athlete</label><br>
+    <label><input type="radio" name="level" value="intermediate"> Intermediate</label><br>
+    <label><input type="radio" name="level" value="low"> Low Intensity</label><br>
+    <label><input type="radio" name="level" value="beginner" checked> Beginner</label>
+    <button id="closeSettings">Close</button>
   </div>
 
-  <audio id="clickButtonAudio" src="click-button.mp3" preload="auto"></audio>
-  <audio id="progressSoundAudio" src="progress-sound.mp3" preload="auto"></audio>
+  <audio id="clickButtonAudio" src="click-button.mp3"></audio>
+  <audio id="progressSoundAudio" src="progress-sound.mp3"></audio>
+  <audio id="helpButtonAudio" src="help-button.mp3"></audio>
+</div>
 
 <script>
 (function(){
   const maxInput = document.getElementById('maxInput');
   const bigBtn = document.getElementById('bigBtn');
-  const counterNumber = document.getElementById('counterNumber');
   const stepText = document.getElementById('stepText');
-  const prog = document.getElementById('prog');
-  const rippleContainer = document.getElementById('rippleContainer');
+  const prog = document.getElementById('prog').querySelector('circle');
   const resetBtn = document.getElementById('resetBtn');
   const autoBtn = document.getElementById('autoBtn');
   const clickButtonAudio = document.getElementById('clickButtonAudio');
   const progressSoundAudio = document.getElementById('progressSoundAudio');
-  const modeSelect = document.getElementById('modeSelect');
-  const customSecondsPerRep = document.getElementById('customSecondsPerRep');
-  const restPerRepSec = document.getElementById('restPerRepSec');
-
+  const helpButtonAudio = document.getElementById('helpButtonAudio');
   const helpIcon = document.getElementById('helpIcon');
   const helpPopup = document.getElementById('helpPopup');
   const closeHelp = document.getElementById('closeHelp');
+  const modeSelect = document.getElementById('modeSelect');
+  const customSecondsPerRep = document.getElementById('customSecondsPerRep');
+  const restPerRepSec = document.getElementById('restPerRepSec');
+  const soundIcon = document.getElementById('soundIcon');
+  const settingsIcon = document.getElementById('settingsIcon');
+  const settingsPopup = document.getElementById('settingsPopup');
+  const closeSettings = document.getElementById('closeSettings');
+  const levelRadios = document.querySelectorAll('input[name="level"]');
 
-  let max = 10, current = 0, dir = 1, stepCount = 0;
+  let max = parseInt(maxInput.value)||10;
+  let current = 0;
+  let dir = 1;
   let autoRunning = false;
-  let phase = 'idle';
-  let phaseTimerId = null;
-  let phaseStart = 0, phaseDuration = 0;
-  const CIRC = 2 * Math.PI * 52;
-  prog.style.strokeDasharray = `${CIRC}`;
+  let autoTimer = null;
+  let soundOn = true;
+  let userLevel = 'beginner';
+  const CIRC = 2*Math.PI*52;
+  prog.style.strokeDasharray = CIRC;
+  prog.style.strokeDashoffset = CIRC;
 
-  const MODES = {
-    squats: { label:'Squats', secPerRep: 1.0, baseExtra:0.3 },
-    pushups:{ label:'Push-ups', secPerRep: 0.75, baseExtra:0.25 },
-    pullups:{ label:'Pull-ups', secPerRep: 1.4, baseExtra:0.4 },
-    burpees:{ label:'Burpees', secPerRep: 1.2, baseExtra:0.4 },
-    custom:{ label:'Custom', secPerRep: 1.0, baseExtra:0.3 }
-  };
+  function colorFor(val,maxV){ 
+    if(maxV<=1) return 'hsl(120,100%,45%)'; 
+    const ratio = Math.max(0,Math.min(1,val/maxV)); 
+    const hue = 120-(120*ratio); 
+    return `hsl(${hue},100%,50%)`; 
+  }
 
-  function load(){
-    maxInput.value = String(max);
-    customSecondsPerRep.style.display = (modeSelect.value === 'custom') ? 'inline-block' : 'none';
+  function playAudio(audio){ if(soundOn) audio.play().catch(()=>{}); }
+
+  function updateUI(display=current){
+    bigBtn.textContent=display;
+    stepText.textContent=`Step ${current} of ${max*2-1}`;
+    const offset = CIRC*(1-(current/max));
+    prog.style.strokeDashoffset=offset;
+    prog.style.stroke=colorFor(current,max);
+  }
+
+  function advanceStep(){
+    playAudio(clickButtonAudio);
+    current+=dir;
+    if(current>=max) dir=-1;
+    if(current<=1 && dir==-1) dir=1;
     updateUI();
   }
 
-  function colorFor(val, maxV){
-    if (maxV <= 1) return 'hsl(120,100%,45%)';
-    const ratio = Math.max(0, Math.min(1, val / maxV));
-    const hue = 120 - (120 * ratio);
-    return `hsl(${hue},100%,50%)`;
-  }
+  bigBtn.addEventListener('click',()=>{ if(!autoRunning) advanceStep(); });
+  resetBtn.addEventListener('click',()=>{
+    clearTimeout(autoTimer);
+    autoRunning=false;
+    autoBtn.textContent="Auto";
+    current=0; dir=1;
+    updateUI();
+  });
 
-  function getModeConfig(){
-    const mode = modeSelect.value;
-    if (mode === 'custom'){
-      const sec = parseFloat(customSecondsPerRep.value);
-      return { secPerRep: (isNaN(sec) || sec <= 0) ? MODES.custom.secPerRep : sec, baseExtra: MODES.custom.baseExtra };
+  function getExerciseSeconds(number){
+    let mode = modeSelect.value; let baseSec=2;
+    if(mode==='squats') baseSec=3;
+    if(mode==='pushups') baseSec=2;
+    if(mode==='pullups') baseSec=2.5;
+    if(mode==='burpees') baseSec=3;
+    if(mode==='custom') baseSec=parseFloat(customSecondsPerRep.value)||2;
+    switch(userLevel){
+      case 'athlete': baseSec*=0.7; break;
+      case 'intermediate': baseSec*=1; break;
+      case 'low': baseSec*=1.2; break;
+      case 'beginner': baseSec*=1.5; break;
     }
-    return MODES[mode] || MODES.squats;
+    return baseSec*number;
   }
 
-  function computeExerciseMs(n){
-    const cfg = getModeConfig();
-    const extra = Math.floor(n / 6) * 0.15 * n;
-    const seconds = (cfg.secPerRep * n) + extra;
-    return Math.round(seconds * 1000);
+  function getRestSeconds(number){
+    let rest=parseFloat(restPerRepSec.value)||10;
+    switch(userLevel){
+      case 'athlete': rest*=0.7; break;
+      case 'intermediate': rest*=1; break;
+      case 'low': rest*=1.2; break;
+      case 'beginner': rest*=1.5; break;
+    }
+    return rest*number;
   }
-  function computeRestMs(n){
-    const restUnit = parseFloat(restPerRepSec.value);
-    const r = (isNaN(restUnit) || restUnit <= 0) ? 10 : rest
+
+  function autoStep(){
+    let totalTime=getExerciseSeconds(current)+getRestSeconds(current);
+    let interval=100; let steps=totalTime*1000/interval; let elapsed=0;
+    playAudio(progressSoundAudio);
+    function tick(){
+      elapsed++;
+      let remaining=Math.ceil((steps-elapsed)*interval/1000);
+      bigBtn.textContent=remaining;
+      const percent=elapsed/steps;
+      const offset=CIRC*(1-percent);
+      prog.style.strokeDashoffset=offset;
+      prog.style.stroke=colorFor(current,max);
+      if(elapsed<steps&&autoRunning){ autoTimer=setTimeout(tick,interval); }
+      else {
+        current+=dir;
+        if(current>=max) dir=-1;
+        if(current<=1&&dir==-1) dir=1;
+        if(autoRunning) autoStep();
+      }
+    }
+    tick();
+  }
+
+  autoBtn.addEventListener('click',()=>{
+    if(autoRunning){ clearTimeout(autoTimer); autoRunning=false; autoBtn.textContent="Auto"; updateUI(); return; }
+    autoRunning=true; autoBtn.textContent="Stop"; autoStep();
+  });
+
+  helpIcon.addEventListener('click',()=>{ playAudio(helpButtonAudio); helpPopup.style.display='block'; });
+  closeHelp.addEventListener('click',()=>{ helpPopup.style.display='none'; });
+  window.addEventListener('click',(e)=>{ if(e.target===helpPopup) helpPopup.style.display='none'; });
+
+  modeSelect.addEventListener('change',()=>{ customSecondsPerRep.style.display=(modeSelect.value==='custom')?'inline-block':'none'; });
+  maxInput.addEventListener('change',()=>{ max=parseInt(maxInput.value)||10; updateUI(); });
+  soundIcon.addEventListener('click',()=>{ soundOn=!soundOn; soundIcon.textContent=soundOn?'🔊':'🔇'; });
+
+  settingsIcon.addEventListener('click',()=>{ settingsPopup.style.display='block'; });
+  closeSettings.addEventListener('click',()=>{ settingsPopup.style.display='none'; });
+  window.addEventListener('click',(e)=>{ if(e.target===settingsPopup) settingsPopup.style.display='none'; });
+  levelRadios.forEach(radio=>{ radio.addEventListener('change',()=>{ if(radio.checked) userLevel=radio.value; }); });
+
+  updateUI();
+})();
+</script>
+
+</body>
+</html>
