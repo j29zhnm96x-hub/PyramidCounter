@@ -22,29 +22,39 @@
       color: #ffffff;
     }
     #counter {
-      font-size: 48px;
+      font-size: 64px;
       font-weight: bold;
-      color: #00ffcc;
       margin: 20px;
+      transition: color 0.3s ease;
     }
     #step {
-      font-size: 24px;
+      font-size: 22px;
       margin-bottom: 20px;
       color: #cccccc;
     }
     button {
-      font-size: 24px;
-      padding: 20px 40px;
+      font-size: 22px;
+      padding: 16px 32px;
       border-radius: 12px;
-      background-color: #1f8a70;
-      color: white;
       border: none;
       margin: 10px;
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      transition: background-color 0.2s;
     }
-    button:active {
+    #nextBtn {
+      background-color: #1f8a70;
+      color: white;
+    }
+    #nextBtn:active {
       background-color: #166653;
+    }
+    #resetBtn {
+      background-color: #444;
+      color: #fff;
+    }
+    #resetBtn:active {
+      background-color: #333;
     }
     input {
       font-size: 24px;
@@ -63,10 +73,10 @@
   <h1>Pyramid Counter</h1>
   <input type="number" id="maxNumber" placeholder="Max" min="1" value="10">
   <div id="counter">0</div>
-  <div id="step">Step 0 of 10</div>
+  <div id="step">Step 0 of 19</div>
   <button id="nextBtn">Next</button>
+  <button id="resetBtn">Reset</button>
 
-  <!-- Audio for button click -->
   <audio id="clickSound" src="click.mp3" preload="auto"></audio>
 
   <script>
@@ -74,36 +84,62 @@
     let maxNum = 10;
     let ascending = true;
     let stepCount = 0;
+
     const counterDisplay = document.getElementById("counter");
     const stepDisplay = document.getElementById("step");
     const maxInput = document.getElementById("maxNumber");
     const nextBtn = document.getElementById("nextBtn");
+    const resetBtn = document.getElementById("resetBtn");
     const clickSound = document.getElementById("clickSound");
 
     function updateMax() {
-      let val = parseInt(maxInput.value);
+      const val = parseInt(maxInput.value);
       if (!isNaN(val) && val > 0) {
         maxNum = val;
-        current = 0;
-        ascending = true;
-        stepCount = 0;
-        counterDisplay.textContent = current;
-        stepDisplay.textContent = `Step ${stepCount} of ${maxNum*2 - 1}`;
+        resetCounter();
       }
+    }
+
+    function resetCounter() {
+      current = 0;
+      ascending = true;
+      stepCount = 0;
+      updateCounterDisplay();
+    }
+
+    function getGradientColor(value, max) {
+      const ratio = value / max; // 0 → 1
+      // Green (0,255,0) → Yellow (255,255,0) → Red (255,0,0)
+      let r, g;
+      if (ratio < 0.5) {
+        // green to yellow
+        r = Math.round(510 * ratio);
+        g = 255;
+      } else {
+        // yellow to red
+        r = 255;
+        g = Math.round(510 * (1 - ratio));
+      }
+      return `rgb(${r},${g},0)`;
+    }
+
+    function updateCounterDisplay() {
+      counterDisplay.textContent = current;
+      stepDisplay.textContent = `Step ${stepCount} of ${maxNum * 2 - 1}`;
+      counterDisplay.style.color = getGradientColor(current, maxNum);
     }
 
     maxInput.addEventListener("change", updateMax);
 
     nextBtn.addEventListener("click", () => {
       // vibration
-      if (navigator.vibrate) {
-        navigator.vibrate(50);
-      }
+      if (navigator.vibrate) navigator.vibrate(40);
+
       // play sound
       clickSound.currentTime = 0;
       clickSound.play().catch(e => console.log("Sound blocked:", e));
 
-      // update pyramid
+      // pyramid logic
       if (ascending) {
         current++;
         if (current >= maxNum) ascending = false;
@@ -111,16 +147,18 @@
         current--;
         if (current <= 1) ascending = true;
       }
-      counterDisplay.textContent = current;
 
-      // update step count
       stepCount++;
-      stepDisplay.textContent = `Step ${stepCount} of ${maxNum*2 - 1}`;
+      updateCounterDisplay();
     });
 
-    // initialize
-    counterDisplay.textContent = current;
-    stepDisplay.textContent = `Step ${stepCount} of ${maxNum*2 - 1}`;
+    resetBtn.addEventListener("click", () => {
+      if (navigator.vibrate) navigator.vibrate(80);
+      resetCounter();
+    });
+
+    // init
+    resetCounter();
   </script>
 </body>
 </html>
