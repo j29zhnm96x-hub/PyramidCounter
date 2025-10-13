@@ -34,7 +34,7 @@
   .main{display:flex;gap:14px;align-items:center;justify-content:center;margin-top:6px;margin-bottom:8px}
   @media (max-width:420px){ .main{flex-direction:column;gap:12px} }
 
-  .btn-area{ position:relative; width:220px; height:220px; display:flex;align-items:center;justify-content:center; }
+  .btn-area{ position:relative; width:240px; height:240px; display:flex;align-items:center;justify-content:center; }
   button.big {
     width:220px;height:220px;border-radius:50%;border:1px solid var(--outline);font-size:54px;font-weight:800;
     color:white;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));
@@ -42,10 +42,11 @@
     transition: transform 140ms, box-shadow 140ms; touch-action:manipulation;
   }
   button.big:active{ transform:translateY(3px) scale(0.986); box-shadow:0 16px 46px rgba(2,6,23,0.55); }
+  button.big.disabled { opacity:0.78; pointer-events:none; }
 
-  /* ring sits on edge of button */
-  .ring-svg{ position:absolute; width:260px; height:260px; left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; }
-  .ring-svg circle{ transition: stroke 120ms linear; }
+  /* ring sits on edge of button, thinner stroke */
+  .ring-svg{ position:absolute; width:300px; height:300px; left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; }
+  .ring-svg circle{ transition: stroke 120ms linear; stroke-width:6; } /* thinner */
 
   /* dedicated current-number display */
   .current-number {
@@ -70,10 +71,13 @@
 
   @media (max-width:420px){
     .card{ padding:14px; }
-    .btn-area{ width:260px; height:260px; }
+    .btn-area{ width:280px; height:280px; }
     button.big{ width:260px;height:260px;font-size:68px }
-    .ring-svg{ width:300px; height:300px; }
+    .ring-svg{ width:320px; height:320px; }
   }
+  /* small ripple */
+  .ripple{position:absolute;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,0.12);pointer-events:none;animation:ripple 700ms ease-out;}
+  @keyframes ripple{to{transform:translate(-50%,-50%) scale(3.2);opacity:0;}}
 </style>
 </head>
 <body>
@@ -111,7 +115,7 @@
         <div>
           <div class="current-number" id="currentNumberDisplay">Number: -</div>
           <div class="btn-area" aria-hidden="false">
-            <svg class="ring-svg" viewBox="0 0 140 140" aria-hidden="true">
+            <svg class="ring-svg" viewBox="0 0 160 160" aria-hidden="true">
               <defs>
                 <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#00ff7f" />
@@ -119,10 +123,10 @@
                   <stop offset="100%" stop-color="#ff3b3b" />
                 </linearGradient>
               </defs>
-              <g transform="translate(70,70)">
-                <circle id="baseRing" r="60" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="8"/>
-                <circle id="prog" r="60" fill="none" stroke="url(#rg)" stroke-width="8" stroke-linecap="round"
-                        stroke-dasharray="377" stroke-dashoffset="377" transform="rotate(-90)"/>
+              <g transform="translate(80,80)">
+                <circle id="baseRing" r="72" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="6"/>
+                <circle id="prog" r="72" fill="none" stroke="url(#rg)" stroke-width="6" stroke-linecap="round"
+                        stroke-dasharray="452" stroke-dashoffset="452" transform="rotate(-90)"/>
               </g>
             </svg>
 
@@ -134,11 +138,11 @@
         <div class="counter-col" aria-live="polite" aria-atomic="true">
           <div class="digital" id="digitalClock">
             <div class="time" id="countdown">00:00</div>
-            <div class="label" id="countdownLabel">Remaining</div>
+            <div class="label" id="countdownLabel">Remaining / Stopwatch</div>
           </div>
           <div class="digital" id="manualHint" style="text-align:left">
             <div style="font-weight:700" id="manualReps">Reps for this step: -</div>
-            <div style="font-size:13px;color:var(--muted)">Manual mode: tap the big button to advance the pyramid; the clock acts like a stopwatch.</div>
+            <div style="font-size:13px;color:var(--muted)">Manual: clock = stopwatch. Auto: clock = remaining time.</div>
           </div>
         </div>
       </div>
@@ -157,21 +161,15 @@
           <p>This app guides you through pyramid sets. Set the <strong>Max number</strong> (top of your pyramid). Choose a mode (Squats, Push-ups, etc.).</p>
           <h3>Manual mode</h3>
           <ul>
-            <li>Tap the large round button to start or to finish the current step.</li>
-            <li>When you start a step, the digital clock becomes a <strong>stopwatch</strong> counting up while you perform the reps.</li>
-            <li>When you finish reps for that step, tap the big button again — stopwatch will stop, the number advances, and the stopwatch resets and starts for the next step.</li>
-            <li>The dedicated <strong>Number</strong> display above the button shows the count you must perform for the step.</li>
+            <li>Tap the big round button to start a step; the clock becomes a stopwatch.</li>
+            <li>When you finish reps for the step, tap the button again to stop stopwatch and start the next step's stopwatch (until you reach Max).</li>
+            <li>Number display above the button shows the repeats for the current step.</li>
           </ul>
           <h3>Auto mode</h3>
           <ul>
-            <li>Tap <strong>Auto</strong> to automatically cycle through the pyramid.</li>
-            <li>The digital clock shows the remaining time (exercise + rest) as <strong>MM:SS</strong>.</li>
-            <li>The dedicated number display still shows the current repetition number.</li>
-          </ul>
-          <h3>Settings</h3>
-          <ul>
-            <li>Open Settings (wrench icon) to set user level (Athlete → Beginner) and to define custom seconds-per-rep or rest-per-rep.</li>
-            <li>Sound toggle (speaker icon) mutes/unmutes all sounds.</li>
+            <li>Tap <strong>Auto</strong> to automatically cycle through the pyramid (exercise + rest). The clock shows remaining time.</li>
+            <li>While Auto runs the big button is disabled to avoid accidental taps.</li>
+            <li>When Auto completes the pyramid (up and down), it will stop and reset (no loop).</li>
           </ul>
           <div style="text-align:right"><button id="closeHelp" class="btn primary">Close</button></div>
         </div>
@@ -244,7 +242,7 @@
   // State
   let max = Math.max(1, parseInt(maxInput.value) || 10);
   let current = 0;
-  let dir = 1;
+  let dir = 1; // for auto pyramid generation
   let autoRunning = false;
   let tickTimer = null;
   let soundOn = true;
@@ -255,8 +253,8 @@
   let manualStart = 0;              // performance.now() when stopwatch started
   let manualElapsedSec = 0;         // seconds elapsed (integer, for display)
 
-  // Ring constants (r=60)
-  const R = 60;
+  // Ring constants (r=72 now, matches SVG)
+  const R = 72;
   const CIRC = 2 * Math.PI * R;
   prog.style.strokeDasharray = CIRC;
   prog.style.strokeDashoffset = CIRC;
@@ -278,11 +276,11 @@
   // Save/load settings
   function saveState(){
     const s = { max, current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, soundOn };
-    try { localStorage.setItem('pyr_v2', JSON.stringify(s)); } catch(e){}
+    try { localStorage.setItem('pyr_v3', JSON.stringify(s)); } catch(e){}
   }
   function loadState(){
     try{
-      const s = JSON.parse(localStorage.getItem('pyr_v2') || '{}');
+      const s = JSON.parse(localStorage.getItem('pyr_v3') || '{}');
       if(s && s.max){ max = s.max; maxInput.value = max; }
       if(s && typeof s.current === 'number'){ current = s.current; dir = s.dir || 1; }
       if(s && s.userLevel) userLevel = s.userLevel;
@@ -335,11 +333,15 @@
     manualRepsEl.textContent = 'Reps for this step: ' + (current === 0 ? '-' : current);
     stepText.textContent = `Step ${current === 0 ? 0 : current} of ${max * 2 - 1}`;
     if (!autoRunning){
+      // manual ring shows current/max progress
       const pct = max > 0 ? (current / max) : 0;
       prog.style.strokeDashoffset = CIRC * (1 - pct);
       prog.style.stroke = colorFor(current, max);
-      // in manual mode the stopwatch updates countdownEl directly
       if (!manualTimer) countdownEl.textContent = '00:00';
+      bigBtn.classList.remove('disabled');
+    } else {
+      // disable big button during auto
+      bigBtn.classList.add('disabled');
     }
     saveState();
   }
@@ -373,87 +375,134 @@
     }
   }
 
-  // Manual advance logic (with stopwatch)
+  // Manual advance logic (non-looping: stops at max)
   function manualAdvance_StartOrNext(){
     if (current === 0){
       current = 1;
-      dir = 1;
       playIfOn(clickAudio);
       startManualStopwatch();
       updateUI();
       return;
     }
+    // user finished current step -> stop stopwatch
     playIfOn(clickAudio);
     stopManualStopwatch();
-    const tentative = current + dir;
-    if (tentative > max || tentative < 1) dir = -dir;
-    current = current + dir;
-    startManualStopwatch();
-    updateUI();
+    // if current < max -> advance to next number and start stopwatch
+    if (current < max){
+      current = current + 1;
+      startManualStopwatch();
+      updateUI();
+    } else {
+      // current === max -> final step finished; keep on max and stop (no looping)
+      current = max;
+      countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec || 0);
+      updateUI();
+      // show final state: big button label -> Done
+      bigBtn.textContent = 'Done';
+    }
   }
 
-  // Auto loop with precise timing and MM:SS display
+  // Auto mode sequence builder: full pyramid 1..max..1
+  function buildPyramidSequence(maxN){
+    const seq = [];
+    for(let i=1;i<=maxN;i++) seq.push(i);
+    for(let j=maxN-1;j>=1;j--) seq.push(j);
+    return seq;
+  }
+
+  // Auto loop: goes through sequence, then stops & resets
   function startAuto(){
     stopManualStopwatch();
-    if (current === 0){ current = 1; dir = 1; }
+    if (current === 0) current = 1;
     autoRunning = true;
     autoBtn.textContent = 'Stop';
-    runCycle();
+    bigBtn.classList.add('disabled');
+
+    const seq = buildPyramidSequence(max);
+    let idx = seq.indexOf(current);
+    if (idx < 0) idx = 0;
+
+    function runNext(){
+      if (!autoRunning) return;
+      const n = seq[idx];
+      // animate this step: exercise+rest total
+      const ex = exerciseSecondsForNumber(n);
+      const rest = restSecondsForNumber(n);
+      const total = Math.max(200, Math.round((ex + rest) * 1000)); // ms
+      const interval = 100;
+      const steps = Math.max(1, Math.round(total / interval));
+      let step = 0;
+
+      playIfOn(progressAudio);
+      // set UI for this step
+      current = n;
+      currentNumberDisplay.textContent = 'Number: ' + n;
+      manualRepsEl.textContent = 'Reps for this step: ' + n;
+      stepText.textContent = `Step ${n} of ${max * 2 - 1}`;
+
+      function tick(){
+        if (!autoRunning) return;
+        step++;
+        const pct = Math.min(1, step / steps);
+        prog.style.strokeDashoffset = CIRC * (1 - pct);
+        prog.style.stroke = colorFor(n, max);
+
+        const remainingMs = Math.max(0, Math.round(total - step * interval));
+        countdownEl.textContent = fmtSecondsMMSS(Math.ceil(remainingMs / 1000));
+
+        if (step < steps){
+          tickTimer = setTimeout(tick, interval);
+        } else {
+          // finished this number
+          idx++;
+          if (idx >= seq.length){
+            // finished entire pyramid -> stop and reset
+            stopAutoAndReset();
+            return;
+          } else {
+            // short gap then next
+            tickTimer = setTimeout(()=>{ runNext(); }, 140);
+          }
+        }
+      }
+
+      // init and start
+      countdownEl.textContent = fmtSecondsMMSS(Math.ceil(total / 1000));
+      prog.style.stroke = colorFor(n, max);
+      tick();
+    }
+
+    runNext();
   }
-  function stopAuto(){
+
+  function stopAutoAndReset(){
+    // clear timers
+    if (tickTimer) { clearTimeout(tickTimer); tickTimer = null; }
     autoRunning = false;
     autoBtn.textContent = 'Auto';
-    if (tickTimer) { clearTimeout(tickTimer); tickTimer = null; }
+    // reset to initial state
+    current = 0; dir = 1;
     countdownEl.textContent = '00:00';
+    manualRepsEl.textContent = 'Reps for this step: -';
+    currentNumberDisplay.textContent = 'Number: -';
+    prog.style.strokeDashoffset = CIRC;
+    bigBtn.classList.remove('disabled');
     updateUI();
   }
 
-  function runCycle(){
-    if (!autoRunning) return;
-    const n = current;
-    const ex = exerciseSecondsForNumber(n);
-    const rest = restSecondsForNumber(n);
-    const total = Math.max(200, Math.round((ex + rest) * 1000)); // ms
-    const interval = 100; // 0.1s
-    const steps = Math.max(1, Math.round(total / interval));
-    let step = 0;
-
-    playIfOn(progressAudio);
-
-    function tick(){
-      if (!autoRunning) return;
-      step++;
-      const pct = Math.min(1, step / steps);
-      prog.style.strokeDashoffset = CIRC * (1 - pct);
-      prog.style.stroke = colorFor(n, max);
-
-      const remainingMs = Math.max(0, Math.round(total - step * interval));
-      countdownEl.textContent = fmtSecondsMMSS(Math.ceil(remainingMs / 1000));
-      manualRepsEl.textContent = 'Reps for this step: ' + n;
-      currentNumberDisplay.textContent = 'Number: ' + n;
-      stepText.textContent = `Step ${n} of ${max * 2 - 1}`;
-
-      if (step < steps){
-        tickTimer = setTimeout(tick, interval);
-      } else {
-        if (!autoRunning) return;
-        const tentative = n + dir;
-        if (tentative > max || tentative < 1) dir = -dir;
-        current = n + dir;
-        tickTimer = setTimeout(()=> { if (autoRunning) runCycle(); }, 140);
-      }
-    }
-
-    countdownEl.textContent = fmtSecondsMMSS(Math.ceil(total / 1000));
-    manualRepsEl.textContent = 'Reps for this step: ' + n;
-    currentNumberDisplay.textContent = 'Number: ' + n;
-    stepText.textContent = `Step ${n} of ${max * 2 - 1}`;
-    tick();
+  function stopAuto(){
+    if (tickTimer) { clearTimeout(tickTimer); tickTimer = null; }
+    autoRunning = false;
+    autoBtn.textContent = 'Auto';
+    bigBtn.classList.remove('disabled');
+    countdownEl.textContent = '00:00';
+    updateUI();
   }
 
   // Event listeners
   bigBtn.addEventListener('pointerdown', (ev) => {
     ev.preventDefault();
+    // ripple
     const rc = document.getElementById('rippleContainer');
     const r = document.createElement('div');
     r.className = 'ripple';
@@ -467,17 +516,10 @@
     rc.appendChild(r);
     r.addEventListener('animationend', ()=> r.remove());
 
-    if (autoRunning) {
-      if (tickTimer) { clearTimeout(tickTimer); tickTimer = null; }
-      const n = current;
-      const tentative = n + dir;
-      if (tentative > max || tentative < 1) dir = -dir;
-      current = n + dir;
-      stopManualStopwatch();
-      runCycle();
-      return;
-    }
+    // disabled during Auto
+    if (autoRunning) return;
 
+    // manual behavior
     manualAdvance_StartOrNext();
   });
 
@@ -491,6 +533,8 @@
     manualRepsEl.textContent = 'Reps for this step: -';
     currentNumberDisplay.textContent = 'Number: -';
     prog.style.strokeDashoffset = CIRC;
+    bigBtn.textContent = 'Start';
+    bigBtn.classList.remove('disabled');
     updateUI();
   });
 
@@ -524,14 +568,20 @@
     const v = Math.max(1, parseInt(maxInput.value) || 1);
     max = v;
     if (current > max) current = max;
-    prog.style.strokeDashoffset = CIRC * (1 - (current / max));
+    prog.style.strokeDashoffset = CIRC * (1 - (current / Math.max(1, max)));
     updateUI();
   });
 
-  // initial load
+  // load initial state
   loadState();
   updateUI();
   prog.style.stroke = colorFor(current, max);
+
+  // Ensure big button label is 'Start' when appropriate
+  (function ensureButtonLabel(){
+    if (current === 0) bigBtn.textContent = 'Start';
+    else bigBtn.textContent = current;
+  })();
 
 })();
 </script>
