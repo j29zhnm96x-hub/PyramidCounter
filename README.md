@@ -1,1 +1,1 @@
-A simple web app to count piramidal style workout by setting the goal number
+A simple web app to count pyramidal style workout by setting the goal number
