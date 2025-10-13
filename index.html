@@ -1,189 +1,148 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <title>Pyramid Counter — Pro</title>
-
 <style>
   :root{
-    --card-w: 380px;
-    --bg-1: #0b1116;
-    --bg-2: #081018;
-    --muted: #9fa6ad;
-    --accent-a: #0b84ff;
-    --accent-b: #3299ff;
-    --outline: rgba(255,255,255,0.12);
-    --glass: rgba(255,255,255,0.02);
+    --card-w:420px;
+    --bg-1:#0b1116;--bg-2:#081018;
+    --muted:#9fa6ad;
+    --accent-a:#0b84ff;--accent-b:#3299ff;
+    --outline:rgba(255,255,255,0.08);
+    --glass:rgba(255,255,255,0.02);
+    --input-bg: rgba(255,255,255,0.035);
+    --input-border: rgba(255,255,255,0.10);
   }
-  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));font-family:-apple-system,"SF Pro Text",Roboto,Arial;color:#eef2f3;-webkit-font-smoothing:antialiased}
-  .center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px;box-sizing:border-box;}
-  .card{width:100%;max-width:var(--card-w);border-radius:20px;padding:18px;box-sizing:border-box;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid var(--outline); box-shadow: 0 18px 50px rgba(2,6,23,0.65); position:relative;}
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;color:#eef2f3;-webkit-font-smoothing:antialiased}
+  .center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:14px;box-sizing:border-box;}
+  .card{width:100%;max-width:var(--card-w);border-radius:18px;padding:12px 14px 20px;box-sizing:border-box;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid var(--outline);box-shadow:0 18px 50px rgba(2,6,23,0.65);position:relative;}
 
-  /* icons */
-  .icon { position:absolute; width:36px;height:36px;border-radius:50%;display:grid;place-items:center; border:1px solid var(--outline); background:rgba(0,0,0,0.24); cursor:pointer; font-size:18px; box-shadow:0 6px 18px rgba(0,0,0,0.45); }
-  #soundIcon{left:14px;top:14px} #settingsIcon{left:64px;top:14px} #helpIcon{right:14px;top:14px}
+  /* TOP BAR: icons only (right aligned) */
+  .topbar{display:flex;align-items:center;padding:8px 6px 6px;}
+  .topbar .spacer{flex:1}
+  .icons-right{display:flex;gap:8px;align-items:center}
+  .icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--outline);background:rgba(0,0,0,0.22);cursor:pointer;font-size:18px;box-shadow:0 6px 18px rgba(0,0,0,0.45);}
 
-  /* labeled inputs compact */
-  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-  .label{font-size:13px;color:var(--muted);min-width:90px}
-  .field{flex:1;display:flex;flex-direction:column;gap:6px}
-  input[type=number], select, input[type=text] { padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:#fff;font-size:15px; }
+  /* BELOW TOP BAR: inputs row (brighter inputs) */
+  .inputs-row{display:flex;align-items:center;gap:12px;padding:8px 6px 12px;justify-content:center;}
+  .inputs-row input[type=number], .inputs-row select{
+    padding:10px 12px;border-radius:10px;border:1px solid var(--input-border);
+    background:var(--input-bg);color:#fff;font-size:15px;min-width:110px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.45) inset;
+  }
 
   /* main area */
-  .main{display:flex;gap:14px;align-items:center;justify-content:center;margin-top:6px;margin-bottom:8px}
-  @media (max-width:420px){ .main{flex-direction:column;gap:12px} }
+  .main{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:6px;margin-bottom:6px;flex-direction:column}
+  .btn-area{position:relative; width:170px; height:170px; display:flex;align-items:center;justify-content:center;margin-top:6px;}
+  button.big{width:130px;height:130px;border-radius:50%;border:1px solid var(--outline);font-size:36px;font-weight:800;color:#fff;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));box-shadow:0 18px 34px rgba(2,6,23,0.6), inset 0 6px 14px rgba(255,255,255,0.03);transition:transform 140ms}
+  button.big:active{transform:translateY(3px) scale(.992)}
+  button.big.disabled{opacity:.78;pointer-events:none}
 
-  .btn-area{ position:relative; width:200px; height:200px; display:flex;align-items:center;justify-content:center; }
-  /* main button reduced */
-  button.big {
-    width:180px;height:180px;border-radius:50%;border:1px solid var(--outline);font-size:44px;font-weight:800;
-    color:white;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));
-    box-shadow: 0 20px 46px rgba(2,6,23,0.65), inset 0 6px 16px rgba(255,255,255,0.03);
-    transition: transform 140ms, box-shadow 140ms; touch-action:manipulation;
-  }
-  button.big:active{ transform:translateY(3px) scale(0.986); box-shadow:0 12px 34px rgba(2,6,23,0.55); }
-  button.big.disabled { opacity:0.78; pointer-events:none; }
+  /* ring smaller and thin */
+  .ring-svg{position:absolute;width:190px;height:190px;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
+  .ring-svg circle{transition:stroke 120ms linear;stroke-width:3}
 
-  /* ring sits on edge of button, much thinner */
-  .ring-svg{ position:absolute; width:240px; height:240px; left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; }
-  .ring-svg circle{ transition: stroke 120ms linear; stroke-width:4; } /* much thinner */
+  /* instruction larger */
+  .instruction{width:100%;text-align:center;font-weight:900;font-size:34px;color:#fff;margin-top:6px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:10px}
+  .instruction .exercise{color:#ffdca3;font-weight:900}
+  .fade{animation:fadeIn 340ms ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 
-  /* instruction big (double size) */
-  .instruction {
-    text-align:center; font-weight:800; font-size:32px; color:#cfefff; margin-bottom:8px;
-    min-height:38px; display:flex;align-items:center;justify-content:center;
-  }
-  .instruction .verb { color:#fff; font-weight:800; margin-right:8px; }
-  .instruction .count { color:#fff; font-weight:900; margin-right:8px; font-size:36px; }
-  .instruction .exercise { color:#ffdca3; font-weight:900; font-size:34px; }
+  .digital{width:calc(100% - 24px);margin:8px auto;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));border:1px solid var(--outline);text-align:center}
+  .digital .time{font-size:24px;font-weight:800}
+  .step{ text-align:center;color:var(--muted);font-size:13px;margin-top:8px }
 
-  /* fade animation for instruction */
-  .fade {
-    animation: fadeInOut 420ms ease;
-  }
-  @keyframes fadeInOut {
-    0% { opacity:0; transform: translateY(-6px); }
-    30% { opacity:1; transform: translateY(0); }
-    100% { opacity:1; transform: translateY(0); }
-  }
+  .actions{display:flex;gap:10px;justify-content:center;margin-top:10px}
+  .btn{padding:8px 12px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
+  .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06)}
+  .btn.primary{background:linear-gradient(180deg,var(--accent-a),var(--accent-b));color:#fff;border:1px solid rgba(255,255,255,0.06)}
 
-  /* digital clock and info column */
-  .counter-col{display:flex;flex-direction:column;gap:8px;align-items:flex-start;min-width:140px}
-  .digital { min-width:140px;padding:12px 14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06)); border:1px solid var(--outline);text-align:center; }
-  .digital .time{ font-size:28px; font-weight:800; letter-spacing:0.6px; }
-  .digital .label{ font-size:13px;color:var(--muted); margin-top:6px; }
-
-  .step { text-align:center;color:var(--muted);font-size:14px;margin-top:10px; }
-  .actions { display:flex; gap:10px; margin-top:10px; justify-content:center; flex-wrap:wrap; }
-  .btn { padding:10px 14px;border-radius:12px;border:none;font-weight:700;cursor:pointer }
-  .btn.secondary { background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06) }
-  .btn.primary { background:linear-gradient(180deg,var(--accent-a),var(--accent-b)); color:#fff; border:1px solid rgba(255,255,255,0.06) }
-
-  /* overlay popups */
-  .overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:40;color:#fff;padding:20px;box-sizing:border-box;overflow:auto; }
-  .panel { background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:16px;border-radius:12px; max-width:720px;margin:20px auto; border:1px solid var(--outline); }
+  /* popups */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:60;color:#fff;padding:20px;box-sizing:border-box;overflow:auto}
+  .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:12px;max-width:720px;margin:20px auto;border:1px solid var(--outline)}
 
   @media (max-width:420px){
-    .card{ padding:14px; }
-    .btn-area{ width:240px; height:240px; }
-    button.big{ width:220px;height:220px;font-size:56px }
-    .ring-svg{ width:280px; height:280px; }
-    .instruction{ font-size:28px }
-    .instruction .count{ font-size:30px } 
-    .instruction .exercise{ font-size:28px }
+    :root{--card-w:92vw}
+    .instruction{font-size:28px}
+    button.big{width:170px;height:170px;font-size:44px}
+    .btn-area{width:200px;height:200px}
+    .ring-svg{width:250px;height:250px}
   }
+
   /* small ripple */
   .ripple{position:absolute;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,0.12);pointer-events:none;animation:ripple 700ms ease-out;}
-  @keyframes ripple{to{transform:translate(-50%,-50%) scale(3.2);opacity:0;}}
+  @keyframes ripple{to{transform:translate(-50%,-50%) scale(3.2);opacity:0}}
 </style>
 </head>
 <body>
   <div class="center">
     <div class="card" role="application" aria-label="Pyramid Counter">
 
-      <!-- top icons -->
-      <div id="soundIcon" class="icon" title="Toggle sound">🔊</div>
-      <div id="settingsIcon" class="icon" title="Settings">⚙️</div>
-      <div id="helpIcon" class="icon" title="Help">?</div>
-
-      <!-- labeled inputs -->
-      <div class="row">
-        <div class="label">Max number</div>
-        <div class="field">
-          <input id="maxInput" type="number" min="1" value="10" aria-label="Maximum pyramid number" />
+      <!-- TOP BAR: icons only (right) -->
+      <div class="topbar">
+        <div class="spacer"></div>
+        <div class="icons-right">
+          <div id="settingsIcon" class="icon" title="Settings">⚙️</div>
+          <div id="soundIcon" class="icon" title="Toggle sound">🔊</div>
+          <div id="helpIcon" class="icon" title="Help">?</div>
         </div>
       </div>
 
-      <div class="row">
-        <div class="label">Mode</div>
-        <div class="field">
-          <select id="modeSelect" aria-label="Choose mode">
-            <option value="squats">Squats</option>
-            <option value="pushups">Push-ups</option>
-            <option value="pullups">Pull-ups</option>
-            <option value="situps">Sit-ups</option>
-            <option value="burpees">Burpees</option>
-            <option value="custom">Custom</option>
-          </select>
-        </div>
+      <!-- INPUTS ROW: under top bar (centered) -->
+      <div class="inputs-row">
+        <input id="maxInput" type="number" min="1" value="10" aria-label="Maximum pyramid number" />
+        <select id="modeSelect" aria-label="Mode">
+          <option value="squats">Squats</option>
+          <option value="pushups">Push-ups</option>
+          <option value="pullups">Pull-ups</option>
+          <option value="situps">Sit-ups</option>
+          <option value="burpees">Burpees</option>
+          <option value="custom">Custom</option>
+        </select>
       </div>
 
-      <!-- instruction text (big) -->
+      <!-- instruction -->
       <div class="instruction" id="instructionText" aria-live="polite">
         <span class="verb">Complete</span>
         <span class="count" id="instrCount">-</span>
         <span class="exercise" id="instrExercise">-</span>
       </div>
 
-      <!-- MAIN: ring + big button + digital timer -->
+      <!-- main: ring + button + digital -->
       <div class="main" role="region" aria-label="Counter area">
-        <div class="btn-column">
-          <div class="btn-area" aria-hidden="false">
-            <svg class="ring-svg" viewBox="0 0 160 160" aria-hidden="true">
-              <defs>
-                <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#00ff7f" />
-                  <stop offset="55%" stop-color="#ffd400" />
-                  <stop offset="100%" stop-color="#ff3b3b" />
-                </linearGradient>
-              </defs>
-              <g transform="translate(80,80)">
-                <circle id="baseRing" r="72" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="4"/>
-                <circle id="prog" r="72" fill="none" stroke="url(#rg)" stroke-width="4" stroke-linecap="round"
-                        stroke-dasharray="452" stroke-dashoffset="452" transform="rotate(-90)"/>
-              </g>
-            </svg>
+        <div class="btn-area">
+          <svg class="ring-svg" viewBox="0 0 160 160" aria-hidden="true">
+            <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00ff7f"/><stop offset="55%" stop-color="#ffd400"/><stop offset="100%" stop-color="#ff3b3b"/></linearGradient></defs>
+            <g transform="translate(80,80)">
+              <circle id="baseRing" r="54" fill="none" stroke="rgba(255,255,255,0.04)"/>
+              <circle id="prog" r="54" fill="none" stroke="url(#rg)" stroke-linecap="round" stroke-dasharray="340" stroke-dashoffset="340" transform="rotate(-90)"/>
+            </g>
+          </svg>
 
-            <button id="bigBtn" class="big" aria-label="Advance pyramid">Start</button>
-            <div id="rippleContainer" aria-hidden="true"></div>
-          </div>
+          <button id="bigBtn" class="big" aria-label="Advance pyramid">Start</button>
+          <div id="rippleContainer" aria-hidden="true"></div>
         </div>
 
-        <div class="counter-col" aria-live="polite" aria-atomic="true">
-          <div class="digital" id="digitalClock">
-            <div class="time" id="countdown">00:00</div>
-            <div class="label" id="countdownLabel">Remaining / Stopwatch</div>
-          </div>
-          <div class="digital" id="manualHint" style="text-align:left">
-            <div style="font-weight:700" id="manualReps">Reps for this step: -</div>
-            <div style="font-size:13px;color:var(--muted)">Manual: clock = stopwatch. Auto: clock = remaining time.</div>
-          </div>
+        <div class="digital" id="digitalClock">
+          <div class="time" id="countdown">00:00</div>
+          <div class="label" id="countdownLabel">Remaining / Stopwatch</div>
         </div>
       </div>
 
       <div class="step" id="stepText">Step 0 of 0</div>
 
       <div class="actions">
-        <button id="resetBtn" class="btn secondary" aria-label="Reset">Reset</button>
-        <button id="autoBtn" class="btn primary" aria-label="Toggle Auto">Auto</button>
+        <button id="resetBtn" class="btn secondary">Reset</button>
+        <button id="autoBtn" class="btn primary">Auto</button>
       </div>
 
-      <!-- Help and Settings popups -->
+      <!-- popups -->
       <div id="helpPopup" class="overlay" role="dialog" aria-modal="true">
         <div class="panel">
-          <h2>Pyramid Counter — Help</h2>
-          <p>Set the Max number (top of your pyramid). Choose Mode. Manual: tap button to start/finish the step. Auto: press Auto to run one full pyramid (1..max..1).</p>
+          <h2>Help</h2>
+          <p>Set Max and Mode below the top icons. Manual: tap the big button to start/finish each step (stopwatch). Auto runs 1..max..1 once and stops.</p>
           <div style="text-align:right"><button id="closeHelp" class="btn primary">Close</button></div>
         </div>
       </div>
@@ -196,22 +155,20 @@
               <strong>User level</strong><br>
               <label><input type="radio" name="level" value="athlete"> Athlete</label><br>
               <label><input type="radio" name="level" value="intermediate"> Intermediate</label><br>
-              <label><input type="radio" name="level" value="low"> Low intensity</label><br>
+              <label><input type="radio" name="level" value="low"> Low</label><br>
               <label><input type="radio" name="level" value="beginner" checked> Beginner</label>
             </div>
             <div>
               <strong>Custom seconds-per-rep</strong><br>
-              <input id="customSecondsPerRep" type="number" min="0.1" step="0.1" placeholder="seconds per rep (used when Mode = Custom)" />
+              <input id="customSecondsPerRep" type="number" min="0.1" step="0.1" placeholder="seconds per rep"/>
             </div>
             <div>
               <strong>Rest seconds per rep</strong><br>
-              <input id="restPerRepSec" type="number" min="1" step="0.5" value="10" />
-              <div style="font-size:13px;color:var(--muted)">Rest for N = N × this value (seconds)</div>
+              <input id="restPerRepSec" type="number" min="1" step="0.5" value="10"/>
             </div>
             <div>
               <strong>Custom exercise name</strong><br>
-              <input id="customExerciseName" type="text" placeholder="e.g. 'glute bridges' or 'lateral raises'"/>
-              <div style="font-size:13px;color:var(--muted)">Used if Mode = Custom</div>
+              <input id="customExerciseName" type="text" placeholder="e.g. 'glute bridges'"/>
             </div>
             <div style="text-align:right"><button id="closeSettings" class="btn primary">Close</button></div>
           </div>
@@ -228,15 +185,15 @@
 
 <script>
 (function(){
-  // Elements
+  // elements
   const maxInput = document.getElementById('maxInput');
+  const modeSelect = document.getElementById('modeSelect');
   const bigBtn = document.getElementById('bigBtn');
   const prog = document.getElementById('prog');
-  const instructionText = document.getElementById('instructionText');
   const instrCount = document.getElementById('instrCount');
   const instrExercise = document.getElementById('instrExercise');
+  const instructionText = document.getElementById('instructionText');
   const countdownEl = document.getElementById('countdown');
-  const manualRepsEl = document.getElementById('manualReps');
   const stepText = document.getElementById('stepText');
   const resetBtn = document.getElementById('resetBtn');
   const autoBtn = document.getElementById('autoBtn');
@@ -245,388 +202,139 @@
   const progressAudio = document.getElementById('progressAudio');
   const helpAudio = document.getElementById('helpAudio');
 
+  const settingsIcon = document.getElementById('settingsIcon');
   const soundIcon = document.getElementById('soundIcon');
   const helpIcon = document.getElementById('helpIcon');
   const helpPopup = document.getElementById('helpPopup');
   const closeHelp = document.getElementById('closeHelp');
-
-  const settingsIcon = document.getElementById('settingsIcon');
   const settingsPopup = document.getElementById('settingsPopup');
   const closeSettings = document.getElementById('closeSettings');
-  const levelRadios = document.querySelectorAll('input[name="level"]');
+
   const customSecondsPerRepInput = document.getElementById('customSecondsPerRep');
   const restPerRepSecInput = document.getElementById('restPerRepSec');
   const customExerciseNameInput = document.getElementById('customExerciseName');
+  const levelRadios = document.querySelectorAll('input[name="level"]');
 
-  const modeSelect = document.getElementById('modeSelect');
-
-  // State
+  // state
   let max = Math.max(1, parseInt(maxInput.value) || 10);
   let current = 0;
-  let dir = 1; // manual direction for pyramid
+  let dir = 1;
   let autoRunning = false;
   let tickTimer = null;
   let soundOn = true;
   let userLevel = 'beginner';
-
-  // Manual stopwatch specific
   let manualTimer = null;
   let manualStart = 0;
   let manualElapsedSec = 0;
+  let manualFinished = false;
 
-  // Ring constants (r=72 matches SVG)
-  const R = 72;
+  // ring constants (r=54)
+  const R = 54;
   const CIRC = 2 * Math.PI * R;
   prog.style.strokeDasharray = CIRC;
   prog.style.strokeDashoffset = CIRC;
 
-  // Helpers
-  function fmtSecondsMMSS(s){
-    s = Math.max(0, Math.round(s));
-    const m = Math.floor(s/60);
-    const sec = s % 60;
-    return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
-  }
-  function colorFor(val, maxv){
-    if (maxv <= 1) return 'hsl(120,100%,50%)';
-    const ratio = Math.max(0, Math.min(1, val / maxv));
-    const hue = 120 - (120 * ratio);
-    return `hsl(${hue},100%,45%)`;
-  }
+  // helpers
+  function fmtSecondsMMSS(s){ s = Math.max(0, Math.round(s)); const m = Math.floor(s/60); const sec = s%60; return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0'); }
+  function colorFor(val,maxv){ if (maxv<=1) return 'hsl(120,100%,50%)'; const ratio = Math.max(0,Math.min(1,val/maxv)); const hue = 120 - (120*ratio); return `hsl(${hue},100%,45%)`; }
 
-  // Save/load settings
-  function saveState(){
-    const s = {
-      max, current, dir, userLevel,
-      customSecondsPerRep: customSecondsPerRepInput.value,
-      restPerRepSec: restPerRepSecInput.value,
-      customExerciseName: customExerciseNameInput.value,
-      soundOn
-    };
-    try { localStorage.setItem('pyr_v5', JSON.stringify(s)); } catch(e){}
-  }
-  function loadState(){
-    try{
-      const s = JSON.parse(localStorage.getItem('pyr_v5') || '{}');
-      if(s && s.max){ max = s.max; maxInput.value = max; }
-      if(s && typeof s.current === 'number'){ current = s.current; dir = s.dir || 1; }
-      if(s && s.userLevel) userLevel = s.userLevel;
-      if(s && s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep;
-      if(s && s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec;
-      if(s && s.customExerciseName) customExerciseNameInput.value = s.customExerciseName;
-      if(s && typeof s.soundOn === 'boolean') soundOn = s.soundOn;
-      soundIcon.textContent = soundOn ? '🔊' : '🔇';
-      levelRadios.forEach(r=> { if(r.value === userLevel) r.checked = true; });
-    }catch(e){}
-  }
+  // save/load
+  function saveState(){ const s={ max, current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, customExerciseName: customExerciseNameInput.value, soundOn }; try{ localStorage.setItem('pyr_v_final2', JSON.stringify(s)); }catch(e){} }
+  function loadState(){ try{ const s = JSON.parse(localStorage.getItem('pyr_v_final2')||'{}'); if(s && s.max){ max = s.max; maxInput.value = max; } if(s && typeof s.current==='number'){ current = s.current; dir = s.dir || 1; } if(s && s.userLevel) userLevel = s.userLevel; if(s && s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s && s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s && s.customExerciseName) customExerciseNameInput.value = s.customExerciseName; if(s && typeof s.soundOn==='boolean') soundOn = s.soundOn; soundIcon.textContent = soundOn ? '🔊' : '🔇'; levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} }
 
-  // Mode / timing
-  function baseSecondsPerRepForMode(){
-    const m = modeSelect.value;
-    if (m === 'squats') return 3.0;
-    if (m === 'pushups') return 2.0;
-    if (m === 'pullups') return 2.5;
-    if (m === 'situps') return 2.5;
-    if (m === 'burpees') return 3.0;
-    if (m === 'custom') {
-      const v = parseFloat(customSecondsPerRepInput.value);
-      return (isFinite(v) && v > 0) ? v : 2.0;
-    }
-    return 2.0;
-  }
-  function levelMultiplier(){
-    switch(userLevel){
-      case 'athlete': return 0.75;
-      case 'intermediate': return 1.0;
-      case 'low': return 1.2;
-      case 'beginner': return 1.45;
-      default: return 1.0;
-    }
-  }
+  // timings
+  function baseSecondsPerRepForMode(){ const m = modeSelect.value; if(m==='squats') return 3.0; if(m==='pushups') return 2.0; if(m==='pullups') return 2.5; if(m==='situps') return 2.5; if(m==='burpees') return 3.0; if(m==='custom'){ const v=parseFloat(customSecondsPerRepInput.value); return (isFinite(v)&&v>0)?v:2.0 } return 2.0; }
+  function levelMultiplier(){ switch(userLevel){ case 'athlete':return .75; case 'intermediate':return 1; case 'low':return 1.2; case 'beginner':return 1.45; default:return 1; } }
   function exerciseSecondsForNumber(n){ return baseSecondsPerRepForMode() * levelMultiplier() * n; }
-  function restSecondsForNumber(n){
-    const restUnit = parseFloat(restPerRepSecInput.value);
-    const r = (isFinite(restUnit) && restUnit > 0) ? restUnit : 10;
-    const lvlFactor = (userLevel === 'athlete') ? 0.8 : (userLevel === 'beginner') ? 1.4 : (userLevel === 'low') ? 1.2 : 1.0;
-    return r * lvlFactor * n;
-  }
+  function restSecondsForNumber(n){ const rUnit = parseFloat(restPerRepSecInput.value); const r = (isFinite(rUnit)&&rUnit>0)?rUnit:10; const lvl = (userLevel==='athlete')?0.8:(userLevel==='beginner')?1.4:(userLevel==='low')?1.2:1.0; return r*lvl*n; }
 
-  // instruction text
-  function currentExerciseName(){
-    const mode = modeSelect.value;
-    if (mode === 'custom'){
-      const t = (customExerciseNameInput.value || '').trim();
-      return t ? t : 'exercise';
-    }
-    const opt = modeSelect.options[modeSelect.selectedIndex];
-    return opt ? opt.text.toLowerCase() : mode;
-  }
-  function showInstruction(n){
-    instrCount.textContent = n === 0 ? '-' : n;
-    instrExercise.textContent = (n === 0) ? '-' : currentExerciseName();
-    instructionText.classList.remove('fade');
-    void instructionText.offsetWidth;
-    instructionText.classList.add('fade');
-  }
+  // instruction
+  function currentExerciseName(){ const mode = modeSelect.value; if(mode==='custom'){ const t=(customExerciseNameInput.value||'').trim(); return t? t : 'exercise'; } const opt = modeSelect.options[modeSelect.selectedIndex]; return opt ? opt.text.toLowerCase() : mode; }
+  function showInstruction(n){ instrCount.textContent = n===0?'-':n; instrExercise.textContent = n===0?'-':currentExerciseName(); instructionText.classList.remove('fade'); void instructionText.offsetWidth; instructionText.classList.add('fade'); }
 
-  // Update UI
-  function updateUI(){
-    showInstruction(current);
-    manualRepsEl.textContent = 'Reps for this step: ' + (current === 0 ? '-' : current);
-    stepText.textContent = `Step ${current === 0 ? 0 : current} of ${max * 2 - 1}`;
-    if (!autoRunning){
-      const pct = Math.max(0, Math.min(1, (current / Math.max(1, max))));
-      prog.style.strokeDashoffset = CIRC * (1 - pct);
-      prog.style.stroke = colorFor(current, max);
-      if (!manualTimer) countdownEl.textContent = '00:00';
-      bigBtn.classList.remove('disabled');
-      bigBtn.textContent = current === 0 ? 'Start' : String(current);
-    } else {
-      // show current number while auto (button disabled)
-      bigBtn.classList.add('disabled');
-      bigBtn.textContent = current === 0 ? '—' : String(current);
-    }
-    saveState();
-  }
+  // update UI
+  function updateUI(){ showInstruction(current); stepText.textContent = `Step ${current===0?0:current} of ${max*2-1}`; if(!autoRunning){ const pct = Math.max(0,Math.min(1,(current/Math.max(1,max)))); prog.style.strokeDashoffset = CIRC*(1-pct); prog.style.stroke = colorFor(current,max); if(!manualTimer) countdownEl.textContent='00:00'; bigBtn.classList.remove('disabled'); bigBtn.textContent = current===0? 'Start' : String(current); } else { bigBtn.classList.add('disabled'); bigBtn.textContent = current===0? '—' : String(current); } saveState(); }
 
-  // audio helper
-  function playIfOn(audioEl){ if(!soundOn) return; try{ audioEl.currentTime = 0; audioEl.play().catch(()=>{}); }catch(e){} }
+  // audio
+  function playIfOn(audioEl){ if(!soundOn) return; try{ audioEl.currentTime=0; audioEl.play().catch(()=>{});}catch(e){} }
 
-  // Manual stopwatch
-  function startManualStopwatch(){
-    stopManualStopwatch();
-    manualStart = performance.now();
-    manualElapsedSec = 0;
-    countdownEl.textContent = fmtSecondsMMSS(0);
-    manualTimer = setInterval(()=>{
-      const elapsedMs = performance.now() - manualStart;
-      const elapsedSec = Math.floor(elapsedMs / 1000);
-      if (elapsedSec !== manualElapsedSec){
-        manualElapsedSec = elapsedSec;
-        countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec);
-      }
-    }, 200);
-  }
-  function stopManualStopwatch(){
-    if (manualTimer){ clearInterval(manualTimer); manualTimer = null; }
-  }
+  // manual stopwatch
+  function startManualStopwatch(){ stopManualStopwatch(); manualStart = performance.now(); manualElapsedSec = 0; countdownEl.textContent = fmtSecondsMMSS(0); manualTimer = setInterval(()=>{ const elapsedMs = performance.now()-manualStart; const elapsedSec = Math.floor(elapsedMs/1000); if(elapsedSec !== manualElapsedSec){ manualElapsedSec = elapsedSec; countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec); } },200); }
+  function stopManualStopwatch(){ if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } }
 
-  // Manual advance with pyramid direction (1..max..1) then stop
+  // manual behaviour
   function manualAdvance_StartOrNext(){
-    if (current === 0){
-      current = 1;
-      dir = 1;
-      playIfOn(clickAudio);
-      startManualStopwatch();
-      updateUI();
-      return;
-    }
-
-    // user finished current step
+    if(manualFinished){ doReset(); return; }
+    if(current===0){ current=1; dir=1; playIfOn(clickAudio); startManualStopwatch(); updateUI(); return; }
     playIfOn(clickAudio);
     stopManualStopwatch();
-
-    // if ascending and not yet at max -> go up
-    if (dir === 1 && current < max){
-      current = current + 1;
-      startManualStopwatch();
-      updateUI();
-      return;
-    }
-
-    // if ascending and at max -> switch direction to descending
-    if (dir === 1 && current === max){
-      dir = -1;
-      // if max>1, start descending
-      if (max > 1){
-        current = current + dir; // max-1
-        startManualStopwatch();
-        updateUI();
-        return;
-      } else {
-        // max ==1 -> finished immediately
-        finishManual();
-        return;
-      }
-    }
-
-    // if descending and current > 1 -> continue descending
-    if (dir === -1 && current > 1){
-      current = current + dir;
-      startManualStopwatch();
-      updateUI();
-      return;
-    }
-
-    // if descending and current ===1 -> finished pyramid
-    if (dir === -1 && current === 1){
-      finishManual();
-      return;
-    }
+    if(dir===1 && current<max){ current=current+1; startManualStopwatch(); updateUI(); return; }
+    if(dir===1 && current===max){ dir=-1; if(max>1){ current=current+dir; startManualStopwatch(); updateUI(); return; } else { finishManual(); return; } }
+    if(dir===-1 && current>1){ current=current+dir; startManualStopwatch(); updateUI(); return; }
+    if(dir===-1 && current===1){ finishManual(); return; }
   }
+  function finishManual(){ stopManualStopwatch(); manualFinished=true; bigBtn.textContent='Done'; current=1; dir=1; updateUI(); }
 
-  function finishManual(){
-    // stop everything and mark done
-    stopManualStopwatch();
-    bigBtn.textContent = 'Done';
-    // keep current = 1 (final)
-    current = 1;
-    dir = 1;
-    updateUI();
-  }
+  // auto sequence
+  function buildPyramidSequence(maxN){ const seq=[]; for(let i=1;i<=maxN;i++) seq.push(i); for(let j=maxN-1;j>=1;j--) seq.push(j); return seq; }
 
-  // build pyramid sequence 1..max..1
-  function buildPyramidSequence(maxN){
-    const seq = [];
-    for(let i=1;i<=maxN;i++) seq.push(i);
-    for(let j=maxN-1;j>=1;j--) seq.push(j);
-    return seq;
-  }
-
-  // Auto: runs sequence once then stop & reset
+  // auto run once
   function startAuto(){
     stopManualStopwatch();
-    if (current === 0) current = 1;
-    autoRunning = true;
-    autoBtn.textContent = 'Stop';
-    bigBtn.classList.add('disabled');
-
-    const seq = buildPyramidSequence(max);
-    let idx = seq.indexOf(current);
-    if (idx < 0) idx = 0;
-
+    manualFinished=false;
+    if(current===0) current=1;
+    autoRunning=true; autoBtn.textContent='Stop'; bigBtn.classList.add('disabled');
+    const seq = buildPyramidSequence(max); let idx = seq.indexOf(current); if(idx<0) idx=0;
     function runNext(){
-      if (!autoRunning) return;
+      if(!autoRunning) return;
       const n = seq[idx];
       const ex = exerciseSecondsForNumber(n);
       const rest = restSecondsForNumber(n);
-      const total = Math.max(200, Math.round((ex + rest) * 1000));
-      const interval = 100;
-      const steps = Math.max(1, Math.round(total / interval));
-      let step = 0;
-
+      const total = Math.max(200, Math.round((ex+rest)*1000));
+      const interval = 100; const steps = Math.max(1, Math.round(total/interval)); let step = 0;
       playIfOn(progressAudio);
-      current = n;
-      updateUI();
-      manualRepsEl.textContent = 'Reps for this step: ' + n;
-      stepText.textContent = `Step ${n} of ${max * 2 - 1}`;
-
+      current = n; updateUI(); stepText.textContent = `Step ${n} of ${max*2-1}`;
       function tick(){
-        if (!autoRunning) return;
+        if(!autoRunning) return;
         step++;
-        const pct = Math.min(1, step / steps);
-        prog.style.strokeDashoffset = CIRC * (1 - pct);
-        prog.style.stroke = colorFor(n, max);
-        const remainingMs = Math.max(0, Math.round(total - step * interval));
-        countdownEl.textContent = fmtSecondsMMSS(Math.ceil(remainingMs / 1000));
-        if (step < steps){
-          tickTimer = setTimeout(tick, interval);
-        } else {
-          idx++;
-          if (idx >= seq.length){ stopAutoAndReset(); return; }
-          tickTimer = setTimeout(()=>{ runNext(); }, 140);
-        }
+        const pct = Math.min(1, step/steps);
+        prog.style.strokeDashoffset = CIRC*(1-pct);
+        prog.style.stroke = colorFor(n,max);
+        const remainingMs = Math.max(0, Math.round(total - step*interval));
+        countdownEl.textContent = fmtSecondsMMSS(Math.ceil(remainingMs/1000));
+        if(step < steps){ tickTimer = setTimeout(tick, interval); } else { idx++; if(idx>=seq.length){ stopAutoAndReset(); return; } tickTimer = setTimeout(()=>{ runNext(); }, 140); }
       }
-
-      countdownEl.textContent = fmtSecondsMMSS(Math.ceil(total / 1000));
-      prog.style.stroke = colorFor(n, max);
+      countdownEl.textContent = fmtSecondsMMSS(Math.ceil(total/1000));
+      prog.style.stroke = colorFor(n,max);
       tick();
     }
-
     runNext();
   }
 
-  function stopAutoAndReset(){
-    if (tickTimer) { clearTimeout(tickTimer); tickTimer = null; }
-    autoRunning = false;
-    autoBtn.textContent = 'Auto';
-    current = 0; dir = 1;
-    countdownEl.textContent = '00:00';
-    manualRepsEl.textContent = 'Reps for this step: -';
-    prog.style.strokeDashoffset = CIRC;
-    bigBtn.classList.remove('disabled');
-    bigBtn.textContent = 'Start';
-    updateUI();
-  }
-  function stopAuto(){
-    if (tickTimer) { clearTimeout(tickTimer); tickTimer = null; }
-    autoRunning = false;
-    autoBtn.textContent = 'Auto';
-    bigBtn.classList.remove('disabled');
-    countdownEl.textContent = '00:00';
-    updateUI();
-  }
+  function stopAutoAndReset(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00'; prog.style.strokeDashoffset = CIRC; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start'; updateUI(); }
+  function stopAuto(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; bigBtn.classList.remove('disabled'); countdownEl.textContent='00:00'; updateUI(); }
 
-  // Events
-  bigBtn.addEventListener('pointerdown', (ev) => {
-    ev.preventDefault();
-    // ripple
-    const rc = document.getElementById('rippleContainer');
-    const r = document.createElement('div');
-    r.className = 'ripple';
-    const rect = ev.currentTarget.getBoundingClientRect();
-    const x = (ev.clientX - rect.left) || rect.width/2;
-    const y = (ev.clientY - rect.top) || rect.height/2;
-    r.style.left = x + 'px';
-    r.style.top = y + 'px';
-    r.style.width = '18px';
-    r.style.height = '18px';
-    rc.appendChild(r);
-    r.addEventListener('animationend', ()=> r.remove());
+  // reset helper
+  function doReset(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00'; prog.style.strokeDashoffset = CIRC; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start'; updateUI(); }
 
-    if (autoRunning) return; // disabled in auto
-    manualAdvance_StartOrNext();
-  });
+  // events
+  bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; manualAdvance_StartOrNext(); });
 
-  resetBtn.addEventListener('click', () => {
-    if (tickTimer) { clearTimeout(tickTimer); tickTimer = null; }
-    if (manualTimer) { clearInterval(manualTimer); manualTimer = null; }
-    autoRunning = false;
-    autoBtn.textContent = 'Auto';
-    current = 0; dir = 1;
-    countdownEl.textContent = '00:00';
-    manualRepsEl.textContent = 'Reps for this step: -';
-    instrCount.textContent = '-';
-    instrExercise.textContent = '-';
-    prog.style.strokeDashoffset = CIRC;
-    bigBtn.textContent = 'Start';
-    bigBtn.classList.remove('disabled');
-    updateUI();
-  });
+  resetBtn.addEventListener('click', doReset);
+  autoBtn.addEventListener('click', ()=>{ if(!autoRunning) startAuto(); else stopAuto(); });
 
-  autoBtn.addEventListener('click', () => {
-    if (!autoRunning) startAuto(); else stopAuto();
-  });
+  soundIcon.addEventListener('click', ()=>{ soundOn = !soundOn; soundIcon.textContent = soundOn ? '🔊' : '🔇'; saveState(); });
+  helpIcon.addEventListener('click', ()=>{ playIfOn(helpAudio); helpPopup.style.display='block'; });
+  closeHelp.addEventListener('click', ()=>{ helpPopup.style.display='none'; });
+  settingsIcon.addEventListener('click', ()=>{ settingsPopup.style.display='block'; });
+  closeSettings.addEventListener('click', ()=>{ settingsPopup.style.display='none'; });
 
-  // sound toggle
-  soundIcon.addEventListener('click', () => {
-    soundOn = !soundOn;
-    soundIcon.textContent = soundOn ? '🔊' : '🔇';
-    saveState();
-  });
-
-  // help/settings
-  helpIcon.addEventListener('click', () => { playIfOn(helpAudio); helpPopup.style.display = 'block'; });
-  closeHelp.addEventListener('click', () => { helpPopup.style.display = 'none'; });
-  helpPopup.addEventListener('click', (e) => { if (e.target === helpPopup) helpPopup.style.display = 'none'; });
-
-  settingsIcon.addEventListener('click', () => { settingsPopup.style.display = 'block'; });
-  closeSettings.addEventListener('click', () => { settingsPopup.style.display = 'none'; });
-  settingsPopup.addEventListener('click', (e) => { if (e.target === settingsPopup) settingsPopup.style.display = 'none'; });
-
-  levelRadios.forEach(r => r.addEventListener('change', () => { if (r.checked) { userLevel = r.value; saveState(); } }));
-  customSecondsPerRepInput.addEventListener('change', () => saveState());
-  restPerRepSecInput.addEventListener('change', () => saveState());
-  customExerciseNameInput.addEventListener('change', () => saveState());
-  modeSelect.addEventListener('change', () => { updateUI(); saveState(); });
-
-  maxInput.addEventListener('change', () => {
-    const v = Math.max(1, parseInt(maxInput.value) || 1);
-    max = v;
-    if (current > max) current = max;
-    prog.style.strokeDashoffset = CIRC * (1 - (current / Math.max(1, max)));
-    updateUI();
-  });
+  levelRadios.forEach(r=> r.addEventListener('change', ()=>{ if(r.checked){ userLevel = r.value; saveState(); } }));
+  customSecondsPerRepInput.addEventListener('change', ()=> saveState());
+  restPerRepSecInput.addEventListener('change', ()=> saveState());
+  customExerciseNameInput.addEventListener('change', ()=> saveState());
+  modeSelect.addEventListener('change', ()=>{ updateUI(); saveState(); });
+  maxInput.addEventListener('change', ()=>{ max = Math.max(1, parseInt(maxInput.value)||1); if(current>max) current=max; prog.style.strokeDashoffset = CIRC*(1-(current/Math.max(1,max))); updateUI(); });
 
   // init
   loadState();
@@ -634,6 +342,5 @@
   prog.style.stroke = colorFor(current, max);
 })();
 </script>
-
 </body>
 </html>
