@@ -48,9 +48,23 @@
   .ring-svg{ position:absolute; width:300px; height:300px; left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; }
   .ring-svg circle{ transition: stroke 120ms linear; stroke-width:6; } /* thinner */
 
-  /* dedicated current-number display */
-  .current-number {
-    text-align:center; font-weight:800; font-size:36px; color:#fff; margin-bottom:8px;
+  /* dedicated instruction / current-number display */
+  .instruction {
+    text-align:center; font-weight:700; font-size:16px; color:#cfefff; margin-bottom:8px;
+    min-height:22px; display:flex;align-items:center;justify-content:center;
+  }
+  .instruction .verb { color:#fff; font-weight:800; margin-right:6px; }
+  .instruction .count { color:#fff; font-weight:900; margin-right:6px; font-size:18px; }
+  .instruction .exercise { color:#ffdca3; font-weight:800; }
+
+  /* fade animation for instruction */
+  .fade {
+    animation: fadeInOut 420ms ease;
+  }
+  @keyframes fadeInOut {
+    0% { opacity:0; transform: translateY(-6px); }
+    30% { opacity:1; transform: translateY(0); }
+    100% { opacity:1; transform: translateY(0); }
   }
 
   /* digital clock and info column */
@@ -104,16 +118,23 @@
             <option value="squats">Squats</option>
             <option value="pushups">Push-ups</option>
             <option value="pullups">Pull-ups</option>
+            <option value="situps">Sit-ups</option>
             <option value="burpees">Burpees</option>
-            <option value="custom">Custom (set in Settings)</option>
+            <option value="custom">Custom</option>
           </select>
         </div>
       </div>
 
-      <!-- MAIN: ring + big button + digital timer + current-number display -->
+      <!-- instruction text (updates to "Complete X <exercise>") -->
+      <div class="instruction" id="instructionText" aria-live="polite">
+        <span class="verb">Complete</span>
+        <span class="count" id="instrCount">-</span>
+        <span class="exercise" id="instrExercise">-</span>
+      </div>
+
+      <!-- MAIN: ring + big button + digital timer + instruction -->
       <div class="main" role="region" aria-label="Counter area">
-        <div>
-          <div class="current-number" id="currentNumberDisplay">Number: -</div>
+        <div class="btn-column">
           <div class="btn-area" aria-hidden="false">
             <svg class="ring-svg" viewBox="0 0 160 160" aria-hidden="true">
               <defs>
@@ -163,7 +184,7 @@
           <ul>
             <li>Tap the big round button to start a step; the clock becomes a stopwatch.</li>
             <li>When you finish reps for the step, tap the button again to stop stopwatch and start the next step's stopwatch (until you reach Max).</li>
-            <li>Number display above the button shows the repeats for the current step.</li>
+            <li>The instruction above the button tells you exactly what to do (e.g. "Complete 5 squats").</li>
           </ul>
           <h3>Auto mode</h3>
           <ul>
@@ -195,6 +216,11 @@
               <input id="restPerRepSec" type="number" min="1" step="0.5" value="10" />
               <div style="font-size:13px;color:var(--muted)">Rest for N = N × this value (seconds)</div>
             </div>
+            <div>
+              <strong>Custom exercise name</strong><br>
+              <input id="customExerciseName" type="text" placeholder="e.g. 'glute bridges' or 'lateral raises'"/>
+              <div style="font-size:13px;color:var(--muted)">Used when Mode = Custom. Leave empty to use "exercise".</div>
+            </div>
             <div style="text-align:right"><button id="closeSettings" class="btn primary">Close</button></div>
           </div>
         </div>
@@ -214,7 +240,9 @@
   const maxInput = document.getElementById('maxInput');
   const bigBtn = document.getElementById('bigBtn');
   const prog = document.getElementById('prog');
-  const currentNumberDisplay = document.getElementById('currentNumberDisplay');
+  const instructionText = document.getElementById('instructionText');
+  const instrCount = document.getElementById('instrCount');
+  const instrExercise = document.getElementById('instrExercise');
   const countdownEl = document.getElementById('countdown');
   const manualRepsEl = document.getElementById('manualReps');
   const stepText = document.getElementById('stepText');
@@ -236,13 +264,14 @@
   const levelRadios = document.querySelectorAll('input[name="level"]');
   const customSecondsPerRepInput = document.getElementById('customSecondsPerRep');
   const restPerRepSecInput = document.getElementById('restPerRepSec');
+  const customExerciseNameInput = document.getElementById('customExerciseName');
 
   const modeSelect = document.getElementById('modeSelect');
 
   // State
   let max = Math.max(1, parseInt(maxInput.value) || 10);
   let current = 0;
-  let dir = 1; // for auto pyramid generation
+  let dir = 1; // for auto pyramid progression
   let autoRunning = false;
   let tickTimer = null;
   let soundOn = true;
@@ -253,7 +282,7 @@
   let manualStart = 0;              // performance.now() when stopwatch started
   let manualElapsedSec = 0;         // seconds elapsed (integer, for display)
 
-  // Ring constants (r=72 now, matches SVG)
+  // Ring constants (r=72 matches SVG)
   const R = 72;
   const CIRC = 2 * Math.PI * R;
   prog.style.strokeDasharray = CIRC;
@@ -275,17 +304,24 @@
 
   // Save/load settings
   function saveState(){
-    const s = { max, current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, soundOn };
-    try { localStorage.setItem('pyr_v3', JSON.stringify(s)); } catch(e){}
+    const s = {
+      max, current, dir, userLevel,
+      customSecondsPerRep: customSecondsPerRepInput.value,
+      restPerRepSec: restPerRepSecInput.value,
+      customExerciseName: customExerciseNameInput.value,
+      soundOn
+    };
+    try { localStorage.setItem('pyr_v4', JSON.stringify(s)); } catch(e){}
   }
   function loadState(){
     try{
-      const s = JSON.parse(localStorage.getItem('pyr_v3') || '{}');
+      const s = JSON.parse(localStorage.getItem('pyr_v4') || '{}');
       if(s && s.max){ max = s.max; maxInput.value = max; }
       if(s && typeof s.current === 'number'){ current = s.current; dir = s.dir || 1; }
       if(s && s.userLevel) userLevel = s.userLevel;
       if(s && s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep;
       if(s && s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec;
+      if(s && s.customExerciseName) customExerciseNameInput.value = s.customExerciseName;
       if(s && typeof s.soundOn === 'boolean') soundOn = s.soundOn;
       soundIcon.textContent = soundOn ? '🔊' : '🔇';
       levelRadios.forEach(r=> { if(r.value === userLevel) r.checked = true; });
@@ -298,6 +334,7 @@
     if (m === 'squats') return 3.0;
     if (m === 'pushups') return 2.0;
     if (m === 'pullups') return 2.5;
+    if (m === 'situps') return 2.5;
     if (m === 'burpees') return 3.0;
     if (m === 'custom') {
       const v = parseFloat(customSecondsPerRepInput.value);
@@ -327,9 +364,31 @@
     return r * lvlFactor * n;
   }
 
+  // Build instruction text like "Complete 5 squats"
+  function currentExerciseName(){
+    const mode = modeSelect.value;
+    if (mode === 'custom'){
+      const t = (customExerciseNameInput.value || '').trim();
+      return t ? t : 'exercise';
+    }
+    // use the select label text for clarity
+    const opt = modeSelect.options[modeSelect.selectedIndex];
+    return opt ? opt.text : mode;
+  }
+  function showInstruction(n){
+    // Update text and animate fade
+    instrCount.textContent = n === 0 ? '-' : n;
+    instrExercise.textContent = (n === 0) ? '-' : currentExerciseName();
+    // animate
+    instructionText.classList.remove('fade');
+    // force reflow to restart animation
+    void instructionText.offsetWidth;
+    instructionText.classList.add('fade');
+  }
+
   // Update UI - keep digital clock consistent
   function updateUI(){
-    currentNumberDisplay.textContent = (current === 0) ? 'Number: -' : 'Number: ' + current;
+    showInstruction(current);
     manualRepsEl.textContent = 'Reps for this step: ' + (current === 0 ? '-' : current);
     stepText.textContent = `Step ${current === 0 ? 0 : current} of ${max * 2 - 1}`;
     if (!autoRunning){
@@ -339,6 +398,8 @@
       prog.style.stroke = colorFor(current, max);
       if (!manualTimer) countdownEl.textContent = '00:00';
       bigBtn.classList.remove('disabled');
+      if (current === 0) bigBtn.textContent = 'Start';
+      else bigBtn.textContent = current;
     } else {
       // disable big button during auto
       bigBtn.classList.add('disabled');
@@ -393,16 +454,15 @@
       startManualStopwatch();
       updateUI();
     } else {
-      // current === max -> final step finished; keep on max and stop (no looping)
+      // current === max -> final step finished; show Done state
       current = max;
       countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec || 0);
       updateUI();
-      // show final state: big button label -> Done
       bigBtn.textContent = 'Done';
     }
   }
 
-  // Auto mode sequence builder: full pyramid 1..max..1
+  // Build pyramid sequence 1..max..1
   function buildPyramidSequence(maxN){
     const seq = [];
     for(let i=1;i<=maxN;i++) seq.push(i);
@@ -436,7 +496,7 @@
       playIfOn(progressAudio);
       // set UI for this step
       current = n;
-      currentNumberDisplay.textContent = 'Number: ' + n;
+      updateUI();
       manualRepsEl.textContent = 'Reps for this step: ' + n;
       stepText.textContent = `Step ${n} of ${max * 2 - 1}`;
 
@@ -476,7 +536,6 @@
   }
 
   function stopAutoAndReset(){
-    // clear timers
     if (tickTimer) { clearTimeout(tickTimer); tickTimer = null; }
     autoRunning = false;
     autoBtn.textContent = 'Auto';
@@ -484,7 +543,6 @@
     current = 0; dir = 1;
     countdownEl.textContent = '00:00';
     manualRepsEl.textContent = 'Reps for this step: -';
-    currentNumberDisplay.textContent = 'Number: -';
     prog.style.strokeDashoffset = CIRC;
     bigBtn.classList.remove('disabled');
     updateUI();
@@ -531,7 +589,9 @@
     current = 0; dir = 1;
     countdownEl.textContent = '00:00';
     manualRepsEl.textContent = 'Reps for this step: -';
-    currentNumberDisplay.textContent = 'Number: -';
+    instructionText.classList.remove('fade');
+    instrCount.textContent = '-';
+    instrExercise.textContent = '-';
     prog.style.strokeDashoffset = CIRC;
     bigBtn.textContent = 'Start';
     bigBtn.classList.remove('disabled');
@@ -562,7 +622,8 @@
   levelRadios.forEach(r => r.addEventListener('change', () => { if (r.checked) { userLevel = r.value; saveState(); } }));
   customSecondsPerRepInput.addEventListener('change', () => saveState());
   restPerRepSecInput.addEventListener('change', () => saveState());
-  modeSelect.addEventListener('change', () => { saveState(); });
+  customExerciseNameInput.addEventListener('change', () => saveState());
+  modeSelect.addEventListener('change', () => { updateUI(); saveState(); });
 
   maxInput.addEventListener('change', () => {
     const v = Math.max(1, parseInt(maxInput.value) || 1);
@@ -577,11 +638,8 @@
   updateUI();
   prog.style.stroke = colorFor(current, max);
 
-  // Ensure big button label is 'Start' when appropriate
-  (function ensureButtonLabel(){
-    if (current === 0) bigBtn.textContent = 'Start';
-    else bigBtn.textContent = current;
-  })();
+  // Ensure big button label is 'Start' initially
+  if (current === 0) bigBtn.textContent = 'Start';
 
 })();
 </script>
