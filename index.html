@@ -1,81 +1,9 @@
-<!doctype html>
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<title>Pyramid Counter — Sound Pack</title>
-<style>
-  :root{
-    --card-w:420px;
-    --bg-1:#07090c; --bg-2:#05111a;
-    --muted:#9fa6ad;
-    --accent-a:#0b84ff; --accent-b:#2aa0ff;
-    --outline:rgba(255,255,255,0.06);
-    --glass:rgba(255,255,255,0.02);
-    --input-bg: rgba(255,255,255,0.03);
-    --input-border: rgba(255,255,255,0.08);
-    --ring-w:4;
-    --btn-size:92px;
-  }
-  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;color:#eef2f3;-webkit-font-smoothing:antialiased}
-  .center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:env(safe-area-inset-top) 14px 14px;box-sizing:border-box;}
-  .card{width:100%;max-width:var(--card-w);border-radius:16px;padding:10px 12px 18px;box-sizing:border-box;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));border:1px solid var(--outline);box-shadow:0 18px 50px rgba(0,0,0,0.65);position:relative;}
-  .topbar{display:flex;align-items:center;padding:6px 4px;}
-  .spacer{flex:1}
-  .icons-right{display:flex;gap:8px;align-items:center}
-  .icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--outline);background:rgba(255,255,255,0.02);cursor:pointer;font-size:16px;box-shadow:0 6px 14px rgba(0,0,0,0.45);transition:transform 120ms, background 120ms}
-  .icon:active{transform:translateY(2px) scale(.98);}
-  .inputs-row{display:flex;align-items:center;gap:12px;padding:6px 6px 10px;justify-content:center;flex-wrap:wrap;}
-  .input-col{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
-  .input-label{font-size:13px;color:var(--muted);letter-spacing:0.2px}
-  input[type=number], select{padding:9px 10px;border-radius:10px;border:1px solid var(--input-border);background:var(--input-bg);color:#fff;font-size:15px;box-shadow:inset 0 4px 10px rgba(0,0,0,0.45)}
-  #maxInput{ width:56px; text-align:center; font-weight:700; letter-spacing:0.6px; }
-  .main{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:4px;margin-bottom:4px;flex-direction:column}
-  .btn-area{position:relative; width:calc(var(--btn-size) + 140px); height:calc(var(--btn-size) + 140px); display:flex;align-items:center;justify-content:center;margin-top:6px;}
-  .ring-svg{position:absolute;width:calc(var(--btn-size) + 120px);height:calc(var(--btn-size) + 120px);left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
-  .ring-svg circle{transition:stroke 120ms linear, stroke-dashoffset 120ms linear;stroke-width:var(--ring-w);stroke-linecap:round}
-  button.big{width:var(--btn-size);height:var(--btn-size);border-radius:50%;border:1px solid rgba(255,255,255,0.06);font-size:28px;font-weight:800;color:#fff;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));box-shadow:0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), inset 0 4px 14px rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;transition:transform 140ms, box-shadow 140ms}
-  button.big:active{transform:translateY(4px) scale(.99);box-shadow:0 10px 18px rgba(0,0,0,0.5), inset 0 2px 8px rgba(255,255,255,0.02)}
-  button.big.disabled{opacity:.78;pointer-events:none}
-  .instruction{width:100%;text-align:center;font-weight:800;font-size:28px;color:#fff;margin-top:8px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:8px}
-  .instruction .exercise{color:#ffdca3;font-weight:900;font-size:28px}
-  .fade{animation:fadeIn 320ms ease}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-  .digital{width:calc(100% - 24px);margin:8px auto;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));border:1px solid var(--outline);text-align:center}
-  .digital .time{font-size:20px;font-weight:800}
-  .subtitle{font-size:12px;color:var(--muted);margin-top:4px}
-  .subrow{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:10px}
-  .small-box{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);min-width:86px;text-align:center}
-  .small-title{font-size:11px;color:var(--muted);margin-bottom:4px}
-  .small-val{font-weight:800;font-size:15px}
-  .small-sub{font-size:11px;color:var(--muted);margin-top:4px}
-  .step{ text-align:center;color:var(--muted);font-size:13px;margin-top:8px }
-  .actions{display:flex;gap:10px;justify-content:center;margin-top:10px}
-  .btn{padding:8px 12px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
-  .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06)}
-  .btn.primary{background:linear-gradient(180deg,var(--accent-a),var(--accent-b));color:#fff;border:1px solid rgba(255,255,255,0.06)}
-  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:60;color:#fff;padding:20px;box-sizing:border-box;overflow:auto}
-  .panel{background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));padding:16px;border-radius:12px;max-width:720px;margin:20px auto;border:1px solid var(--outline)}
-  .confirm-panel{max-width:420px;margin:120px auto;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));border:1px solid var(--outline);text-align:center}
-  .confirm-actions{display:flex;gap:10px;justify-content:center;margin-top:12px}
-  @media (max-width:420px){
-    :root{--card-w:94vw}
-    .instruction{font-size:22px}
-    button.big{width:calc(var(--btn-size) * 1.15);height:calc(var(--btn-size) * 1.15);font-size:34px}
-    .btn-area{width:calc(var(--btn-size) + 160px);height:calc(var(--btn-size) + 160px)}
-    .ring-svg{width:calc(var(--btn-size) + 160px);height:calc(var(--btn-size) + 160px)}
-    #maxInput{ width:66px; }
-  }
-  .ripple{position:absolute;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,0.10);pointer-events:none;animation:ripple 700ms ease-out;}
-  @keyframes ripple{to{transform:translate(-50%,-50%) scale(3.2);opacity:0}}
-  /* done pulse */
-  @keyframes donePulse {
-    0% { box-shadow: 0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), 0 0 0 0 rgba(255,255,255,0.04); transform: translateY(0); }
-    50% { box-shadow: 0 30px 50px rgba(2,6,23,0.65), 0 10px 24px rgba(0,0,0,0.6), 0 0 12px 8px rgba(42,160,255,0.12); transform: translateY(-2px); }
-    100% { box-shadow: 0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), 0 0 0 0 rgba(255,255,255,0.04); transform: translateY(0); }
-  }
-  .done-pulse{animation:donePulse 1600ms ease-in-out infinite;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pyramid Counter -- Sound Pack</title>
 </head>
 <body>
   <div class="center">
@@ -198,12 +126,6 @@
               <input id="customExerciseName" type="text" placeholder="e.g. 'glute bridge'"/>
             </div>
 
-            <div>
-              <strong>Volume</strong><br>
-              <input id="volumeControl" type="range" min="0" max="100" value="90" />
-              <div style="font-size:12px;color:var(--muted);margin-top:6px">Use the 🔊 button to fully mute/unmute.</div>
-            </div>
-
             <div style="text-align:right"><button id="closeSettings" class="btn primary">Close</button></div>
           </div>
         </div>
@@ -220,314 +142,347 @@
         </div>
       </div>
 
-      <!-- audio elements: add the new audio files in your repo too -->
+      <!-- audio elements -->
       <audio id="clickAudio" src="click-button.mp3" preload="auto"></audio>
       <audio id="progressAudio" src="progress-sound.mp3" preload="auto"></audio>
       <audio id="helpAudio" src="help-button.mp3" preload="auto"></audio>
-
-      <!-- NEW SOUND FILES -->
       <audio id="stepStartAudio" src="step-start.mp3" preload="auto"></audio>
       <audio id="stepCompleteAudio" src="step-complete.mp3" preload="auto"></audio>
       <audio id="finishJingleAudio" src="finish-jingle.mp3" preload="auto"></audio>
 
     </div>
   </div>
-
-<script>
-(function(){
-  /* Elements */
-  const maxInput = document.getElementById('maxInput');
-  const modeSelect = document.getElementById('modeSelect');
-  const bigBtn = document.getElementById('bigBtn');
-  const prog = document.getElementById('prog');
-  const instrCount = document.getElementById('instrCount');
-  const instrExercise = document.getElementById('instrExercise');
-  const instructionText = document.getElementById('instructionText');
-  const countdownEl = document.getElementById('countdown');
-  const stepText = document.getElementById('stepText');
-  const resetBtn = document.getElementById('resetBtn');
-  const autoBtn = document.getElementById('autoBtn');
-
-  const clickAudio = document.getElementById('clickAudio');
-  const progressAudio = document.getElementById('progressAudio');
-  const helpAudio = document.getElementById('helpAudio');
-  const stepStartAudio = document.getElementById('stepStartAudio');
-  const stepCompleteAudio = document.getElementById('stepCompleteAudio');
-  const finishJingleAudio = document.getElementById('finishJingleAudio');
-
-  const settingsIcon = document.getElementById('settingsIcon');
-  const soundIcon = document.getElementById('soundIcon');
-  const helpIcon = document.getElementById('helpIcon');
-  const helpPopup = document.getElementById('helpPopup');
-  const closeHelp = document.getElementById('closeHelp');
-  const settingsPopup = document.getElementById('settingsPopup');
-  const closeSettings = document.getElementById('closeSettings');
-
-  const customSecondsPerRepInput = document.getElementById('customSecondsPerRep');
-  const restPerRepSecInput = document.getElementById('restPerRepSec');
-  const customExerciseNameInput = document.getElementById('customExerciseName');
-  const levelRadios = document.querySelectorAll('input[name="level"]');
-  const volumeControl = document.getElementById('volumeControl');
-
-  const levelDisplay = document.getElementById('levelDisplay');
-  const elapsedDisplay = document.getElementById('elapsedDisplay');
-  const totalRepsDisplay = document.getElementById('totalRepsDisplay');
-  const totalLabel = document.getElementById('totalLabel');
-
-  const resetConfirm = document.getElementById('resetConfirm');
-  const confirmReset = document.getElementById('confirmReset');
-  const cancelReset = document.getElementById('cancelReset');
-
-  /* State */
-  let max = Math.max(1, parseInt(maxInput.value) || 10);
-  let current = 0;
-  let dir = 1;
-  let autoRunning = false;
-  let tickTimer = null;
-  let soundOn = true;
-  let userLevel = 'beginner';
-  let manualTimer = null;
-  let manualStart = 0;
-  let manualElapsedSec = 0;
-  let manualFinished = false;
-
-  let overallTimer = null;
-  let overallStart = 0;
-  let overallElapsedSec = 0;
-
-  let totalReps = 0;
-
-  let savedVolume = 0.9; // 0..1
-
-  /* Ring */
-  const R = 72;
-  const CIRC = 2 * Math.PI * R;
-  prog.style.strokeDasharray = CIRC;
-  prog.style.strokeDashoffset = CIRC;
-
-  /* Helpers */
-  function fmtSecondsMMSS(s){ s = Math.max(0, Math.round(s)); const m = Math.floor(s/60); const sec = s%60; return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0'); }
-  function colorFor(val,maxv){ if (maxv<=1) return 'hsl(120,100%,50%)'; const ratio = Math.max(0,Math.min(1,val/maxv)); const hue = 120 - (120*ratio); return `hsl(${hue},100%,45%)`; }
-  function currentExerciseName(){ const mode = modeSelect.value; if(mode==='custom'){ const t=(customExerciseNameInput.value||'').trim(); return t? t : 'exercise'; } const opt = modeSelect.options[modeSelect.selectedIndex]; return opt ? opt.text.toLowerCase() : mode; }
-  function pluralExerciseLabel(){ const ex = currentExerciseName(); const low = ex.toLowerCase(); if (low.endsWith('s')) return low + ' performed'; return low + 's performed'; }
-
-  /* Persistence */
-  function saveState(){ const s={ max, current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, customExerciseName: customExerciseNameInput.value, soundOn, savedVolume }; try{ localStorage.setItem('pyr_v_soundpack', JSON.stringify(s)); }catch(e){} }
-  function loadState(){ try{ const s = JSON.parse(localStorage.getItem('pyr_v_soundpack')||'{}'); if(s && s.max){ max = s.max; maxInput.value = max; } if(s && typeof s.current==='number'){ current = s.current; dir = s.dir || 1; } if(s && s.userLevel) userLevel = s.userLevel; if(s && s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s && s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s && s.customExerciseName) customExerciseNameInput.value = s.customExerciseName; if(s && typeof s.soundOn==='boolean') soundOn = s.soundOn; if(s && typeof s.savedVolume==='number') savedVolume = s.savedVolume; soundIcon.textContent = soundOn ? '🔊' : '🔇'; levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} updateLevelDisplay(); }
-
-  /* Timing formulas */
-  function baseSecondsPerRepForMode(){ const m = modeSelect.value; if(m==='squats') return 3.0; if(m==='pushups') return 2.0; if(m==='pullups') return 2.5; if(m==='situps') return 2.5; if(m==='burpees') return 3.0; if(m==='custom'){ const v=parseFloat(customSecondsPerRepInput.value); return (isFinite(v)&&v>0)?v:2.0 } return 2.0; }
-  function levelMultiplier(){ switch(userLevel){ case 'athlete':return .75; case 'intermediate':return 1; case 'low':return 1.2; case 'beginner':return 1.45; default:return 1; } }
-  function exerciseSecondsForNumber(n){ return baseSecondsPerRepForMode() * levelMultiplier() * n; }
-  function restSecondsForNumber(n){ const rUnit = parseFloat(restPerRepSecInput.value); const r = (isFinite(rUnit)&&rUnit>0)?rUnit:10; const lvl = (userLevel==='athlete')?0.8:(userLevel==='beginner')?1.4:(userLevel==='low')?1.2:1.0; return r*lvl*n; }
-
-  /* Audio helpers */
-  function applyVolumeToAll(){
-    const vol = soundOn ? savedVolume : 0;
-    [clickAudio, progressAudio, helpAudio, stepStartAudio, stepCompleteAudio, finishJingleAudio].forEach(a=>{
-      try{ a.volume = vol; }catch(e){}
-    });
-  }
-  function playIfOn(audioEl){
-    const vol = soundOn ? savedVolume : 0;
-    try{
-      audioEl.volume = vol;
-      audioEl.currentTime = 0;
-      audioEl.play().catch(()=>{});
-    }catch(e){}
-  }
-
-  /* UI update functions */
-  function showInstruction(n){ instrCount.textContent = n===0?'-':n; instrExercise.textContent = n===0?'-':currentExerciseName(); instructionText.classList.remove('fade'); void instructionText.offsetWidth; instructionText.classList.add('fade'); }
-  function updateTotalDisplay(){ totalRepsDisplay.textContent = String(totalReps); totalLabel.textContent = pluralExerciseLabel(); }
-  function updateLevelDisplay(){ levelDisplay.textContent = userLevel.charAt(0).toUpperCase() + userLevel.slice(1); }
-
-  function updateUI(){
-    showInstruction(current);
-    stepText.textContent = `Step ${current===0?0:current} of ${max*2-1}`;
-    if(!autoRunning){
-      const pct = Math.max(0, Math.min(1, (current / Math.max(1, max))));
-      prog.style.strokeDashoffset = CIRC * (1 - pct);
-      prog.style.stroke = colorFor(current, max);
-      if(!manualTimer) countdownEl.textContent = '00:00';
-      bigBtn.classList.remove('disabled');
-      bigBtn.textContent = current===0? 'Start' : String(current);
-    } else {
-      bigBtn.classList.add('disabled');
-      bigBtn.textContent = current===0? '—' : String(current);
-    }
-    saveState();
-    updateLevelDisplay();
-    updateTotalDisplay();
-  }
-
-  /* Manual stopwatch & overall timer */
-  function startManualStopwatch(){ stopManualStopwatch(); manualStart = performance.now(); manualElapsedSec = 0; countdownEl.textContent = fmtSecondsMMSS(0); manualTimer = setInterval(()=>{ const elapsedMs = performance.now()-manualStart; const elapsedSec = Math.floor(elapsedMs/1000); if(elapsedSec !== manualElapsedSec){ manualElapsedSec = elapsedSec; countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec); } },200); }
-  function stopManualStopwatch(){ if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } }
-
-  function startOverallTimer(){ stopOverallTimer(); overallStart = performance.now(); overallElapsedSec = 0; elapsedDisplay.textContent = fmtSecondsMMSS(0); overallTimer = setInterval(()=>{ const s = Math.floor((performance.now() - overallStart)/1000); if (s !== overallElapsedSec){ overallElapsedSec = s; elapsedDisplay.textContent = fmtSecondsMMSS(overallElapsedSec); } }, 300); }
-  function stopOverallTimer(){ if (overallTimer){ clearInterval(overallTimer); overallTimer=null; } }
-  function resetOverallTimer(){ stopOverallTimer(); overallElapsedSec = 0; elapsedDisplay.textContent = fmtSecondsMMSS(0); }
-
-  /* Manual behavior */
-  function manualAdvance_StartOrNext(){
-    if(manualFinished) return;
-    if(current===0){
-      current=1; dir=1;
-      playIfOn(stepStartAudio); // start sound
-      startManualStopwatch(); startOverallTimer(); updateUI();
-      return;
-    }
-    // user completes step
-    playIfOn(stepCompleteAudio); // completion sound
-    stopManualStopwatch();
-    totalReps += current; updateTotalDisplay();
-
-    if(dir===1 && current<max){ current=current+1; playIfOn(stepStartAudio); startManualStopwatch(); updateUI(); return; }
-    if(dir===1 && current===max){ dir=-1; if(max>1){ current=current+dir; playIfOn(stepStartAudio); startManualStopwatch(); updateUI(); return; } else { finishManual(); return; } }
-    if(dir===-1 && current>1){ current=current+dir; playIfOn(stepStartAudio); startManualStopwatch(); updateUI(); return; }
-    if(dir===-1 && current===1){ finishManual(); return; }
-  }
-
-  function finishManual(){
-    stopManualStopwatch();
-    manualFinished=true;
-    stopOverallTimer();
-    bigBtn.textContent='Done';
-    current=1; dir=1;
-    // visual pulse + finish jingle (delay a little for effect)
-    bigBtn.classList.add('done-pulse');
-    setTimeout(()=>{ playIfOn(finishJingleAudio); }, 220);
-    updateUI();
-  }
-
-  function buildPyramidSequence(maxN){ const seq=[]; for(let i=1;i<=maxN;i++) seq.push(i); for(let j=maxN-1;j>=1;j--) seq.push(j); return seq; }
-
-  /* Auto run */
-  function startAuto(){
-    stopManualStopwatch();
-    manualFinished=false;
-    if(current===0) current=1;
-    autoRunning=true; autoBtn.textContent='Stop'; bigBtn.classList.add('disabled');
-    startOverallTimer();
-    const seq = buildPyramidSequence(max); let idx = seq.indexOf(current); if(idx<0) idx=0;
-
-    function runNext(){
-      if(!autoRunning) return;
-      const n = seq[idx];
-      const ex = exerciseSecondsForNumber(n);
-      const rest = restSecondsForNumber(n);
-      const total = Math.max(300, Math.round((ex+rest)*1000));
-      const interval = 100; const steps = Math.max(1, Math.round(total/interval)); let step = 0;
-      playIfOn(progressAudio);
-      // step start sound
-      playIfOn(stepStartAudio);
-      current = n; updateUI(); stepText.textContent = `Step ${n} of ${max*2-1}`;
-
-      function tick(){
-        if(!autoRunning) return;
-        step++;
-        const pct = Math.min(1, step/steps);
-        prog.style.strokeDashoffset = CIRC * (1 - pct);
-        prog.style.stroke = colorFor(n, max);
-        const remainingMs = Math.max(0, Math.round(total - step*interval));
-        countdownEl.textContent = fmtSecondsMMSS(Math.ceil(remainingMs/1000));
-        if(step < steps){ tickTimer = setTimeout(tick, interval); }
-        else {
-          playIfOn(stepCompleteAudio);
-          totalReps += n; updateTotalDisplay();
-          idx++;
-          if(idx >= seq.length){
-            autoRunning = false;
-            autoBtn.textContent = 'Auto';
-            bigBtn.classList.remove('disabled');
-            manualFinished = true;
-            stopOverallTimer();
-            bigBtn.textContent = 'Done';
-            // pulse + finish jingle slightly delayed to align with UI
-            bigBtn.classList.add('done-pulse');
-            setTimeout(()=>{ playIfOn(finishJingleAudio); }, 220);
-            countdownEl.textContent = '00:00';
-            updateUI();
-            return;
-          }
-          tickTimer = setTimeout(()=>{ runNext(); }, 140);
-        }
-      }
-      countdownEl.textContent = fmtSecondsMMSS(Math.ceil(total/1000));
-      prog.style.stroke = colorFor(n, max);
-      tick();
-    }
-    runNext();
-  }
-
-  function stopAuto(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; bigBtn.classList.remove('disabled'); countdownEl.textContent='00:00'; stopOverallTimer(); updateUI(); }
-
-  /* Reset behavior */
-  function doReset(){
-    // remove pulse if present
-    bigBtn.classList.remove('done-pulse');
-    if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; }
-    if(manualTimer){ clearInterval(manualTimer); manualTimer=null; }
-    autoRunning=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00';
-    prog.style.strokeDashoffset = CIRC; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start';
-    stopOverallTimer(); resetOverallTimer();
-    totalReps = 0; updateTotalDisplay(); updateUI();
-  }
-
-  /* Clamp and input handling */
-  function clampMaxInput(){
-    let v = parseInt(maxInput.value, 10);
-    if (!isFinite(v) || v < 1) v = 1;
-    if (v > 99) v = 99;
-    max = v;
-    maxInput.value = String(v);
-    if (current > max) current = max;
-    prog.style.strokeDashoffset = CIRC * (1 - (current / Math.max(1, max)));
-    updateUI();
-  }
-
-  /* Events */
-  bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; if(manualFinished) return; manualAdvance_StartOrNext(); });
-
-  resetBtn.addEventListener('click', ()=>{ resetConfirm.style.display = 'block'; resetConfirm.setAttribute('aria-hidden','false'); });
-  confirmReset.addEventListener('click', ()=>{ resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); doReset(); });
-  cancelReset.addEventListener('click', ()=>{ resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); });
-
-  autoBtn.addEventListener('click', ()=>{ if(!autoRunning) startAuto(); else stopAuto(); });
-
-  soundIcon.addEventListener('click', ()=>{ soundOn = !soundOn; soundIcon.textContent = soundOn ? '🔊' : '🔇'; applyVolumeToAll(); saveState(); });
-  helpIcon.addEventListener('click', ()=>{ playIfOn(helpAudio); helpPopup.style.display='block'; });
-  closeHelp.addEventListener('click', ()=>{ helpPopup.style.display='none'; });
-  settingsIcon.addEventListener('click', ()=>{ settingsPopup.style.display='block'; });
-  closeSettings.addEventListener('click', ()=>{ settingsPopup.style.display='none'; });
-
-  levelRadios.forEach(r=> r.addEventListener('change', ()=>{ if(r.checked){ userLevel = r.value; updateLevelDisplay(); saveState(); } }));
-  customSecondsPerRepInput.addEventListener('change', ()=> saveState());
-  restPerRepSecInput.addEventListener('change', ()=> saveState());
-  customExerciseNameInput.addEventListener('change', ()=> saveState());
-  modeSelect.addEventListener('change', ()=>{ updateUI(); saveState(); updateTotalDisplay(); });
-
-  volumeControl.addEventListener('input', ()=>{ savedVolume = Math.max(0, Math.min(1, parseInt(volumeControl.value,10) / 100)); applyVolumeToAll(); saveState(); });
-
-  maxInput.addEventListener('change', clampMaxInput);
-  maxInput.addEventListener('blur', clampMaxInput);
-  maxInput.addEventListener('input', ()=> {
-    const v = maxInput.value.replace(/[^\d]/g, '').slice(0,2);
-    maxInput.value = v === '' ? '' : String(parseInt(v,10));
-  });
-
-  /* Init */
-  loadState();
-  clampMaxInput();
-  // ensure volume slider reflects saved value
-  volumeControl.value = Math.round((savedVolume||0.9) * 100);
-  applyVolumeToAll();
-  totalReps = 0; updateTotalDisplay();
-  updateUI();
-  prog.style.stroke = colorFor(current, max);
-
-})();
-</script>
 </body>
-</html>
+</html><style>/* General reset and body */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: #fff;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.card {
+  width: 360px;
+  background: #222;
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 16px;
+  box-shadow: 0 0 16px rgba(0,0,0,0.7);
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.icons-right {
+  display: flex;
+  gap: 12px;
+}
+
+.icon {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.inputs-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.input-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-label {
+  font-size: 12px;
+  color: #aaa;
+  margin-bottom: 4px;
+}
+
+input[type="number"], select {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: none;
+  background: #333;
+  color: #fff;
+}
+
+.instruction {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin: 16px 0;
+}
+
+.instruction .verb {
+  color: #00ff7f;
+}
+
+.instruction .count {
+  color: #ffd400;
+  margin: 0 4px;
+}
+
+.instruction .exercise {
+  color: #ff3b3b;
+}
+
+.main {
+  position: relative;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.btn-area {
+  position: relative;
+}
+
+#bigBtn {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  font-size: 20px;
+  border: none;
+  background: linear-gradient(45deg, #00ff7f, #ffd400, #ff3b3b);
+  color: #111;
+  cursor: pointer;
+  z-index: 2;
+  position: relative;
+}
+
+.ring-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  pointer-events: none;
+}
+
+.digital {
+  margin-top: 16px;
+  background: #111;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.time {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 10px;
+  color: #aaa;
+}
+
+.subrow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.small-box {
+  text-align: center;
+  font-size: 12px;
+}
+
+.small-title {
+  color: #aaa;
+  margin-bottom: 4px;
+}
+
+.small-val {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.small-sub {
+  font-size: 10px;
+  color: #aaa;
+}
+
+.step {
+  text-align: center;
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: #00ff7f;
+  color: #111;
+}
+
+.btn.secondary {
+  background: #333;
+  color: #fff;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.overlay.active {
+  display: flex;
+}
+
+.panel {
+  background: #222;
+  padding: 16px;
+  border-radius: 12px;
+  width: 280px;
+}
+
+.confirm-panel {
+  background: #222;
+  padding: 16px;
+  border-radius: 12px;
+  width: 260px;
+  text-align: center;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+input[type="text"], input[type="number"] {
+  width: 100%;
+  box-sizing: border-box;
+  background: #333;
+  color: #fff;
+  border: none;
+  padding: 6px;
+  border-radius: 6px;
+}</style><script>// ====== GLOBAL VARIABLES ======
+let currentStep = 0;
+let pyramid = [];
+let rounds = 3;
+let setsPerRound = 3;
+let count = 0;
+let isRunning = false;
+
+// ====== SELECT ELEMENTS ======
+const bigBtn = document.getElementById("bigBtn");
+const instruction = document.getElementById("instruction");
+const countDisplay = document.getElementById("count");
+const stepDisplay = document.getElementById("step");
+const overlay = document.getElementById("overlay");
+const panelCloseBtn = document.getElementById("panelClose");
+
+// ====== FUNCTIONS ======
+
+// Initialize pyramid based on input values
+function initPyramid() {
+  pyramid = [];
+  const sets = document.getElementById("setsInput").value || 3;
+  const reps = document.getElementById("repsInput").value || 5;
+  const roundsInput = document.getElementById("roundsInput").value || 3;
+  
+  for (let r = 0; r < roundsInput; r++) {
+    let roundArr = [];
+    for (let s = 1; s <= sets; s++) {
+      roundArr.push(s * reps);
+    }
+    pyramid.push(roundArr);
+  }
+  currentStep = 0;
+  count = 0;
+  updateDisplay();
+}
+
+// Update the instruction and count display
+function updateDisplay() {
+  if (!pyramid[currentStep]) return;
+  countDisplay.textContent = pyramid[currentStep];
+  stepDisplay.textContent = `Step ${currentStep + 1} / ${pyramid.length}`;
+  instruction.innerHTML = `Do <span class="count">${pyramid[currentStep]}</span> <span class="exercise">reps</span>`;
+}
+
+// Handle big button click
+bigBtn.addEventListener("click", () => {
+  if (!pyramid.length) initPyramid();
+  
+  if (!isRunning) {
+    isRunning = true;
+    countDown();
+  } else {
+    // skip / next
+    nextStep();
+  }
+});
+
+// Countdown timer for each step
+function countDown() {
+  if (count < pyramid[currentStep]) {
+    count++;
+    countDisplay.textContent = count;
+    setTimeout(countDown, 500); // half-second per rep, adjust if needed
+  } else {
+    nextStep();
+  }
+}
+
+// Move to next step
+function nextStep() {
+  count = 0;
+  currentStep++;
+  if (currentStep >= pyramid.length) {
+    alert("Workout complete!");
+    isRunning = false;
+    currentStep = 0;
+    pyramid = [];
+    countDisplay.textContent = 0;
+    stepDisplay.textContent = "Step 0 / 0";
+    instruction.textContent = "Start your pyramid!";
+  } else {
+    updateDisplay();
+    isRunning = false;
+  }
+}
+
+// ====== PANEL / OVERLAY ======
+panelCloseBtn.addEventListener("click", () => {
+  overlay.classList.remove("active");
+});
+
+function openPanel() {
+  overlay.classList.add("active");
+}
+
+// ====== INITIALIZE ======
+document.addEventListener("DOMContentLoaded", () => {
+  initPyramid();
+});</script>
