@@ -24,7 +24,7 @@
   .icons-right{display:flex;gap:8px;align-items:center}
   .icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--outline);background:rgba(0,0,0,0.22);cursor:pointer;font-size:18px;box-shadow:0 6px 18px rgba(0,0,0,0.45);}
 
-  /* INPUTS ROW: labels */
+  /* BELOW TOP BAR: inputs row (labels) */
   .inputs-row{display:flex;align-items:center;gap:14px;padding:8px 6px 12px;justify-content:center;flex-wrap:wrap;}
   .input-col{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
   .input-label{font-size:13px;color:var(--muted)}
@@ -56,7 +56,7 @@
   .digital{width:calc(100% - 24px);margin:8px auto;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));border:1px solid var(--outline);text-align:center}
   .digital .time{font-size:24px;font-weight:800}
   .subrow{display:flex;gap:12px;align-items:center;justify-content:center;margin-top:8px}
-  .small-box{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);min-width:120px;text-align:center}
+  .small-box{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);min-width:100px;text-align:center}
   .small-title{font-size:12px;color:var(--muted);margin-bottom:4px}
   .small-val{font-weight:700}
 
@@ -153,6 +153,10 @@
               <div class="small-title">Elapsed</div>
               <div class="small-val" id="elapsedDisplay">00:00</div>
             </div>
+            <div class="small-box">
+              <div class="small-title">Total</div>
+              <div class="small-val" id="totalRepsDisplay">0</div>
+            </div>
           </div>
         </div>
       </div>
@@ -243,6 +247,7 @@
 
   const levelDisplay = document.getElementById('levelDisplay');
   const elapsedDisplay = document.getElementById('elapsedDisplay');
+  const totalRepsDisplay = document.getElementById('totalRepsDisplay');
 
   // state
   let max = Math.max(1, parseInt(maxInput.value) || 10);
@@ -262,6 +267,9 @@
   let overallStart = 0;
   let overallElapsedSec = 0;
 
+  // total reps tracked
+  let totalReps = 0;
+
   // ring constants (r=54)
   const R = 54;
   const CIRC = 2 * Math.PI * R;
@@ -273,8 +281,8 @@
   function colorFor(val,maxv){ if (maxv<=1) return 'hsl(120,100%,50%)'; const ratio = Math.max(0,Math.min(1,val/maxv)); const hue = 120 - (120*ratio); return `hsl(${hue},100%,45%)`; }
 
   // save/load
-  function saveState(){ const s={ max, current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, customExerciseName: customExerciseNameInput.value, soundOn }; try{ localStorage.setItem('pyr_v_final3', JSON.stringify(s)); }catch(e){} }
-  function loadState(){ try{ const s = JSON.parse(localStorage.getItem('pyr_v_final3')||'{}'); if(s && s.max){ max = s.max; maxInput.value = max; } if(s && typeof s.current==='number'){ current = s.current; dir = s.dir || 1; } if(s && s.userLevel) userLevel = s.userLevel; if(s && s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s && s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s && s.customExerciseName) customExerciseNameInput.value = s.customExerciseName; if(s && typeof s.soundOn==='boolean') soundOn = s.soundOn; soundIcon.textContent = soundOn ? '🔊' : '🔇'; levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} updateLevelDisplay(); }
+  function saveState(){ const s={ max, current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, customExerciseName: customExerciseNameInput.value, soundOn }; try{ localStorage.setItem('pyr_v_totals', JSON.stringify(s)); }catch(e){} }
+  function loadState(){ try{ const s = JSON.parse(localStorage.getItem('pyr_v_totals')||'{}'); if(s && s.max){ max = s.max; maxInput.value = max; } if(s && typeof s.current==='number'){ current = s.current; dir = s.dir || 1; } if(s && s.userLevel) userLevel = s.userLevel; if(s && s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s && s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s && s.customExerciseName) customExerciseNameInput.value = s.customExerciseName; if(s && typeof s.soundOn==='boolean') soundOn = s.soundOn; soundIcon.textContent = soundOn ? '🔊' : '🔇'; levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} updateLevelDisplay(); }
 
   // timings
   function baseSecondsPerRepForMode(){ const m = modeSelect.value; if(m==='squats') return 3.0; if(m==='pushups') return 2.0; if(m==='pullups') return 2.5; if(m==='situps') return 2.5; if(m==='burpees') return 3.0; if(m==='custom'){ const v=parseFloat(customSecondsPerRepInput.value); return (isFinite(v)&&v>0)?v:2.0 } return 2.0; }
@@ -287,10 +295,13 @@
   function showInstruction(n){ instrCount.textContent = n===0?'-':n; instrExercise.textContent = n===0?'-':currentExerciseName(); instructionText.classList.remove('fade'); void instructionText.offsetWidth; instructionText.classList.add('fade'); }
 
   // update UI
-  function updateUI(){ showInstruction(current); stepText.textContent = `Step ${current===0?0:current} of ${max*2-1}`; if(!autoRunning){ const pct = Math.max(0,Math.min(1,(current/Math.max(1,max)))); prog.style.strokeDashoffset = CIRC*(1-pct); prog.style.stroke = colorFor(current,max); if(!manualTimer) countdownEl.textContent='00:00'; bigBtn.classList.remove('disabled'); bigBtn.textContent = current===0? 'Start' : String(current); } else { bigBtn.classList.add('disabled'); bigBtn.textContent = current===0? '—' : String(current); } saveState(); updateLevelDisplay(); }
+  function updateUI(){ showInstruction(current); stepText.textContent = `Step ${current===0?0:current} of ${max*2-1}`; if(!autoRunning){ const pct = Math.max(0,Math.min(1,(current/Math.max(1,max)))); prog.style.strokeDashoffset = CIRC*(1-pct); prog.style.stroke = colorFor(current,max); if(!manualTimer) countdownEl.textContent='00:00'; bigBtn.classList.remove('disabled'); bigBtn.textContent = current===0? 'Start' : String(current); } else { bigBtn.classList.add('disabled'); bigBtn.textContent = current===0? '—' : String(current); } saveState(); updateLevelDisplay(); updateTotalDisplay(); }
 
   // show level on main screen
   function updateLevelDisplay(){ levelDisplay.textContent = userLevel.charAt(0).toUpperCase() + userLevel.slice(1); }
+
+  // update total display
+  function updateTotalDisplay(){ totalRepsDisplay.textContent = String(totalReps); }
 
   // overall elapsed timer functions
   function startOverallTimer(){ stopOverallTimer(); overallStart = performance.now(); overallElapsedSec = 0; elapsedDisplay.textContent = fmtSecondsMMSS(0); overallTimer = setInterval(()=>{ const s = Math.floor((performance.now() - overallStart)/1000); if (s !== overallElapsedSec){ overallElapsedSec = s; elapsedDisplay.textContent = fmtSecondsMMSS(overallElapsedSec); } }, 300); }
@@ -304,13 +315,15 @@
   function startManualStopwatch(){ stopManualStopwatch(); manualStart = performance.now(); manualElapsedSec = 0; countdownEl.textContent = fmtSecondsMMSS(0); manualTimer = setInterval(()=>{ const elapsedMs = performance.now()-manualStart; const elapsedSec = Math.floor(elapsedMs/1000); if(elapsedSec !== manualElapsedSec){ manualElapsedSec = elapsedSec; countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec); } },200); }
   function stopManualStopwatch(){ if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } }
 
-  // manual behaviour (1..max..1 then stop). If finished and user taps again => reset
+  // manual behaviour (1..max..1 then stop). Removed automatic reset on tap after finish.
   function manualAdvance_StartOrNext(){
-    if(manualFinished){ doReset(); return; }
     if(current===0){ current=1; dir=1; playIfOn(clickAudio); startManualStopwatch(); startOverallTimer(); updateUI(); return; }
-    // finished current step
+    // user finished current step: add current to total, stop stopwatch
     playIfOn(clickAudio);
     stopManualStopwatch();
+    totalReps += current;
+    updateTotalDisplay();
+
     if(dir===1 && current<max){ current=current+1; startManualStopwatch(); updateUI(); return; }
     if(dir===1 && current===max){ dir=-1; if(max>1){ current=current+dir; startManualStopwatch(); updateUI(); return; } else { finishManual(); return; } }
     if(dir===-1 && current>1){ current=current+dir; startManualStopwatch(); updateUI(); return; }
@@ -321,7 +334,7 @@
   // build pyramid sequence 1..max..1
   function buildPyramidSequence(maxN){ const seq=[]; for(let i=1;i<=maxN;i++) seq.push(i); for(let j=maxN-1;j>=1;j--) seq.push(j); return seq; }
 
-  // auto run once
+  // auto run once (accumulate totals live), DO NOT auto-reset at end — show Done and wait for user Reset
   function startAuto(){
     stopManualStopwatch();
     manualFinished=false;
@@ -329,6 +342,7 @@
     autoRunning=true; autoBtn.textContent='Stop'; bigBtn.classList.add('disabled');
     startOverallTimer();
     const seq = buildPyramidSequence(max); let idx = seq.indexOf(current); if(idx<0) idx=0;
+
     function runNext(){
       if(!autoRunning) return;
       const n = seq[idx];
@@ -338,6 +352,7 @@
       const interval = 100; const steps = Math.max(1, Math.round(total/interval)); let step = 0;
       playIfOn(progressAudio);
       current = n; updateUI(); stepText.textContent = `Step ${n} of ${max*2-1}`;
+
       function tick(){
         if(!autoRunning) return;
         step++;
@@ -346,7 +361,26 @@
         prog.style.stroke = colorFor(n,max);
         const remainingMs = Math.max(0, Math.round(total - step*interval));
         countdownEl.textContent = fmtSecondsMMSS(Math.ceil(remainingMs/1000));
-        if(step < steps){ tickTimer = setTimeout(tick, interval); } else { idx++; if(idx>=seq.length){ stopAutoAndReset(); return; } tickTimer = setTimeout(()=>{ runNext(); }, 140); }
+        if(step < steps){ tickTimer = setTimeout(tick, interval); }
+        else {
+          // finished this step: add n to total
+          totalReps += n;
+          updateTotalDisplay();
+          idx++;
+          if(idx >= seq.length){
+            // finished whole pyramid: stop timers and show Done — do NOT auto-reset
+            autoRunning = false;
+            autoBtn.textContent = 'Auto';
+            bigBtn.classList.remove('disabled');
+            manualFinished = true;
+            stopOverallTimer();
+            bigBtn.textContent = 'Done';
+            countdownEl.textContent = '00:00';
+            updateUI();
+            return;
+          }
+          tickTimer = setTimeout(()=>{ runNext(); }, 140);
+        }
       }
       countdownEl.textContent = fmtSecondsMMSS(Math.ceil(total/1000));
       prog.style.stroke = colorFor(n,max);
@@ -355,11 +389,10 @@
     runNext();
   }
 
-  function stopAutoAndReset(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00'; prog.style.strokeDashoffset = CIRC; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start'; stopOverallTimer(); resetOverallTimer(); updateUI(); }
   function stopAuto(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; bigBtn.classList.remove('disabled'); countdownEl.textContent='00:00'; stopOverallTimer(); updateUI(); }
 
   // reset helper
-  function doReset(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00'; prog.style.strokeDashoffset = CIRC; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start'; stopOverallTimer(); resetOverallTimer(); updateUI(); }
+  function doReset(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00'; prog.style.strokeDashoffset = CIRC; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start'; stopOverallTimer(); resetOverallTimer(); totalReps = 0; updateTotalDisplay(); updateUI(); }
 
   // clamp max input to 1..99 (two digits)
   function clampMaxInput(){
@@ -374,7 +407,7 @@
   }
 
   // events
-  bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; manualAdvance_StartOrNext(); });
+  bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; if(manualFinished) return; manualAdvance_StartOrNext(); });
 
   resetBtn.addEventListener('click', doReset);
   autoBtn.addEventListener('click', ()=>{ if(!autoRunning) startAuto(); else stopAuto(); });
@@ -391,19 +424,18 @@
   customExerciseNameInput.addEventListener('change', ()=> saveState());
   modeSelect.addEventListener('change', ()=>{ updateUI(); saveState(); });
 
-  // clamp on change / blur / input (prevents large pastes)
+  // clamp on change / blur / input
   maxInput.addEventListener('change', clampMaxInput);
   maxInput.addEventListener('blur', clampMaxInput);
   maxInput.addEventListener('input', ()=> {
-    // allow typing but keep value numeric-ish; enforce 2 digits visually
     const v = maxInput.value.replace(/[^\d]/g, '').slice(0,2);
     maxInput.value = v === '' ? '' : String(parseInt(v,10));
   });
 
   // init
   loadState();
-  // ensure max respects clamp at startup
   clampMaxInput();
+  totalReps = 0; updateTotalDisplay();
   updateUI();
   prog.style.stroke = colorFor(current, max);
 })();
