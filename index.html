@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<title>Pyramid Counter — Sound Pack</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>Pyramid Counter — Polished + Achievements</title>
 <style>
   :root{
     --card-w:420px;
@@ -20,16 +20,22 @@
   html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;color:#eef2f3;-webkit-font-smoothing:antialiased}
   .center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:env(safe-area-inset-top) 14px 14px;box-sizing:border-box;}
   .card{width:100%;max-width:var(--card-w);border-radius:16px;padding:10px 12px 18px;box-sizing:border-box;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));border:1px solid var(--outline);box-shadow:0 18px 50px rgba(0,0,0,0.65);position:relative;}
+
+  /* Top bar */
   .topbar{display:flex;align-items:center;padding:6px 4px;}
   .spacer{flex:1}
   .icons-right{display:flex;gap:8px;align-items:center}
   .icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--outline);background:rgba(255,255,255,0.02);cursor:pointer;font-size:16px;box-shadow:0 6px 14px rgba(0,0,0,0.45);transition:transform 120ms, background 120ms}
   .icon:active{transform:translateY(2px) scale(.98);}
+
+  /* Inputs */
   .inputs-row{display:flex;align-items:center;gap:12px;padding:6px 6px 10px;justify-content:center;flex-wrap:wrap;}
   .input-col{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
   .input-label{font-size:13px;color:var(--muted);letter-spacing:0.2px}
   input[type=number], select{padding:9px 10px;border-radius:10px;border:1px solid var(--input-border);background:var(--input-bg);color:#fff;font-size:15px;box-shadow:inset 0 4px 10px rgba(0,0,0,0.45)}
   #maxInput{ width:56px; text-align:center; font-weight:700; letter-spacing:0.6px; }
+
+  /* Main area */
   .main{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:4px;margin-bottom:4px;flex-direction:column}
   .btn-area{position:relative; width:calc(var(--btn-size) + 140px); height:calc(var(--btn-size) + 140px); display:flex;align-items:center;justify-content:center;margin-top:6px;}
   .ring-svg{position:absolute;width:calc(var(--btn-size) + 120px);height:calc(var(--btn-size) + 120px);left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
@@ -37,10 +43,14 @@
   button.big{width:var(--btn-size);height:var(--btn-size);border-radius:50%;border:1px solid rgba(255,255,255,0.06);font-size:28px;font-weight:800;color:#fff;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));box-shadow:0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), inset 0 4px 14px rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;transition:transform 140ms, box-shadow 140ms}
   button.big:active{transform:translateY(4px) scale(.99);box-shadow:0 10px 18px rgba(0,0,0,0.5), inset 0 2px 8px rgba(255,255,255,0.02)}
   button.big.disabled{opacity:.78;pointer-events:none}
+
+  /* Instruction */
   .instruction{width:100%;text-align:center;font-weight:800;font-size:28px;color:#fff;margin-top:8px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:8px}
   .instruction .exercise{color:#ffdca3;font-weight:900;font-size:28px}
   .fade{animation:fadeIn 320ms ease}
   @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+  /* Digital */
   .digital{width:calc(100% - 24px);margin:8px auto;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));border:1px solid var(--outline);text-align:center}
   .digital .time{font-size:20px;font-weight:800}
   .subtitle{font-size:12px;color:var(--muted);margin-top:4px}
@@ -50,14 +60,26 @@
   .small-val{font-weight:800;font-size:15px}
   .small-sub{font-size:11px;color:var(--muted);margin-top:4px}
   .step{ text-align:center;color:var(--muted);font-size:13px;margin-top:8px }
+
   .actions{display:flex;gap:10px;justify-content:center;margin-top:10px}
   .btn{padding:8px 12px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
   .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06)}
   .btn.primary{background:linear-gradient(180deg,var(--accent-a),var(--accent-b));color:#fff;border:1px solid rgba(255,255,255,0.06)}
+
+  /* overlays */
   .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:60;color:#fff;padding:20px;box-sizing:border-box;overflow:auto}
   .panel{background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));padding:16px;border-radius:12px;max-width:720px;margin:20px auto;border:1px solid var(--outline)}
-  .confirm-panel{max-width:420px;margin:120px auto;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));border:1px solid var(--outline);text-align:center}
+  .confirm-panel{max-width:520px;margin:80px auto;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));border:1px solid var(--outline);text-align:center}
   .confirm-actions{display:flex;gap:10px;justify-content:center;margin-top:12px}
+
+  /* done pulse */
+  @keyframes donePulse {
+    0% { box-shadow: 0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), 0 0 0 0 rgba(255,255,255,0.04); transform: translateY(0); }
+    50% { box-shadow: 0 30px 50px rgba(2,6,23,0.65), 0 10px 24px rgba(0,0,0,0.6), 0 0 12px 8px rgba(42,160,255,0.12); transform: translateY(-2px); }
+    100% { box-shadow: 0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), 0 0 0 0 rgba(255,255,255,0.04); transform: translateY(0); }
+  }
+  .done-pulse{animation:donePulse 1600ms ease-in-out infinite;}
+
   @media (max-width:420px){
     :root{--card-w:94vw}
     .instruction{font-size:22px}
@@ -66,30 +88,26 @@
     .ring-svg{width:calc(var(--btn-size) + 160px);height:calc(var(--btn-size) + 160px)}
     #maxInput{ width:66px; }
   }
+
   .ripple{position:absolute;border-radius:50%;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,0.10);pointer-events:none;animation:ripple 700ms ease-out;}
   @keyframes ripple{to{transform:translate(-50%,-50%) scale(3.2);opacity:0}}
-  /* done pulse */
-  @keyframes donePulse {
-    0% { box-shadow: 0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), 0 0 0 0 rgba(255,255,255,0.04); transform: translateY(0); }
-    50% { box-shadow: 0 30px 50px rgba(2,6,23,0.65), 0 10px 24px rgba(0,0,0,0.6), 0 0 12px 8px rgba(42,160,255,0.12); transform: translateY(-2px); }
-    100% { box-shadow: 0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), 0 0 0 0 rgba(255,255,255,0.04); transform: translateY(0); }
-  }
-  .done-pulse{animation:donePulse 1600ms ease-in-out infinite;}
 </style>
 </head>
 <body>
   <div class="center">
     <div class="card" role="application" aria-label="Pyramid Counter">
 
+      <!-- TOP BAR -->
       <div class="topbar">
         <div class="spacer"></div>
         <div class="icons-right">
+          <div id="trophyIcon" class="icon" title="Achievements">🏆</div>
           <div id="settingsIcon" class="icon" title="Settings">⚙️</div>
-          <div id="soundIcon" class="icon" title="Toggle sound">🔊</div>
           <div id="helpIcon" class="icon" title="Help">?</div>
         </div>
       </div>
 
+      <!-- INPUTS -->
       <div class="inputs-row">
         <div class="input-col">
           <div class="input-label">Max rep</div>
@@ -108,12 +126,14 @@
         </div>
       </div>
 
+      <!-- INSTRUCTION -->
       <div class="instruction" id="instructionText" aria-live="polite">
         <span class="verb">Complete</span>
         <span class="count" id="instrCount">-</span>
         <span class="exercise" id="instrExercise">-</span>
       </div>
 
+      <!-- MAIN -->
       <div class="main" role="region" aria-label="Counter area">
         <div class="btn-area">
           <svg id="halo" class="ring-svg" viewBox="0 0 200 200" aria-hidden="true">
@@ -163,6 +183,7 @@
         <button id="autoBtn" class="btn primary">Auto</button>
       </div>
 
+      <!-- HELP POPUP -->
       <div id="helpPopup" class="overlay" role="dialog" aria-modal="true">
         <div class="panel">
           <h2>Help</h2>
@@ -171,6 +192,7 @@
         </div>
       </div>
 
+      <!-- SETTINGS POPUP -->
       <div id="settingsPopup" class="overlay" role="dialog" aria-modal="true">
         <div class="panel">
           <h2>Settings</h2>
@@ -198,17 +220,12 @@
               <input id="customExerciseName" type="text" placeholder="e.g. 'glute bridge'"/>
             </div>
 
-            <div>
-              <strong>Volume</strong><br>
-              <input id="volumeControl" type="range" min="0" max="100" value="90" />
-              <div style="font-size:12px;color:var(--muted);margin-top:6px">Use the 🔊 button to fully mute/unmute.</div>
-            </div>
-
             <div style="text-align:right"><button id="closeSettings" class="btn primary">Close</button></div>
           </div>
         </div>
       </div>
 
+      <!-- RESET CONFIRM -->
       <div id="resetConfirm" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
         <div class="confirm-panel">
           <h3>Confirm reset</h3>
@@ -220,22 +237,45 @@
         </div>
       </div>
 
-      <!-- audio elements: add the new audio files in your repo too -->
-      <audio id="clickAudio" src="click-button.mp3" preload="auto"></audio>
-      <audio id="progressAudio" src="progress-sound.mp3" preload="auto"></audio>
-      <audio id="helpAudio" src="help-button.mp3" preload="auto"></audio>
+      <!-- SUMMARY (appears after completion) -->
+      <div id="summaryPopup" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="panel" id="summaryPanel" style="max-width:420px">
+          <h2>Workout Summary</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+            <div><div style="color:var(--muted);font-size:12px">Pyramid</div><div id="summaryMax" style="font-weight:800;font-size:16px">-</div></div>
+            <div><div style="color:var(--muted);font-size:12px">Total reps</div><div id="summaryTotal" style="font-weight:800;font-size:16px">-</div></div>
+            <div><div style="color:var(--muted);font-size:12px">Elapsed</div><div id="summaryElapsed" style="font-weight:800;font-size:16px">-</div></div>
+            <div><div style="color:var(--muted);font-size:12px">Calories</div><div id="summaryCalories" style="font-weight:800;font-size:16px">-</div></div>
+          </div>
+          <div style="margin-top:12px;color:var(--muted);font-size:13px" id="summaryDate">-</div>
+          <div style="text-align:right;margin-top:14px">
+            <button id="saveAchievementBtn" class="btn primary">Save to Achievements</button>
+            <button id="closeSummaryBtn" class="btn secondary">Close</button>
+          </div>
+        </div>
+      </div>
 
-      <!-- NEW SOUND FILES -->
-      <audio id="stepStartAudio" src="step-start.mp3" preload="auto"></audio>
-      <audio id="stepCompleteAudio" src="step-complete.mp3" preload="auto"></audio>
-      <audio id="finishJingleAudio" src="finish-jingle.mp3" preload="auto"></audio>
+      <!-- ACHIEVEMENTS -->
+      <div id="achPopup" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="panel" style="max-width:720px">
+          <h2>Achievements</h2>
+          <div id="achList" style="margin-top:8px"></div>
+          <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:12px">
+            <div style="color:var(--muted);font-size:13px">Saved sessions are stored locally on this device.</div>
+            <div>
+              <button id="downloadCsv" class="btn secondary">Download CSV</button>
+              <button id="closeAch" class="btn primary">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
   </div>
 
 <script>
 (function(){
-  /* Elements */
+  // Elements
   const maxInput = document.getElementById('maxInput');
   const modeSelect = document.getElementById('modeSelect');
   const bigBtn = document.getElementById('bigBtn');
@@ -248,16 +288,10 @@
   const resetBtn = document.getElementById('resetBtn');
   const autoBtn = document.getElementById('autoBtn');
 
-  const clickAudio = document.getElementById('clickAudio');
-  const progressAudio = document.getElementById('progressAudio');
-  const helpAudio = document.getElementById('helpAudio');
-  const stepStartAudio = document.getElementById('stepStartAudio');
-  const stepCompleteAudio = document.getElementById('stepCompleteAudio');
-  const finishJingleAudio = document.getElementById('finishJingleAudio');
-
+  const trophyIcon = document.getElementById('trophyIcon');
   const settingsIcon = document.getElementById('settingsIcon');
-  const soundIcon = document.getElementById('soundIcon');
   const helpIcon = document.getElementById('helpIcon');
+
   const helpPopup = document.getElementById('helpPopup');
   const closeHelp = document.getElementById('closeHelp');
   const settingsPopup = document.getElementById('settingsPopup');
@@ -267,7 +301,6 @@
   const restPerRepSecInput = document.getElementById('restPerRepSec');
   const customExerciseNameInput = document.getElementById('customExerciseName');
   const levelRadios = document.querySelectorAll('input[name="level"]');
-  const volumeControl = document.getElementById('volumeControl');
 
   const levelDisplay = document.getElementById('levelDisplay');
   const elapsedDisplay = document.getElementById('elapsedDisplay');
@@ -278,13 +311,26 @@
   const confirmReset = document.getElementById('confirmReset');
   const cancelReset = document.getElementById('cancelReset');
 
-  /* State */
+  const summaryPopup = document.getElementById('summaryPopup');
+  const summaryMax = document.getElementById('summaryMax');
+  const summaryTotal = document.getElementById('summaryTotal');
+  const summaryElapsed = document.getElementById('summaryElapsed');
+  const summaryCalories = document.getElementById('summaryCalories');
+  const summaryDate = document.getElementById('summaryDate');
+  const saveAchievementBtn = document.getElementById('saveAchievementBtn');
+  const closeSummaryBtn = document.getElementById('closeSummaryBtn');
+
+  const achPopup = document.getElementById('achPopup');
+  const achList = document.getElementById('achList');
+  const downloadCsv = document.getElementById('downloadCsv');
+  const closeAch = document.getElementById('closeAch');
+
+  // State
   let max = Math.max(1, parseInt(maxInput.value) || 10);
   let current = 0;
   let dir = 1;
   let autoRunning = false;
   let tickTimer = null;
-  let soundOn = true;
   let userLevel = 'beginner';
   let manualTimer = null;
   let manualStart = 0;
@@ -297,47 +343,57 @@
 
   let totalReps = 0;
 
-  let savedVolume = 0.9; // 0..1
+  // achievements storage key
+  const ACH_KEY = 'pyr_achievements_v1';
+  const STATE_KEY = 'pyr_state_v1';
 
-  /* Ring */
+  // Ring maths
   const R = 72;
   const CIRC = 2 * Math.PI * R;
   prog.style.strokeDasharray = CIRC;
   prog.style.strokeDashoffset = CIRC;
 
-  /* Helpers */
+  // helpers
   function fmtSecondsMMSS(s){ s = Math.max(0, Math.round(s)); const m = Math.floor(s/60); const sec = s%60; return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0'); }
   function colorFor(val,maxv){ if (maxv<=1) return 'hsl(120,100%,50%)'; const ratio = Math.max(0,Math.min(1,val/maxv)); const hue = 120 - (120*ratio); return `hsl(${hue},100%,45%)`; }
   function currentExerciseName(){ const mode = modeSelect.value; if(mode==='custom'){ const t=(customExerciseNameInput.value||'').trim(); return t? t : 'exercise'; } const opt = modeSelect.options[modeSelect.selectedIndex]; return opt ? opt.text.toLowerCase() : mode; }
   function pluralExerciseLabel(){ const ex = currentExerciseName(); const low = ex.toLowerCase(); if (low.endsWith('s')) return low + ' performed'; return low + 's performed'; }
 
-  /* Persistence */
-  function saveState(){ const s={ max, current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, customExerciseName: customExerciseNameInput.value, soundOn, savedVolume }; try{ localStorage.setItem('pyr_v_soundpack', JSON.stringify(s)); }catch(e){} }
-  function loadState(){ try{ const s = JSON.parse(localStorage.getItem('pyr_v_soundpack')||'{}'); if(s && s.max){ max = s.max; maxInput.value = max; } if(s && typeof s.current==='number'){ current = s.current; dir = s.dir || 1; } if(s && s.userLevel) userLevel = s.userLevel; if(s && s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s && s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s && s.customExerciseName) customExerciseNameInput.value = s.customExerciseName; if(s && typeof s.soundOn==='boolean') soundOn = s.soundOn; if(s && typeof s.savedVolume==='number') savedVolume = s.savedVolume; soundIcon.textContent = soundOn ? '🔊' : '🔇'; levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} updateLevelDisplay(); }
+  // persistence
+  function loadState(){ try{ const s = JSON.parse(localStorage.getItem(STATE_KEY) || '{}'); if(s.max) { max = s.max; maxInput.value = max; } if(typeof s.current === 'number'){ current = s.current; dir = s.dir || 1; } if(s.userLevel) userLevel = s.userLevel; if(s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s.customExerciseName) customExerciseNameInput.value = s.customExerciseName; levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} updateLevelDisplay(); }
+  function saveState(){ const s = { max, current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, customExerciseName: customExerciseNameInput.value }; try{ localStorage.setItem(STATE_KEY, JSON.stringify(s)); } catch(e) {} }
 
-  /* Timing formulas */
+  function loadAchievements(){ try{ const raw = localStorage.getItem(ACH_KEY); return raw ? JSON.parse(raw) : []; }catch(e){return [];} }
+  function saveAchievements(arr){ try{ localStorage.setItem(ACH_KEY, JSON.stringify(arr)); }catch(e){} }
+
+  // timing formulas
   function baseSecondsPerRepForMode(){ const m = modeSelect.value; if(m==='squats') return 3.0; if(m==='pushups') return 2.0; if(m==='pullups') return 2.5; if(m==='situps') return 2.5; if(m==='burpees') return 3.0; if(m==='custom'){ const v=parseFloat(customSecondsPerRepInput.value); return (isFinite(v)&&v>0)?v:2.0 } return 2.0; }
   function levelMultiplier(){ switch(userLevel){ case 'athlete':return .75; case 'intermediate':return 1; case 'low':return 1.2; case 'beginner':return 1.45; default:return 1; } }
   function exerciseSecondsForNumber(n){ return baseSecondsPerRepForMode() * levelMultiplier() * n; }
   function restSecondsForNumber(n){ const rUnit = parseFloat(restPerRepSecInput.value); const r = (isFinite(rUnit)&&rUnit>0)?rUnit:10; const lvl = (userLevel==='athlete')?0.8:(userLevel==='beginner')?1.4:(userLevel==='low')?1.2:1.0; return r*lvl*n; }
 
-  /* Audio helpers */
-  function applyVolumeToAll(){
-    const vol = soundOn ? savedVolume : 0;
-    [clickAudio, progressAudio, helpAudio, stepStartAudio, stepCompleteAudio, finishJingleAudio].forEach(a=>{
-      try{ a.volume = vol; }catch(e){}
-    });
-  }
-  function playIfOn(audioEl){
-    const vol = soundOn ? savedVolume : 0;
-    try{
-      audioEl.volume = vol;
-      audioEl.currentTime = 0;
-      audioEl.play().catch(()=>{});
-    }catch(e){}
+  // basic calorie estimate
+  // Use approximate MET values per exercise type:
+  const METS = {
+    'squats': 5,
+    'pushups': 8,
+    'pullups': 7,
+    'situps': 6,
+    'burpees': 10,
+    'exercise': 6
+  };
+  // default weight (kg) used for estimate; you may add weight setting later
+  const DEFAULT_WEIGHT_KG = 70;
+
+  function estimateCalories(totalSeconds){
+    const ex = modeSelect.value || 'exercise';
+    const met = METS[ex] || METS['exercise'];
+    const hours = totalSeconds / 3600;
+    const calories = met * DEFAULT_WEIGHT_KG * hours;
+    return Math.round(calories);
   }
 
-  /* UI update functions */
+  // UI updates
   function showInstruction(n){ instrCount.textContent = n===0?'-':n; instrExercise.textContent = n===0?'-':currentExerciseName(); instructionText.classList.remove('fade'); void instructionText.offsetWidth; instructionText.classList.add('fade'); }
   function updateTotalDisplay(){ totalRepsDisplay.textContent = String(totalReps); totalLabel.textContent = pluralExerciseLabel(); }
   function updateLevelDisplay(){ levelDisplay.textContent = userLevel.charAt(0).toUpperCase() + userLevel.slice(1); }
@@ -361,31 +417,27 @@
     updateTotalDisplay();
   }
 
-  /* Manual stopwatch & overall timer */
-  function startManualStopwatch(){ stopManualStopwatch(); manualStart = performance.now(); manualElapsedSec = 0; countdownEl.textContent = fmtSecondsMMSS(0); manualTimer = setInterval(()=>{ const elapsedMs = performance.now()-manualStart; const elapsedSec = Math.floor(elapsedMs/1000); if(elapsedSec !== manualElapsedSec){ manualElapsedSec = elapsedSec; countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec); } },200); }
-  function stopManualStopwatch(){ if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } }
-
+  // overall elapsed timer
   function startOverallTimer(){ stopOverallTimer(); overallStart = performance.now(); overallElapsedSec = 0; elapsedDisplay.textContent = fmtSecondsMMSS(0); overallTimer = setInterval(()=>{ const s = Math.floor((performance.now() - overallStart)/1000); if (s !== overallElapsedSec){ overallElapsedSec = s; elapsedDisplay.textContent = fmtSecondsMMSS(overallElapsedSec); } }, 300); }
   function stopOverallTimer(){ if (overallTimer){ clearInterval(overallTimer); overallTimer=null; } }
   function resetOverallTimer(){ stopOverallTimer(); overallElapsedSec = 0; elapsedDisplay.textContent = fmtSecondsMMSS(0); }
 
-  /* Manual behavior */
+  // manual stopwatch
+  function startManualStopwatch(){ stopManualStopwatch(); manualStart = performance.now(); manualElapsedSec = 0; countdownEl.textContent = fmtSecondsMMSS(0); manualTimer = setInterval(()=>{ const elapsedMs = performance.now()-manualStart; const elapsedSec = Math.floor(elapsedMs/1000); if(elapsedSec !== manualElapsedSec){ manualElapsedSec = elapsedSec; countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec); } },200); }
+  function stopManualStopwatch(){ if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } }
+
+  // manual flow
   function manualAdvance_StartOrNext(){
     if(manualFinished) return;
-    if(current===0){
-      current=1; dir=1;
-      playIfOn(stepStartAudio); // start sound
-      startManualStopwatch(); startOverallTimer(); updateUI();
-      return;
-    }
-    // user completes step
-    playIfOn(stepCompleteAudio); // completion sound
+    if(current===0){ current=1; dir=1; startManualStopwatch(); startOverallTimer(); updateUI(); return; }
+    // complete current step
     stopManualStopwatch();
-    totalReps += current; updateTotalDisplay();
+    totalReps += current;
+    updateTotalDisplay();
 
-    if(dir===1 && current<max){ current=current+1; playIfOn(stepStartAudio); startManualStopwatch(); updateUI(); return; }
-    if(dir===1 && current===max){ dir=-1; if(max>1){ current=current+dir; playIfOn(stepStartAudio); startManualStopwatch(); updateUI(); return; } else { finishManual(); return; } }
-    if(dir===-1 && current>1){ current=current+dir; playIfOn(stepStartAudio); startManualStopwatch(); updateUI(); return; }
+    if(dir===1 && current<max){ current=current+1; startManualStopwatch(); updateUI(); return; }
+    if(dir===1 && current===max){ dir=-1; if(max>1){ current=current+dir; startManualStopwatch(); updateUI(); return; } else { finishManual(); return; } }
+    if(dir===-1 && current>1){ current=current+dir; startManualStopwatch(); updateUI(); return; }
     if(dir===-1 && current===1){ finishManual(); return; }
   }
 
@@ -395,15 +447,16 @@
     stopOverallTimer();
     bigBtn.textContent='Done';
     current=1; dir=1;
-    // visual pulse + finish jingle (delay a little for effect)
     bigBtn.classList.add('done-pulse');
-    setTimeout(()=>{ playIfOn(finishJingleAudio); }, 220);
+    // show summary popup with final numbers
+    showSummary();
     updateUI();
   }
 
+  // build 1..max..1 sequence
   function buildPyramidSequence(maxN){ const seq=[]; for(let i=1;i<=maxN;i++) seq.push(i); for(let j=maxN-1;j>=1;j--) seq.push(j); return seq; }
 
-  /* Auto run */
+  // auto run
   function startAuto(){
     stopManualStopwatch();
     manualFinished=false;
@@ -419,9 +472,7 @@
       const rest = restSecondsForNumber(n);
       const total = Math.max(300, Math.round((ex+rest)*1000));
       const interval = 100; const steps = Math.max(1, Math.round(total/interval)); let step = 0;
-      playIfOn(progressAudio);
-      // step start sound
-      playIfOn(stepStartAudio);
+
       current = n; updateUI(); stepText.textContent = `Step ${n} of ${max*2-1}`;
 
       function tick(){
@@ -434,20 +485,21 @@
         countdownEl.textContent = fmtSecondsMMSS(Math.ceil(remainingMs/1000));
         if(step < steps){ tickTimer = setTimeout(tick, interval); }
         else {
-          playIfOn(stepCompleteAudio);
+          // finish step
           totalReps += n; updateTotalDisplay();
           idx++;
           if(idx >= seq.length){
+            // full done
             autoRunning = false;
             autoBtn.textContent = 'Auto';
             bigBtn.classList.remove('disabled');
             manualFinished = true;
             stopOverallTimer();
             bigBtn.textContent = 'Done';
-            // pulse + finish jingle slightly delayed to align with UI
             bigBtn.classList.add('done-pulse');
-            setTimeout(()=>{ playIfOn(finishJingleAudio); }, 220);
             countdownEl.textContent = '00:00';
+            // show summary
+            showSummary();
             updateUI();
             return;
           }
@@ -463,9 +515,8 @@
 
   function stopAuto(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; bigBtn.classList.remove('disabled'); countdownEl.textContent='00:00'; stopOverallTimer(); updateUI(); }
 
-  /* Reset behavior */
+  // reset
   function doReset(){
-    // remove pulse if present
     bigBtn.classList.remove('done-pulse');
     if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; }
     if(manualTimer){ clearInterval(manualTimer); manualTimer=null; }
@@ -475,7 +526,7 @@
     totalReps = 0; updateTotalDisplay(); updateUI();
   }
 
-  /* Clamp and input handling */
+  // clamp input
   function clampMaxInput(){
     let v = parseInt(maxInput.value, 10);
     if (!isFinite(v) || v < 1) v = 1;
@@ -487,7 +538,110 @@
     updateUI();
   }
 
-  /* Events */
+  // summary: prepare data and show dialog
+  function showSummary(){
+    const elapsed = overallElapsedSec || 0;
+    const calories = estimateCalories(elapsed);
+    const now = new Date();
+    summaryMax.textContent = String(max);
+    summaryTotal.textContent = String(totalReps);
+    summaryElapsed.textContent = fmtSecondsMMSS(elapsed);
+    summaryCalories.textContent = String(calories);
+    summaryDate.textContent = now.toLocaleString();
+    // store temporary last run in memory (for save)
+    lastRun = {
+      dateISO: now.toISOString(),
+      dateDisplay: now.toLocaleString(),
+      max: max,
+      totalReps: totalReps,
+      elapsedSec: elapsed,
+      calories: calories,
+      exercise: currentExerciseName()
+    };
+    summaryPopup.style.display = 'block';
+    summaryPopup.setAttribute('aria-hidden','false');
+  }
+
+  // Save achievement
+  let lastRun = null;
+  function saveAchievement(){
+    if(!lastRun) return;
+    const arr = loadAchievements();
+    arr.unshift(lastRun); // most recent first
+    saveAchievements(arr);
+    summaryPopup.style.display = 'none';
+    summaryPopup.setAttribute('aria-hidden','true');
+    // show achievements panel right away
+    openAchievements();
+  }
+
+  // Achievements UI
+  function renderAchievements(){
+    const arr = loadAchievements();
+    if(arr.length===0){
+      achList.innerHTML = '<div style="color:var(--muted)">No saved sessions yet. Finish a pyramid and save it to see it here.</div>';
+      return;
+    }
+    const rows = arr.map((a, idx)=>{
+      return `
+        <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;padding:8px;border-bottom:1px solid rgba(255,255,255,0.02)">
+          <div style="flex:1">
+            <div style="font-weight:800">${a.exercise} • ${a.max}</div>
+            <div style="font-size:13px;color:var(--muted)">${a.dateDisplay} • ${a.totalReps} reps • ${fmtSecondsMMSS(a.elapsedSec)} • ${a.calories} kcal</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button data-idx="${idx}" class="del-ach btn secondary">Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+    achList.innerHTML = rows;
+
+    // wire delete buttons
+    document.querySelectorAll('.del-ach').forEach(btn=>{
+      btn.addEventListener('click', (ev)=>{
+        const idx = parseInt(btn.getAttribute('data-idx'),10);
+        const arr = loadAchievements();
+        arr.splice(idx,1);
+        saveAchievements(arr);
+        renderAchievements();
+      });
+    });
+  }
+
+  function openAchievements(){
+    renderAchievements();
+    achPopup.style.display = 'block';
+    achPopup.setAttribute('aria-hidden','false');
+  }
+
+  // CSV export
+  function downloadAchievementsCsv(){
+    const arr = loadAchievements();
+    if(!arr || arr.length===0) return alert('No achievements to download.');
+    const header = ['dateISO','dateDisplay','exercise','max','totalReps','elapsedSec','calories'];
+    const lines = [header.join(',')].concat(arr.map(a=>[
+      `"${a.dateISO}"`,
+      `"${(a.dateDisplay||'').replace(/"/g,'""')}"`,
+      `"${(a.exercise||'').replace(/"/g,'""')}"`,
+      a.max,
+      a.totalReps,
+      a.elapsedSec,
+      a.calories
+    ].join(',')));
+    const csv = lines.join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'pyramid_achievements.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // events wiring
   bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; if(manualFinished) return; manualAdvance_StartOrNext(); });
 
   resetBtn.addEventListener('click', ()=>{ resetConfirm.style.display = 'block'; resetConfirm.setAttribute('aria-hidden','false'); });
@@ -496,19 +650,26 @@
 
   autoBtn.addEventListener('click', ()=>{ if(!autoRunning) startAuto(); else stopAuto(); });
 
-  soundIcon.addEventListener('click', ()=>{ soundOn = !soundOn; soundIcon.textContent = soundOn ? '🔊' : '🔇'; applyVolumeToAll(); saveState(); });
-  helpIcon.addEventListener('click', ()=>{ playIfOn(helpAudio); helpPopup.style.display='block'; });
-  closeHelp.addEventListener('click', ()=>{ helpPopup.style.display='none'; });
-  settingsIcon.addEventListener('click', ()=>{ settingsPopup.style.display='block'; });
-  closeSettings.addEventListener('click', ()=>{ settingsPopup.style.display='none'; });
+  trophyIcon.addEventListener('click', ()=>{ openAchievements(); });
+  closeAch.addEventListener('click', ()=>{ achPopup.style.display='none'; achPopup.setAttribute('aria-hidden','true'); });
 
+  settingsIcon.addEventListener('click', ()=>{ settingsPopup.style.display='block'; settingsPopup.setAttribute('aria-hidden','false'); });
+  closeSettings.addEventListener('click', ()=>{ settingsPopup.style.display='none'; settingsPopup.setAttribute('aria-hidden','true'); });
+
+  helpIcon.addEventListener('click', ()=>{ helpPopup.style.display='block'; helpPopup.setAttribute('aria-hidden','false'); });
+  closeHelp.addEventListener('click', ()=>{ helpPopup.style.display='none'; helpPopup.setAttribute('aria-hidden','true'); });
+
+  saveAchievementBtn.addEventListener('click', ()=> saveAchievement());
+  closeSummaryBtn.addEventListener('click', ()=>{ summaryPopup.style.display='none'; summaryPopup.setAttribute('aria-hidden','true'); });
+
+  downloadCsv.addEventListener('click', ()=> downloadAchievementsCsv());
+
+  // settings inputs
   levelRadios.forEach(r=> r.addEventListener('change', ()=>{ if(r.checked){ userLevel = r.value; updateLevelDisplay(); saveState(); } }));
   customSecondsPerRepInput.addEventListener('change', ()=> saveState());
   restPerRepSecInput.addEventListener('change', ()=> saveState());
   customExerciseNameInput.addEventListener('change', ()=> saveState());
   modeSelect.addEventListener('change', ()=>{ updateUI(); saveState(); updateTotalDisplay(); });
-
-  volumeControl.addEventListener('input', ()=>{ savedVolume = Math.max(0, Math.min(1, parseInt(volumeControl.value,10) / 100)); applyVolumeToAll(); saveState(); });
 
   maxInput.addEventListener('change', clampMaxInput);
   maxInput.addEventListener('blur', clampMaxInput);
@@ -517,12 +678,11 @@
     maxInput.value = v === '' ? '' : String(parseInt(v,10));
   });
 
-  /* Init */
+  // CSV download handler already above
+
+  // init
   loadState();
   clampMaxInput();
-  // ensure volume slider reflects saved value
-  volumeControl.value = Math.round((savedVolume||0.9) * 100);
-  applyVolumeToAll();
   totalReps = 0; updateTotalDisplay();
   updateUI();
   prog.style.stroke = colorFor(current, max);
