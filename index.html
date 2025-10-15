@@ -22,9 +22,11 @@
   .card{width:100%;max-width:var(--card-w);border-radius:16px;padding:10px 12px 18px;box-sizing:border-box;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));border:1px solid var(--outline);box-shadow:0 18px 50px rgba(0,0,0,0.65);position:relative;}
 
   /* Top bar */
-  .topbar{display:flex;align-items:center;padding:6px 4px;}
-  .spacer{flex:1}
-  .icons-right{display:flex;gap:8px;align-items:center}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 4px;}
+  .icons-left, .icons-right{display:flex;gap:8px;align-items:center;min-width:110px}
+  .icons-left{justify-content:flex-start}
+  .icons-center{flex:1;display:flex;justify-content:center}
+  .icons-right{justify-content:flex-end}
   .icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--outline);background:rgba(255,255,255,0.02);cursor:pointer;font-size:16px;box-shadow:0 6px 14px rgba(0,0,0,0.45);transition:transform 120ms, background 120ms}
   .icon:active{transform:translateY(2px) scale(.98);}
 
@@ -54,11 +56,12 @@
   .digital{width:calc(100% - 24px);margin:8px auto;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));border:1px solid var(--outline);text-align:center}
   .digital .time{font-size:20px;font-weight:800}
   .subtitle{font-size:12px;color:var(--muted);margin-top:4px}
-  .subrow{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:10px}
-  .small-box{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);min-width:86px;text-align:center}
+  .subrow{display:flex;gap:8px;align-items:stretch;justify-content:center;margin-top:10px}
+  .small-box{flex:1;min-width:0;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:3/2}
   .small-title{font-size:11px;color:var(--muted);margin-bottom:4px}
   .small-val{font-weight:800;font-size:15px}
   .small-sub{font-size:11px;color:var(--muted);margin-top:4px}
+  #totalLabel{display:none}
   .step{ text-align:center;color:var(--muted);font-size:13px;margin-top:8px }
 
   .actions{display:flex;gap:10px;justify-content:center;margin-top:10px}
@@ -99,11 +102,15 @@
 
       <!-- TOP BAR -->
       <div class="topbar">
-        <div class="spacer"></div>
+        <div class="icons-left">
+          <div id="settingsIcon" class="icon" title="Settings" aria-label="Settings">⚙️</div>
+          <div id="helpIcon" class="icon" title="Help" aria-label="Help">?</div>
+        </div>
+        <div class="icons-center">
+          <div id="trophyIcon" class="icon" title="Achievements" aria-label="Achievements">🏆</div>
+        </div>
         <div class="icons-right">
-          <div id="trophyIcon" class="icon" title="Achievements">🏆</div>
-          <div id="settingsIcon" class="icon" title="Settings">⚙️</div>
-          <div id="helpIcon" class="icon" title="Help">?</div>
+          <div id="speakerIcon" class="icon" title="Sound" aria-label="Sound">🔊</div>
         </div>
       </div>
 
@@ -111,7 +118,7 @@
       <div class="inputs-row">
         <div class="input-col">
           <div class="input-label">Max rep</div>
-          <input id="maxInput" type="number" min="1" max="99" value="10" aria-label="Maximum pyramid number" />
+          <input id="maxInput" type="number" inputmode="numeric" min="1" max="99" value="10" aria-label="Maximum pyramid number" />
         </div>
         <div class="input-col">
           <div class="input-label">Exercise type</div>
@@ -185,10 +192,45 @@
 
       <!-- HELP POPUP -->
       <div id="helpPopup" class="overlay" role="dialog" aria-modal="true">
-        <div class="panel">
+        <div class="panel" style="max-height:72vh; overflow:auto">
           <h2>Help</h2>
-          <p>Manual: tap Start; tap again when you finish the shown reps. Auto: press Auto to run timed steps (1..max..1). Only Reset clears the session.</p>
-          <div style="text-align:right"><button id="closeHelp" class="btn primary">Close</button></div>
+          <details open>
+            <summary style="font-weight:800; cursor:pointer">What is this app</summary>
+            <div style="margin-top:8px">
+              <p>This app guides you through a “pyramid” workout. You do 1 rep, then 2, then 3, up to your chosen maximum, and then back down again (for example: 1, 2, 3, 2, 1). It keeps time, counts your total reps, and shows your progress with a circle and a simple step counter.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary style="font-weight:800; cursor:pointer">How it works / How to use it</summary>
+            <div style="margin-top:8px">
+              <ul>
+                <li><strong>Pick your max number</strong> in the top inputs (for example 10). That sets how high the pyramid goes.</li>
+                <li><strong>Choose your exercise</strong> (for example squats or push-ups). You can also enter a custom name.</li>
+                <li><strong>Manual mode</strong>: Tap the big button to start. Do the reps shown. Tap again when you finish that set. The app advances the pyramid and adds to your total.</li>
+                <li><strong>Auto mode</strong>: Press Auto and the app runs each step with a countdown (exercise + rest) until the whole pyramid is done.</li>
+                <li><strong>Settings</strong>: Set your level (this adjusts timing), seconds per rep, and rest time. You can also mute/unmute sounds with the speaker icon.</li>
+                <li><strong>Reset</strong>: Use Reset if you want to clear the session (elapsed time and totals).</li>
+                <li><strong>Achievements</strong>: After finishing, save your session, view past sessions, or download them as a CSV file.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary style="font-weight:800; cursor:pointer">Why do pyramid workouts</summary>
+            <div style="margin-top:8px">
+              <p>Pyramid sets are popular because they’re simple and effective:</p>
+              <ul>
+                <li><strong>Built‑in warm up and cool down</strong>: You start with smaller sets, build up, then taper down—this eases your body in and out.</li>
+                <li><strong>Progressive challenge</strong>: Climbing to a peak set pushes your strength and endurance without jumping straight to the hardest work.</li>
+                <li><strong>Variety and motivation</strong>: Changing reps each set keeps things interesting and helps avoid plateaus.</li>
+                <li><strong>Time‑efficient</strong>: You get a clear plan with a fixed number of total reps, which fits easily into a short session.</li>
+                <li><strong>Scalable</strong>: You can adjust the max number, pace, and rest to match your level and exercise.</li>
+              </ul>
+            </div>
+          </details>
+
+          <div style="text-align:right;margin-top:12px"><button id="closeHelp" class="btn primary">Close</button></div>
         </div>
       </div>
 
@@ -207,12 +249,12 @@
 
             <div>
               <strong>Custom seconds-per-rep</strong><br>
-              <input id="customSecondsPerRep" type="number" min="0.1" step="0.1" placeholder="seconds per rep"/>
+              <input id="customSecondsPerRep" type="number" inputmode="decimal" min="0.1" step="0.1" placeholder="seconds per rep"/>
             </div>
 
             <div>
               <strong>Rest seconds per rep</strong><br>
-              <input id="restPerRepSec" type="number" min="1" step="0.5" value="10"/>
+              <input id="restPerRepSec" type="number" inputmode="decimal" min="1" step="0.5" value="10"/>
             </div>
 
             <div>
@@ -291,6 +333,7 @@
   const trophyIcon = document.getElementById('trophyIcon');
   const settingsIcon = document.getElementById('settingsIcon');
   const helpIcon = document.getElementById('helpIcon');
+  const speakerIcon = document.getElementById('speakerIcon');
 
   const helpPopup = document.getElementById('helpPopup');
   const closeHelp = document.getElementById('closeHelp');
@@ -325,6 +368,23 @@
   const downloadCsv = document.getElementById('downloadCsv');
   const closeAch = document.getElementById('closeAch');
 
+  // SFX
+  const MUTE_KEY = 'pyr_sfx_mute_v1';
+  const sfx = {
+    click: new Audio('SFX/click-button.mp3'),
+    help: new Audio('SFX/help-button.mp3'),
+    stepStart: new Audio('SFX/step-start.mp3'),
+    stepComplete: new Audio('SFX/step-complete.mp3'),
+    finish: new Audio('SFX/finish-jingle.mp3')
+  };
+  Object.values(sfx).forEach(a=>{ a.preload='auto'; });
+  let sfxMuted = false;
+  function setMutedAll(m){ Object.values(sfx).forEach(a=> a.muted = m); }
+  function updateSpeakerIcon(){ speakerIcon.textContent = sfxMuted ? '🔇' : '🔊'; }
+  function loadMute(){ sfxMuted = (localStorage.getItem(MUTE_KEY) === '1'); setMutedAll(sfxMuted); updateSpeakerIcon(); }
+  function saveMute(){ localStorage.setItem(MUTE_KEY, sfxMuted ? '1' : '0'); }
+  function play(name){ const a = sfx[name]; if(!a) return; try{ a.currentTime = 0; a.play(); }catch(e){} }
+
   // State
   let max = Math.max(1, parseInt(maxInput.value) || 10);
   let current = 0;
@@ -358,6 +418,12 @@
   function colorFor(val,maxv){ if (maxv<=1) return 'hsl(120,100%,50%)'; const ratio = Math.max(0,Math.min(1,val/maxv)); const hue = 120 - (120*ratio); return `hsl(${hue},100%,45%)`; }
   function currentExerciseName(){ const mode = modeSelect.value; if(mode==='custom'){ const t=(customExerciseNameInput.value||'').trim(); return t? t : 'exercise'; } const opt = modeSelect.options[modeSelect.selectedIndex]; return opt ? opt.text.toLowerCase() : mode; }
   function pluralExerciseLabel(){ const ex = currentExerciseName(); const low = ex.toLowerCase(); if (low.endsWith('s')) return low + ' performed'; return low + 's performed'; }
+
+  function stepOrdinal(){
+    if (current===0) return 0;
+    if (dir===1) return current;
+    return max + (max - current);
+  }
 
   // persistence
   function loadState(){ try{ const s = JSON.parse(localStorage.getItem(STATE_KEY) || '{}'); if(s.max) { max = s.max; maxInput.value = max; } if(typeof s.current === 'number'){ current = s.current; dir = s.dir || 1; } if(s.userLevel) userLevel = s.userLevel; if(s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s.customExerciseName) customExerciseNameInput.value = s.customExerciseName; levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} updateLevelDisplay(); }
@@ -395,12 +461,12 @@
 
   // UI updates
   function showInstruction(n){ instrCount.textContent = n===0?'-':n; instrExercise.textContent = n===0?'-':currentExerciseName(); instructionText.classList.remove('fade'); void instructionText.offsetWidth; instructionText.classList.add('fade'); }
-  function updateTotalDisplay(){ totalRepsDisplay.textContent = String(totalReps); totalLabel.textContent = pluralExerciseLabel(); }
+  function updateTotalDisplay(){ totalRepsDisplay.textContent = String(totalReps); }
   function updateLevelDisplay(){ levelDisplay.textContent = userLevel.charAt(0).toUpperCase() + userLevel.slice(1); }
 
   function updateUI(){
     showInstruction(current);
-    stepText.textContent = `Step ${current===0?0:current} of ${max*2-1}`;
+    stepText.textContent = `Step ${stepOrdinal()} of ${max*2-1}`;
     if(!autoRunning){
       const pct = Math.max(0, Math.min(1, (current / Math.max(1, max))));
       prog.style.strokeDashoffset = CIRC * (1 - pct);
@@ -449,6 +515,7 @@
     current=1; dir=1;
     bigBtn.classList.add('done-pulse');
     // show summary popup with final numbers
+    play('finish');
     showSummary();
     updateUI();
   }
@@ -473,7 +540,7 @@
       const total = Math.max(300, Math.round((ex+rest)*1000));
       const interval = 100; const steps = Math.max(1, Math.round(total/interval)); let step = 0;
 
-      current = n; updateUI(); stepText.textContent = `Step ${n} of ${max*2-1}`;
+      current = n; play('click'); updateUI(); stepText.textContent = `Step ${idx+1} of ${seq.length}`;
 
       function tick(){
         if(!autoRunning) return;
@@ -487,6 +554,7 @@
         else {
           // finish step
           totalReps += n; updateTotalDisplay();
+          play('click');
           idx++;
           if(idx >= seq.length){
             // full done
@@ -499,6 +567,7 @@
             bigBtn.classList.add('done-pulse');
             countdownEl.textContent = '00:00';
             // show summary
+            play('finish');
             showSummary();
             updateUI();
             return;
@@ -642,37 +711,64 @@
   }
 
   // events wiring
-  bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; if(manualFinished) return; manualAdvance_StartOrNext(); });
+  bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; if(manualFinished) return; play('click'); manualAdvance_StartOrNext(); });
 
-  resetBtn.addEventListener('click', ()=>{ resetConfirm.style.display = 'block'; resetConfirm.setAttribute('aria-hidden','false'); });
-  confirmReset.addEventListener('click', ()=>{ resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); doReset(); });
-  cancelReset.addEventListener('click', ()=>{ resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); });
+  resetBtn.addEventListener('click', ()=>{ play('click'); resetConfirm.style.display = 'block'; resetConfirm.setAttribute('aria-hidden','false'); });
+  confirmReset.addEventListener('click', ()=>{ play('click'); resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); doReset(); });
+  cancelReset.addEventListener('click', ()=>{ play('click'); resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); });
 
-  autoBtn.addEventListener('click', ()=>{ if(!autoRunning) startAuto(); else stopAuto(); });
+  autoBtn.addEventListener('click', ()=>{ play('click'); if(!autoRunning) startAuto(); else stopAuto(); });
 
-  trophyIcon.addEventListener('click', ()=>{ openAchievements(); });
-  closeAch.addEventListener('click', ()=>{ achPopup.style.display='none'; achPopup.setAttribute('aria-hidden','true'); });
+  trophyIcon.addEventListener('click', ()=>{ play('click'); openAchievements(); });
+  closeAch.addEventListener('click', ()=>{ play('click'); achPopup.style.display='none'; achPopup.setAttribute('aria-hidden','true'); });
 
-  settingsIcon.addEventListener('click', ()=>{ settingsPopup.style.display='block'; settingsPopup.setAttribute('aria-hidden','false'); });
-  closeSettings.addEventListener('click', ()=>{ settingsPopup.style.display='none'; settingsPopup.setAttribute('aria-hidden','true'); });
+  settingsIcon.addEventListener('click', ()=>{ play('click'); settingsPopup.style.display='block'; settingsPopup.setAttribute('aria-hidden','false'); });
+  closeSettings.addEventListener('click', ()=>{ play('click'); settingsPopup.style.display='none'; settingsPopup.setAttribute('aria-hidden','true'); });
 
-  helpIcon.addEventListener('click', ()=>{ helpPopup.style.display='block'; helpPopup.setAttribute('aria-hidden','false'); });
-  closeHelp.addEventListener('click', ()=>{ helpPopup.style.display='none'; helpPopup.setAttribute('aria-hidden','true'); });
+  helpIcon.addEventListener('click', ()=>{ play('help'); helpPopup.style.display='block'; helpPopup.setAttribute('aria-hidden','false'); });
+  closeHelp.addEventListener('click', ()=>{ play('click'); helpPopup.style.display='none'; helpPopup.setAttribute('aria-hidden','true'); });
 
-  saveAchievementBtn.addEventListener('click', ()=> saveAchievement());
-  closeSummaryBtn.addEventListener('click', ()=>{ summaryPopup.style.display='none'; summaryPopup.setAttribute('aria-hidden','true'); });
+  // speaker toggle
+  speakerIcon.addEventListener('click', ()=>{
+    sfxMuted = !sfxMuted;
+    setMutedAll(sfxMuted);
+    updateSpeakerIcon();
+    saveMute();
+  });
 
-  downloadCsv.addEventListener('click', ()=> downloadAchievementsCsv());
+  saveAchievementBtn.addEventListener('click', ()=>{ play('click'); saveAchievement(); });
+  closeSummaryBtn.addEventListener('click', ()=>{ play('click'); summaryPopup.style.display='none'; summaryPopup.setAttribute('aria-hidden','true'); });
+
+  downloadCsv.addEventListener('click', ()=>{ play('click'); downloadAchievementsCsv(); });
 
   // settings inputs
   levelRadios.forEach(r=> r.addEventListener('change', ()=>{ if(r.checked){ userLevel = r.value; updateLevelDisplay(); saveState(); } }));
   customSecondsPerRepInput.addEventListener('change', ()=> saveState());
   restPerRepSecInput.addEventListener('change', ()=> saveState());
+  // clear on focus for quick entry
+  customSecondsPerRepInput.addEventListener('focus', ()=> { customSecondsPerRepInput.value=''; });
+  restPerRepSecInput.addEventListener('focus', ()=> { restPerRepSecInput.value=''; });
+  // decimal-only sanitization (one dot max)
+  customSecondsPerRepInput.addEventListener('input', ()=>{
+    let v = customSecondsPerRepInput.value.replace(/[^0-9.]/g,'');
+    const d = v.indexOf('.');
+    if(d!==-1){ v = v.slice(0,d+1) + v.slice(d+1).replace(/\./g,''); }
+    if(v.startsWith('.')) v = '0'+v;
+    customSecondsPerRepInput.value = v;
+  });
+  restPerRepSecInput.addEventListener('input', ()=>{
+    let v = restPerRepSecInput.value.replace(/[^0-9.]/g,'');
+    const d = v.indexOf('.');
+    if(d!==-1){ v = v.slice(0,d+1) + v.slice(d+1).replace(/\./g,''); }
+    if(v.startsWith('.')) v = '0'+v;
+    restPerRepSecInput.value = v;
+  });
   customExerciseNameInput.addEventListener('change', ()=> saveState());
   modeSelect.addEventListener('change', ()=>{ updateUI(); saveState(); updateTotalDisplay(); });
 
   maxInput.addEventListener('change', clampMaxInput);
   maxInput.addEventListener('blur', clampMaxInput);
+  maxInput.addEventListener('focus', ()=> { maxInput.value=''; });
   maxInput.addEventListener('input', ()=> {
     const v = maxInput.value.replace(/[^\d]/g, '').slice(0,2);
     maxInput.value = v === '' ? '' : String(parseInt(v,10));
@@ -682,6 +778,7 @@
 
   // init
   loadState();
+  loadMute();
   clampMaxInput();
   totalReps = 0; updateTotalDisplay();
   updateUI();
