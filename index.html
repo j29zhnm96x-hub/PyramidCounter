@@ -15,7 +15,7 @@
     --input-bg: rgba(255,255,255,0.03);
     --input-border: rgba(255,255,255,0.08);
     --ring-w:4;
-    --btn-size:92px;
+    --btn-size:150px;
   }
   html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;color:#eef2f3;-webkit-font-smoothing:antialiased}
   .center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:env(safe-area-inset-top) 14px 14px;box-sizing:border-box;}
@@ -32,17 +32,18 @@
 
   /* Inputs */
   .inputs-row{display:flex;align-items:center;gap:12px;padding:6px 6px 10px;justify-content:center;flex-wrap:wrap;}
-  .input-col{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
-  .input-label{font-size:13px;color:var(--muted);letter-spacing:0.2px}
+  .input-col{display:flex;flex-direction:column;gap:6px;align-items:center}
+  .input-label{font-size:13px;color:var(--muted);letter-spacing:0.2px;text-align:center}
   input[type=number], select{padding:9px 10px;border-radius:10px;border:1px solid var(--input-border);background:var(--input-bg);color:#fff;font-size:15px;box-shadow:inset 0 4px 10px rgba(0,0,0,0.45)}
   #maxInput{ width:56px; text-align:center; font-weight:700; letter-spacing:0.6px; }
 
   /* Main area */
   .main{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:4px;margin-bottom:4px;flex-direction:column}
-  .btn-area{position:relative; width:calc(var(--btn-size) + 140px); height:calc(var(--btn-size) + 140px); display:flex;align-items:center;justify-content:center;margin-top:6px;}
-  .ring-svg{position:absolute;width:calc(var(--btn-size) + 120px);height:calc(var(--btn-size) + 120px);left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
+  .btn-area{position:relative; width:calc(var(--btn-size) + 60px); height:calc(var(--btn-size) + 60px); display:flex;align-items:center;justify-content:center;margin-top:6px;}
+  .ring-svg{position:absolute;width:calc(var(--btn-size) + 40px);height:calc(var(--btn-size) + 40px);left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
   .ring-svg circle{transition:stroke 120ms linear, stroke-dashoffset 120ms linear;stroke-width:var(--ring-w);stroke-linecap:round}
-  button.big{width:var(--btn-size);height:var(--btn-size);border-radius:50%;border:1px solid rgba(255,255,255,0.06);font-size:28px;font-weight:800;color:#fff;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));box-shadow:0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), inset 0 4px 14px rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;transition:transform 140ms, box-shadow 140ms}
+  .ring-svg path{transition:stroke 120ms linear, stroke-dashoffset 120ms linear;stroke-linecap:round}
+  button.big{width:var(--btn-size);height:var(--btn-size);border:none;font-size:30px;font-weight:800;color:#fff;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));box-shadow:0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), inset 0 4px 14px rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;transition:transform 140ms, box-shadow 140ms; clip-path: polygon(50% 0%, 100% 86.6%, 0% 86.6%);}
   button.big:active{transform:translateY(4px) scale(.99);box-shadow:0 10px 18px rgba(0,0,0,0.5), inset 0 2px 8px rgba(255,255,255,0.02)}
   button.big.disabled{opacity:.78;pointer-events:none}
 
@@ -53,21 +54,41 @@
   @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 
   /* Digital */
-  .digital{width:calc(100% - 24px);margin:8px auto;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));border:1px solid var(--outline);text-align:center}
+  .digital{width:calc(100% - 24px);margin:12px auto 0;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));border:1px solid var(--outline);text-align:center}
   .digital .time{font-size:20px;font-weight:800}
   .subtitle{font-size:12px;color:var(--muted);margin-top:4px}
   .subrow{display:flex;gap:8px;align-items:stretch;justify-content:center;margin-top:10px}
   .small-box{flex:1;min-width:0;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:3/2}
-  .small-title{font-size:11px;color:var(--muted);margin-bottom:4px}
+  .small-title{font-size:15.6px;color:var(--muted);margin-bottom:4px}
   .small-val{font-weight:800;font-size:15px}
   .small-sub{font-size:11px;color:var(--muted);margin-top:4px}
   #totalLabel{display:none}
   .step{ text-align:center;color:var(--muted);font-size:13px;margin-top:8px }
 
-  .actions{display:flex;gap:10px;justify-content:center;margin-top:10px}
+  .actions{display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;margin-top:10px}
   .btn{padding:8px 12px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
   .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06)}
   .btn.primary{background:linear-gradient(180deg,var(--accent-a),var(--accent-b));color:#fff;border:1px solid rgba(255,255,255,0.06)}
+
+  /* Larger Auto button */
+  #autoBtn{ font-size: 1.5em; padding: 12px 18px; }
+  /* Reset button text light red */
+  #resetBtn{ color: #ff9aa2; font-weight:800; padding:8px 16px; transform: scaleX(1.3); transform-origin: center; }
+
+  /* Rest label styling */
+  .resting-label{ text-transform: uppercase; font-size: 18px; animation: blink 1000ms step-start infinite; }
+  @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.2; } }
+  /* Idle (invisible) rest label state */
+  .idle-rest{ color: var(--bg-2) !important; animation: none !important; }
+
+  /* Big button blink for reps */
+  @keyframes bigBlink { 0%{filter:brightness(1)} 50%{filter:brightness(1.6)} 100%{filter:brightness(1)} }
+  .big.blink{ animation: bigBlink 600ms ease-in-out; }
+
+  /* Screen flash synchronized with blink */
+  #screenFlash{ position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0; background:rgba(255,80,80,0.0); }
+  .screen-flash{ animation: screenBlink 600ms ease-in-out; }
+  @keyframes screenBlink { 0%{ opacity:0; background:rgba(255,80,80,0.0); } 50%{ opacity:1; background:rgba(255,80,80,0.18); } 100%{ opacity:0; background:rgba(255,80,80,0.0); } }
 
   /* overlays */
   .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:60;color:#fff;padding:20px;box-sizing:border-box;overflow:auto}
@@ -97,6 +118,7 @@
 </style>
 </head>
 <body>
+  <div id="screenFlash" aria-hidden="true"></div>
   <div class="center">
     <div class="card" role="application" aria-label="Pyramid Counter">
 
@@ -104,6 +126,7 @@
       <div class="topbar">
         <div class="icons-left">
           <div id="settingsIcon" class="icon" title="Settings" aria-label="Settings">⚙️</div>
+          <div id="userIcon" class="icon" title="User" aria-label="User">👤</div>
           <div id="helpIcon" class="icon" title="Help" aria-label="Help">?</div>
         </div>
         <div class="icons-center">
@@ -114,11 +137,42 @@
         </div>
       </div>
 
+      <!-- USER POPUP -->
+      <div id="userPopup" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="panel" style="max-width:520px">
+          <h2>User Profile</h2>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+              <strong>Sex</strong><br>
+              <select id="userSex">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+            <div>
+              <strong>Age</strong><br>
+              <input id="userAge" type="number" inputmode="decimal" min="5" max="120" placeholder="e.g. 30" />
+            </div>
+            <div>
+              <strong>Height (cm)</strong><br>
+              <input id="userHeightCm" type="number" inputmode="decimal" min="50" max="250" placeholder="e.g. 175" />
+            </div>
+            <div>
+              <strong>Weight (kg)</strong><br>
+              <input id="userWeightKg" type="number" inputmode="decimal" min="20" max="300" placeholder="e.g. 70" />
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end">
+              <button id="closeUser" class="btn secondary">Close</button>
+              <button id="saveUser" class="btn primary">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- INPUTS -->
       <div class="inputs-row">
         <div class="input-col">
           <div class="input-label">Max rep</div>
-          <input id="maxInput" type="number" inputmode="numeric" min="1" max="99" value="10" aria-label="Maximum pyramid number" />
+          <input id="maxInput" type="number" inputmode="numeric" min="1" max="99" value="5" aria-label="Maximum pyramid number" />
         </div>
         <div class="input-col">
           <div class="input-label">Exercise type</div>
@@ -128,7 +182,6 @@
             <option value="pullups">Pull-ups</option>
             <option value="situps">Sit-ups</option>
             <option value="burpees">Burpees</option>
-            <option value="custom">Custom</option>
           </select>
         </div>
       </div>
@@ -151,51 +204,50 @@
                 <stop offset="100%" stop-color="#ff3b3b"/>
               </linearGradient>
             </defs>
-            <g transform="translate(100,100)">
-              <circle id="baseRing" r="72" fill="none" stroke="rgba(255,255,255,0.03)"></circle>
-              <circle id="prog" r="72" fill="none" stroke="url(#rg)" stroke-dasharray="452" stroke-dashoffset="452" transform="rotate(-90)"></circle>
-            </g>
+            <!-- Equilateral triangle around the button -->
+            <path id="baseRing" d="M100 20 L180 160 L20 160 Z" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <path id="prog" d="M100 20 L180 160 L20 160 Z" fill="none" stroke="url(#rg)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
 
           <button id="bigBtn" class="big" aria-label="Advance pyramid">Start</button>
           <div id="rippleContainer" aria-hidden="true"></div>
-        </div>
-
-        <div class="digital" id="digitalClock" aria-live="polite">
-          <div class="time" id="countdown">00:00</div>
-          <div class="subtitle" id="countdownLabel">Remaining / Stopwatch</div>
-
-          <div class="subrow">
-            <div class="small-box">
-              <div class="small-title">Level</div>
-              <div class="small-val" id="levelDisplay">Beginner</div>
-            </div>
-            <div class="small-box">
-              <div class="small-title">Elapsed</div>
-              <div class="small-val" id="elapsedDisplay">00:00</div>
-            </div>
-            <div class="small-box">
-              <div class="small-title">Total</div>
-              <div class="small-val" id="totalRepsDisplay">0</div>
-              <div class="small-sub" id="totalLabel">squats performed</div>
-            </div>
-          </div>
         </div>
       </div>
 
       <div class="step" id="stepText">Step 0 of 0</div>
 
       <div class="actions">
+        <button id="autoBtn" class="btn secondary">Auto</button>
         <button id="resetBtn" class="btn secondary">Reset</button>
-        <button id="autoBtn" class="btn primary">Auto</button>
+      </div>
+
+      <div class="digital" id="digitalClock" aria-live="polite">
+        <div class="subtitle idle-rest" id="countdownLabel">PLEASE REST FOR</div>
+        <div class="time" id="countdown">00:00</div>
+
+        <div class="subrow">
+          <div class="small-box">
+            <div class="small-title">Level</div>
+            <div class="small-val" id="levelDisplay">Beginner</div>
+          </div>
+          <div class="small-box">
+            <div class="small-title">Elapsed</div>
+            <div class="small-val" id="elapsedDisplay">00:00</div>
+          </div>
+          <div class="small-box">
+            <div class="small-title">Total</div>
+            <div class="small-val" id="totalRepsDisplay">0</div>
+            <div class="small-sub" id="totalLabel">squats performed</div>
+          </div>
+        </div>
       </div>
 
       <!-- HELP POPUP -->
       <div id="helpPopup" class="overlay" role="dialog" aria-modal="true">
         <div class="panel" style="max-height:72vh; overflow:auto">
           <h2>Help</h2>
-          <details open>
-            <summary style="font-weight:800; cursor:pointer">What is this app</summary>
+          <details>
+            <summary style="font-weight:800; cursor:pointer">What is Pyramid Workout Counter</summary>
             <div style="margin-top:8px">
               <p>This app guides you through a “pyramid” workout. You do 1 rep, then 2, then 3, up to your chosen maximum, and then back down again (for example: 1, 2, 3, 2, 1). It keeps time, counts your total reps, and shows your progress with a circle and a simple step counter.</p>
             </div>
@@ -257,10 +309,7 @@
               <input id="restPerRepSec" type="number" inputmode="decimal" min="1" step="0.5" value="10"/>
             </div>
 
-            <div>
-              <strong>Custom exercise name</strong><br>
-              <input id="customExerciseName" type="text" placeholder="e.g. 'glute bridge'"/>
-            </div>
+            
 
             <div style="text-align:right"><button id="closeSettings" class="btn primary">Close</button></div>
           </div>
@@ -322,6 +371,7 @@
   const modeSelect = document.getElementById('modeSelect');
   const bigBtn = document.getElementById('bigBtn');
   const prog = document.getElementById('prog');
+  let TRI_LEN = 0;
   const instrCount = document.getElementById('instrCount');
   const instrExercise = document.getElementById('instrExercise');
   const instructionText = document.getElementById('instructionText');
@@ -329,11 +379,13 @@
   const stepText = document.getElementById('stepText');
   const resetBtn = document.getElementById('resetBtn');
   const autoBtn = document.getElementById('autoBtn');
+  const screenFlash = document.getElementById('screenFlash');
 
   const trophyIcon = document.getElementById('trophyIcon');
   const settingsIcon = document.getElementById('settingsIcon');
   const helpIcon = document.getElementById('helpIcon');
   const speakerIcon = document.getElementById('speakerIcon');
+  const userIcon = document.getElementById('userIcon');
 
   const helpPopup = document.getElementById('helpPopup');
   const closeHelp = document.getElementById('closeHelp');
@@ -342,13 +394,13 @@
 
   const customSecondsPerRepInput = document.getElementById('customSecondsPerRep');
   const restPerRepSecInput = document.getElementById('restPerRepSec');
-  const customExerciseNameInput = document.getElementById('customExerciseName');
   const levelRadios = document.querySelectorAll('input[name="level"]');
 
   const levelDisplay = document.getElementById('levelDisplay');
   const elapsedDisplay = document.getElementById('elapsedDisplay');
   const totalRepsDisplay = document.getElementById('totalRepsDisplay');
   const totalLabel = document.getElementById('totalLabel');
+  const countdownLabel = document.getElementById('countdownLabel');
 
   const resetConfirm = document.getElementById('resetConfirm');
   const confirmReset = document.getElementById('confirmReset');
@@ -368,6 +420,15 @@
   const downloadCsv = document.getElementById('downloadCsv');
   const closeAch = document.getElementById('closeAch');
 
+  // User modal elements
+  const userPopup = document.getElementById('userPopup');
+  const userSexSelect = document.getElementById('userSex');
+  const userAgeInput = document.getElementById('userAge');
+  const userHeightCmInput = document.getElementById('userHeightCm');
+  const userWeightKgInput = document.getElementById('userWeightKg');
+  const saveUserBtn = document.getElementById('saveUser');
+  const closeUserBtn = document.getElementById('closeUser');
+
   // SFX
   const MUTE_KEY = 'pyr_sfx_mute_v1';
   const sfx = {
@@ -375,7 +436,12 @@
     help: new Audio('SFX/help-button.mp3'),
     stepStart: new Audio('SFX/step-start.mp3'),
     stepComplete: new Audio('SFX/step-complete.mp3'),
-    finish: new Audio('SFX/finish-jingle.mp3')
+    finish: new Audio('SFX/finish-jingle.mp3'),
+    repetition: new Audio('SFX/repetition.mp3'),
+    auto: new Audio('SFX/auto.mp3'),
+    reset: new Audio('SFX/reset.mp3'),
+    save: new Audio('SFX/save.mp3'),
+    error: new Audio('SFX/error.mp3')
   };
   Object.values(sfx).forEach(a=>{ a.preload='auto'; });
   let sfxMuted = false;
@@ -386,16 +452,27 @@
   function play(name){ const a = sfx[name]; if(!a) return; try{ a.currentTime = 0; a.play(); }catch(e){} }
 
   // State
-  let max = Math.max(1, parseInt(maxInput.value) || 10);
+  let max = Math.max(1, parseInt(maxInput.value) || 5);
   let current = 0;
   let dir = 1;
   let autoRunning = false;
+  let autoPaused = false;
+  let autoPhase = null; // 'exercise' | 'rest'
+  let autoSeq = [];
+  let autoIdx = 0;
+  let exerciseTimer = null;
+  let restTimer = null; // interval for rest countdown
+  let exRemainingMs = 0;
+  let restRemainingMs = 0;
   let tickTimer = null;
   let userLevel = 'beginner';
   let manualTimer = null;
   let manualStart = 0;
   let manualElapsedSec = 0;
   let manualFinished = false;
+  let manualRestTimer = null;
+  let manualRestRemainingMs = 0;
+  let manualAwaitNext = false;
 
   let overallTimer = null;
   let overallStart = 0;
@@ -408,15 +485,15 @@
   const STATE_KEY = 'pyr_state_v1';
 
   // Ring maths
-  const R = 72;
-  const CIRC = 2 * Math.PI * R;
-  prog.style.strokeDasharray = CIRC;
-  prog.style.strokeDashoffset = CIRC;
+  // compute triangular path length for progress
+  TRI_LEN = (typeof prog.getTotalLength === 'function') ? prog.getTotalLength() : 452;
+  prog.style.strokeDasharray = TRI_LEN;
+  prog.style.strokeDashoffset = TRI_LEN;
 
   // helpers
   function fmtSecondsMMSS(s){ s = Math.max(0, Math.round(s)); const m = Math.floor(s/60); const sec = s%60; return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0'); }
   function colorFor(val,maxv){ if (maxv<=1) return 'hsl(120,100%,50%)'; const ratio = Math.max(0,Math.min(1,val/maxv)); const hue = 120 - (120*ratio); return `hsl(${hue},100%,45%)`; }
-  function currentExerciseName(){ const mode = modeSelect.value; if(mode==='custom'){ const t=(customExerciseNameInput.value||'').trim(); return t? t : 'exercise'; } const opt = modeSelect.options[modeSelect.selectedIndex]; return opt ? opt.text.toLowerCase() : mode; }
+  function currentExerciseName(){ const opt = modeSelect.options[modeSelect.selectedIndex]; return opt ? opt.text.toLowerCase() : (modeSelect.value||'exercise'); }
   function pluralExerciseLabel(){ const ex = currentExerciseName(); const low = ex.toLowerCase(); if (low.endsWith('s')) return low + ' performed'; return low + 's performed'; }
 
   function stepOrdinal(){
@@ -426,8 +503,8 @@
   }
 
   // persistence
-  function loadState(){ try{ const s = JSON.parse(localStorage.getItem(STATE_KEY) || '{}'); if(s.max) { max = s.max; maxInput.value = max; } if(typeof s.current === 'number'){ current = s.current; dir = s.dir || 1; } if(s.userLevel) userLevel = s.userLevel; if(s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s.customExerciseName) customExerciseNameInput.value = s.customExerciseName; levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} updateLevelDisplay(); }
-  function saveState(){ const s = { max, current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, customExerciseName: customExerciseNameInput.value }; try{ localStorage.setItem(STATE_KEY, JSON.stringify(s)); } catch(e) {} }
+  function loadState(){ try{ const s = JSON.parse(localStorage.getItem(STATE_KEY) || '{}'); if(typeof s.current === 'number'){ current = s.current; dir = s.dir || 1; } if(s.userLevel) userLevel = s.userLevel; if(s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s.user){ userSexSelect.value = s.user.sex||'male'; userAgeInput.value = s.user.age||''; userHeightCmInput.value = s.user.heightCm||''; userWeightKgInput.value = s.user.weightKg||''; applyAccentByGender(userSexSelect.value); } levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} updateLevelDisplay(); }
+  function saveState(){ const s = { current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, user: { sex: userSexSelect.value||'', age: userAgeInput.value||'', heightCm: userHeightCmInput.value||'', weightKg: userWeightKgInput.value||'' } }; try{ localStorage.setItem(STATE_KEY, JSON.stringify(s)); } catch(e) {} }
 
   function loadAchievements(){ try{ const raw = localStorage.getItem(ACH_KEY); return raw ? JSON.parse(raw) : []; }catch(e){return [];} }
   function saveAchievements(arr){ try{ localStorage.setItem(ACH_KEY, JSON.stringify(arr)); }catch(e){} }
@@ -469,9 +546,13 @@
     stepText.textContent = `Step ${stepOrdinal()} of ${max*2-1}`;
     if(!autoRunning){
       const pct = Math.max(0, Math.min(1, (current / Math.max(1, max))));
-      prog.style.strokeDashoffset = CIRC * (1 - pct);
+      prog.style.strokeDashoffset = TRI_LEN * (1 - pct);
       prog.style.stroke = colorFor(current, max);
       if(!manualTimer) countdownEl.textContent = '00:00';
+      countdownLabel.textContent = 'PLEASE REST FOR';
+      const resting = manualRestRemainingMs>0;
+      countdownLabel.classList.toggle('resting-label', resting);
+      countdownLabel.classList.toggle('idle-rest', !resting);
       bigBtn.classList.remove('disabled');
       bigBtn.textContent = current===0? 'Start' : String(current);
     } else {
@@ -481,30 +562,35 @@
     saveState();
     updateLevelDisplay();
     updateTotalDisplay();
+    // toggle auto button visual state
+    if(autoRunning || autoPaused){ autoBtn.classList.add('primary'); autoBtn.classList.remove('secondary'); }
+    else { autoBtn.classList.remove('primary'); autoBtn.classList.add('secondary'); }
   }
 
   // overall elapsed timer
-  function startOverallTimer(){ stopOverallTimer(); overallStart = performance.now(); overallElapsedSec = 0; elapsedDisplay.textContent = fmtSecondsMMSS(0); overallTimer = setInterval(()=>{ const s = Math.floor((performance.now() - overallStart)/1000); if (s !== overallElapsedSec){ overallElapsedSec = s; elapsedDisplay.textContent = fmtSecondsMMSS(overallElapsedSec); } }, 300); }
+  function startOverallTimer(offsetSec=0){ stopOverallTimer(); overallStart = performance.now() - offsetSec*1000; overallElapsedSec = offsetSec; elapsedDisplay.textContent = fmtSecondsMMSS(offsetSec); overallTimer = setInterval(()=>{ const s = Math.floor((performance.now() - overallStart)/1000); if (s !== overallElapsedSec){ overallElapsedSec = s; elapsedDisplay.textContent = fmtSecondsMMSS(overallElapsedSec); } }, 300); }
   function stopOverallTimer(){ if (overallTimer){ clearInterval(overallTimer); overallTimer=null; } }
   function resetOverallTimer(){ stopOverallTimer(); overallElapsedSec = 0; elapsedDisplay.textContent = fmtSecondsMMSS(0); }
 
   // manual stopwatch
-  function startManualStopwatch(){ stopManualStopwatch(); manualStart = performance.now(); manualElapsedSec = 0; countdownEl.textContent = fmtSecondsMMSS(0); manualTimer = setInterval(()=>{ const elapsedMs = performance.now()-manualStart; const elapsedSec = Math.floor(elapsedMs/1000); if(elapsedSec !== manualElapsedSec){ manualElapsedSec = elapsedSec; countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec); } },200); }
+  function startManualStopwatch(){ stopManualStopwatch(); manualStart = performance.now(); manualElapsedSec = 0; countdownEl.textContent = fmtSecondsMMSS(0); countdownLabel.textContent = ''; countdownLabel.classList.remove('resting-label'); manualTimer = setInterval(()=>{ const elapsedMs = performance.now()-manualStart; const elapsedSec = Math.floor(elapsedMs/1000); if(elapsedSec !== manualElapsedSec){ manualElapsedSec = elapsedSec; countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec); } },200); }
   function stopManualStopwatch(){ if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } }
+  function startManualRest(n){ if(manualRestTimer){ clearInterval(manualRestTimer); manualRestTimer=null; } manualRestRemainingMs = Math.max(300, Math.round(restSecondsForNumber(n)*1000)); countdownLabel.textContent = 'PLEASE REST FOR'; countdownLabel.classList.add('resting-label'); countdownLabel.classList.remove('idle-rest'); function tick(){ manualRestRemainingMs = Math.max(0, manualRestRemainingMs-200); countdownEl.textContent = fmtSecondsMMSS(Math.ceil(manualRestRemainingMs/1000)); if(manualRestRemainingMs>0){ manualRestTimer = setTimeout(tick,200); } else { countdownLabel.classList.remove('resting-label'); countdownLabel.classList.add('idle-rest'); manualAwaitNext = true; } } tick(); }
 
   // manual flow
+  // Manual mirroring auto with skippable rest/blink
   function manualAdvance_StartOrNext(){
     if(manualFinished) return;
-    if(current===0){ current=1; dir=1; startManualStopwatch(); startOverallTimer(); updateUI(); return; }
-    // complete current step
-    stopManualStopwatch();
-    totalReps += current;
-    updateTotalDisplay();
-
-    if(dir===1 && current<max){ current=current+1; startManualStopwatch(); updateUI(); return; }
-    if(dir===1 && current===max){ dir=-1; if(max>1){ current=current+dir; startManualStopwatch(); updateUI(); return; } else { finishManual(); return; } }
-    if(dir===-1 && current>1){ current=current+dir; startManualStopwatch(); updateUI(); return; }
-    if(dir===-1 && current===1){ finishManual(); return; }
+    // start manual flow
+    if(current===0){ current=1; dir=1; if(!overallTimer) startOverallTimer(); updateUI(); manualBeginExercisePhase(); return; }
+    // if currently resting, skip to next step immediately
+    if(manualRestRemainingMs>0){ if(manualRestTimer){ clearTimeout(manualRestTimer); manualRestTimer=null; } manualRestRemainingMs = 0; countdownLabel.textContent=''; countdownLabel.classList.remove('resting-label'); countdownLabel.classList.add('idle-rest'); manualAwaitNext = true; }
+    // if awaiting next step after rest, start the next step now
+    if(manualAwaitNext){ manualAwaitNext = false; advanceToNextStep(); return; }
+    // if blinking is active in manual, skip to next step and count the set
+    if(blinkActive && blinkContext==='manual'){ stopBlinking(); totalReps += current; updateTotalDisplay(); startManualRest(current); return; }
+    // otherwise, complete current set and go to rest
+    totalReps += current; updateTotalDisplay(); startManualRest(current);
   }
 
   function finishManual(){
@@ -516,81 +602,146 @@
     bigBtn.classList.add('done-pulse');
     // show summary popup with final numbers
     play('finish');
-    showSummary();
+    setTimeout(()=>{ showSummary(); }, 2000);
     updateUI();
   }
 
   // build 1..max..1 sequence
   function buildPyramidSequence(maxN){ const seq=[]; for(let i=1;i<=maxN;i++) seq.push(i); for(let j=maxN-1;j>=1;j--) seq.push(j); return seq; }
 
-  // auto run
+  // auto run with pause and rest countdown
   function startAuto(){
     stopManualStopwatch();
     manualFinished=false;
     if(current===0) current=1;
-    autoRunning=true; autoBtn.textContent='Stop'; bigBtn.classList.add('disabled');
-    startOverallTimer();
-    const seq = buildPyramidSequence(max); let idx = seq.indexOf(current); if(idx<0) idx=0;
-
-    function runNext(){
-      if(!autoRunning) return;
-      const n = seq[idx];
-      const ex = exerciseSecondsForNumber(n);
-      const rest = restSecondsForNumber(n);
-      const total = Math.max(300, Math.round((ex+rest)*1000));
-      const interval = 100; const steps = Math.max(1, Math.round(total/interval)); let step = 0;
-
-      current = n; play('click'); updateUI(); stepText.textContent = `Step ${idx+1} of ${seq.length}`;
-
-      function tick(){
-        if(!autoRunning) return;
-        step++;
-        const pct = Math.min(1, step/steps);
-        prog.style.strokeDashoffset = CIRC * (1 - pct);
-        prog.style.stroke = colorFor(n, max);
-        const remainingMs = Math.max(0, Math.round(total - step*interval));
-        countdownEl.textContent = fmtSecondsMMSS(Math.ceil(remainingMs/1000));
-        if(step < steps){ tickTimer = setTimeout(tick, interval); }
-        else {
-          // finish step
-          totalReps += n; updateTotalDisplay();
-          play('click');
-          idx++;
-          if(idx >= seq.length){
-            // full done
-            autoRunning = false;
-            autoBtn.textContent = 'Auto';
-            bigBtn.classList.remove('disabled');
-            manualFinished = true;
-            stopOverallTimer();
-            bigBtn.textContent = 'Done';
-            bigBtn.classList.add('done-pulse');
-            countdownEl.textContent = '00:00';
-            // show summary
-            play('finish');
-            showSummary();
-            updateUI();
-            return;
-          }
-          tickTimer = setTimeout(()=>{ runNext(); }, 140);
-        }
-      }
-      countdownEl.textContent = fmtSecondsMMSS(Math.ceil(total/1000));
-      prog.style.stroke = colorFor(n, max);
-      tick();
-    }
-    runNext();
+    if(!overallTimer) startOverallTimer();
+    autoRunning=true; autoPaused=false; autoBtn.textContent='Pause'; bigBtn.classList.add('disabled');
+    autoSeq = buildPyramidSequence(max);
+    autoIdx = autoSeq.indexOf(current);
+    if(autoIdx < 0) autoIdx = 0;
+    beginExercisePhase();
+    updateUI();
   }
 
-  function stopAuto(){ if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; } autoRunning=false; autoBtn.textContent='Auto'; bigBtn.classList.remove('disabled'); countdownEl.textContent='00:00'; stopOverallTimer(); updateUI(); }
+  function pauseAuto(){
+    if(!autoRunning) return;
+    autoPaused = true; autoRunning = false; autoBtn.textContent='Resume';
+    if(exerciseTimer){ clearInterval(exerciseTimer); exerciseTimer=null; }
+    if(restTimer){ clearInterval(restTimer); restTimer=null; }
+    // Pause overall timer
+    stopOverallTimer();
+    updateUI();
+  }
+
+  function resumeAuto(){
+    if(!autoPaused) return;
+    autoRunning = true; autoPaused = false; autoBtn.textContent='Pause';
+    startOverallTimer(overallElapsedSec);
+    if(autoPhase === 'exercise') resumeExercisePhase();
+    else if(autoPhase === 'rest') resumeRestPhase();
+    updateUI();
+  }
+
+  function finishAuto(){
+    autoRunning = false; autoPaused = false; autoBtn.textContent='Auto';
+    if(exerciseTimer){ clearInterval(exerciseTimer); exerciseTimer=null; }
+    if(restTimer){ clearInterval(restTimer); restTimer=null; }
+    bigBtn.classList.remove('disabled');
+    manualFinished = true;
+    stopOverallTimer();
+    bigBtn.textContent = 'Done';
+    bigBtn.classList.add('done-pulse');
+    countdownEl.textContent = '00:00';
+    play('finish');
+    setTimeout(()=>{ showSummary(); }, 2000);
+    updateUI();
+  }
+
+  function beginExercisePhase(){
+    autoPhase = 'exercise';
+    const n = autoSeq[autoIdx];
+    current = n; updateUI(); stepText.textContent = `Step ${autoIdx+1} of ${autoSeq.length}`; play('stepStart');
+    // step-based ring (no within-step animation), just set color and offset
+    const pct = Math.max(0, Math.min(1, (current / Math.max(1, max))));
+    prog.style.strokeDashoffset = TRI_LEN * (1 - pct);
+    prog.style.stroke = colorFor(n, max);
+    // blink big button n times based on level interval, then rest
+    blinkContext='auto'; blinkRepsThenRest(n);
+    countdownLabel.textContent = 'PLEASE REST FOR';
+    countdownLabel.classList.add('idle-rest');
+    countdownLabel.classList.remove('resting-label');
+  }
+
+  function resumeExercisePhase(){
+    // resume blinking sequence based on remaining blinks
+    const n = autoSeq[autoIdx];
+    continueBlinking();
+  }
+
+  function beginRestPhase(){
+    autoPhase = 'rest';
+    const n = autoSeq[autoIdx];
+    const rest = Math.max(300, Math.round(restSecondsForNumber(n)*1000));
+    restRemainingMs = rest;
+    countdownLabel.textContent = 'PLEASE REST FOR';
+    updateRestCountdown();
+    function restTick(){
+      if(!autoRunning){ return; }
+      restRemainingMs = Math.max(0, restRemainingMs - 200);
+      updateRestCountdown();
+      if(restRemainingMs > 0){ restTimer = setTimeout(restTick, 200); }
+      else { autoIdx++; if(autoIdx >= autoSeq.length){ finishAuto(); } else { beginExercisePhase(); } }
+    }
+    restTimer = setTimeout(restTick, 200);
+    countdownLabel.classList.add('resting-label');
+    countdownLabel.classList.remove('idle-rest');
+  }
+
+  function resumeRestPhase(){
+    countdownLabel.textContent = 'PLEASE REST FOR';
+    updateRestCountdown();
+    function restTick(){
+      if(!autoRunning){ return; }
+      restRemainingMs = Math.max(0, restRemainingMs - 200);
+      updateRestCountdown();
+      if(restRemainingMs > 0){ restTimer = setTimeout(restTick, 200); }
+      else { autoIdx++; if(autoIdx >= autoSeq.length){ finishAuto(); } else { beginExercisePhase(); } }
+    }
+    restTimer = setTimeout(restTick, 200);
+    countdownLabel.classList.add('resting-label');
+  }
+
+  function updateRestCountdown(){
+    const secs = Math.ceil(restRemainingMs/1000);
+    countdownEl.textContent = fmtSecondsMMSS(secs);
+  }
+
+  // Blink logic for auto/manual exercise
+  let blinkPlan = { total: 0, done: 0, interval: 1000 };
+  let blinkContext = null; // 'auto' | 'manual'
+  let blinkActive = false;
+  function blinkIntervalForLevel(){ switch(userLevel){ case 'athlete': return 1500; case 'intermediate': return 1800; case 'low': return 2100; case 'beginner': return 2400; default: return 1800; } }
+  function blinkOnce(){ bigBtn.classList.add('blink'); screenFlash.classList.add('screen-flash'); play('repetition'); setTimeout(()=>{ bigBtn.classList.remove('blink'); screenFlash.classList.remove('screen-flash'); }, Math.min(600, blinkPlan.interval*0.6)); }
+  function stopBlinking(){ blinkActive=false; if(exerciseTimer){ clearTimeout(exerciseTimer); exerciseTimer=null; } }
+  function scheduleNextBlink(){ if(!blinkActive) return; if(blinkPlan.done >= blinkPlan.total){ const n = (blinkContext==='auto')? autoSeq[autoIdx] : current; play('stepComplete'); if(blinkContext==='auto'){ totalReps += n; updateTotalDisplay(); beginRestPhase(); } else { totalReps += n; updateTotalDisplay(); startManualRest(n); } blinkActive=false; return; } const delay = (blinkPlan.done===0? 1000 : blinkPlan.interval); // 1s delay before first blink
+    exerciseTimer = setTimeout(()=>{ if(!blinkActive) return; blinkOnce(); blinkPlan.done++; scheduleNextBlink(); }, delay); }
+  function blinkRepsThenRest(n){ blinkPlan = { total: n, done: 0, interval: blinkIntervalForLevel() }; blinkActive=true; scheduleNextBlink(); }
+  function continueBlinking(){ blinkActive=true; scheduleNextBlink(); }
+
+  function manualBeginExercisePhase(){ const n = current; const pct = Math.max(0, Math.min(1, (n / Math.max(1, max)))); prog.style.strokeDashoffset = TRI_LEN * (1 - pct); prog.style.stroke = colorFor(n, max); blinkContext='manual'; play('stepStart'); countdownLabel.textContent='PLEASE REST FOR'; countdownLabel.classList.add('idle-rest'); countdownLabel.classList.remove('resting-label'); blinkRepsThenRest(n); }
+  function advanceToNextStep(){ if(dir===1 && current<max){ current=current+1; updateUI(); manualBeginExercisePhase(); return; } if(dir===1 && current===max){ dir=-1; if(max>1){ current=current+dir; updateUI(); manualBeginExercisePhase(); return; } else { finishManual(); return; } } if(dir===-1 && current>1){ current=current+dir; updateUI(); manualBeginExercisePhase(); return; } if(dir===-1 && current===1){ finishManual(); return; } }
 
   // reset
   function doReset(){
     bigBtn.classList.remove('done-pulse');
     if(tickTimer){ clearTimeout(tickTimer); tickTimer=null; }
+    if(exerciseTimer){ clearTimeout(exerciseTimer); exerciseTimer=null; }
+    if(restTimer){ clearTimeout(restTimer); restTimer=null; }
     if(manualTimer){ clearInterval(manualTimer); manualTimer=null; }
-    autoRunning=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00';
-    prog.style.strokeDashoffset = CIRC; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start';
+    autoRunning=false; autoPaused=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00';
+    // reset max to default 5
+    max = 5; maxInput.value = '5';
+    prog.style.strokeDashoffset = TRI_LEN; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start';
     stopOverallTimer(); resetOverallTimer();
     totalReps = 0; updateTotalDisplay(); updateUI();
   }
@@ -603,7 +754,7 @@
     max = v;
     maxInput.value = String(v);
     if (current > max) current = max;
-    prog.style.strokeDashoffset = CIRC * (1 - (current / Math.max(1, max)));
+    prog.style.strokeDashoffset = TRI_LEN * (1 - (current / Math.max(1, max)));
     updateUI();
   }
 
@@ -642,6 +793,8 @@
     summaryPopup.setAttribute('aria-hidden','true');
     // show achievements panel right away
     openAchievements();
+    // auto reset for next workout
+    doReset();
   }
 
   // Achievements UI
@@ -713,20 +866,62 @@
   // events wiring
   bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; if(manualFinished) return; play('click'); manualAdvance_StartOrNext(); });
 
-  resetBtn.addEventListener('click', ()=>{ play('click'); resetConfirm.style.display = 'block'; resetConfirm.setAttribute('aria-hidden','false'); });
-  confirmReset.addEventListener('click', ()=>{ play('click'); resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); doReset(); });
+  resetBtn.addEventListener('click', ()=>{ play('reset'); resetConfirm.style.display = 'block'; resetConfirm.setAttribute('aria-hidden','false'); });
+  confirmReset.addEventListener('click', ()=>{ play('save'); resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); doReset(); });
   cancelReset.addEventListener('click', ()=>{ play('click'); resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); });
 
-  autoBtn.addEventListener('click', ()=>{ play('click'); if(!autoRunning) startAuto(); else stopAuto(); });
+  autoBtn.addEventListener('click', ()=>{ play('auto');
+    if(!autoRunning && !autoPaused){ startAuto(); }
+    else if(autoRunning){ pauseAuto(); }
+    else if(autoPaused){ resumeAuto(); }
+  });
 
   trophyIcon.addEventListener('click', ()=>{ play('click'); openAchievements(); });
-  closeAch.addEventListener('click', ()=>{ play('click'); achPopup.style.display='none'; achPopup.setAttribute('aria-hidden','true'); });
+  closeAch.addEventListener('click', ()=>{ play('save'); achPopup.style.display='none'; achPopup.setAttribute('aria-hidden','true'); });
 
   settingsIcon.addEventListener('click', ()=>{ play('click'); settingsPopup.style.display='block'; settingsPopup.setAttribute('aria-hidden','false'); });
-  closeSettings.addEventListener('click', ()=>{ play('click'); settingsPopup.style.display='none'; settingsPopup.setAttribute('aria-hidden','true'); });
+  closeSettings.addEventListener('click', ()=>{ play('save'); settingsPopup.style.display='none'; settingsPopup.setAttribute('aria-hidden','true'); });
+
+  // user modal
+  userIcon.addEventListener('click', ()=>{ play('click'); userPopup.style.display='block'; userPopup.setAttribute('aria-hidden','false'); });
+  closeUserBtn.addEventListener('click', ()=>{ play('save'); userPopup.style.display='none'; userPopup.setAttribute('aria-hidden','true'); });
+  function applyAccentByGender(g){
+    const root = document.documentElement;
+    if(g === 'female'){
+      root.style.setProperty('--accent-a', '#8a2be2');
+      root.style.setProperty('--accent-b', '#b266ff');
+    } else {
+      root.style.setProperty('--accent-a', '#0b84ff');
+      root.style.setProperty('--accent-b', '#2aa0ff');
+    }
+  }
+  function selectLevelRadio(level){ levelRadios.forEach(r=>{ r.checked = (r.value===level); }); }
+  saveUserBtn.addEventListener('click', ()=>{
+    play('click');
+    const gender = userSexSelect.value;
+    const hCm = parseFloat(userHeightCmInput.value);
+    const wKg = parseFloat(userWeightKgInput.value);
+    applyAccentByGender(gender);
+    // simple BMI-based level suggestion
+    if(isFinite(hCm) && hCm>0 && isFinite(wKg) && wKg>0){
+      const hM = hCm/100;
+      const bmi = wKg/(hM*hM);
+      let lvl = 'intermediate';
+      if(bmi < 21) lvl = 'athlete';
+      else if(bmi < 25) lvl = 'intermediate';
+      else if(bmi < 30) lvl = 'low';
+      else lvl = 'beginner';
+      userLevel = lvl;
+      selectLevelRadio(lvl);
+      updateLevelDisplay();
+      saveState();
+    }
+    userPopup.style.display='none';
+    userPopup.setAttribute('aria-hidden','true');
+  });
 
   helpIcon.addEventListener('click', ()=>{ play('help'); helpPopup.style.display='block'; helpPopup.setAttribute('aria-hidden','false'); });
-  closeHelp.addEventListener('click', ()=>{ play('click'); helpPopup.style.display='none'; helpPopup.setAttribute('aria-hidden','true'); });
+  closeHelp.addEventListener('click', ()=>{ play('save'); helpPopup.style.display='none'; helpPopup.setAttribute('aria-hidden','true'); });
 
   // speaker toggle
   speakerIcon.addEventListener('click', ()=>{
@@ -736,8 +931,8 @@
     saveMute();
   });
 
-  saveAchievementBtn.addEventListener('click', ()=>{ play('click'); saveAchievement(); });
-  closeSummaryBtn.addEventListener('click', ()=>{ play('click'); summaryPopup.style.display='none'; summaryPopup.setAttribute('aria-hidden','true'); });
+  saveAchievementBtn.addEventListener('click', ()=>{ play('save'); saveAchievement(); });
+  closeSummaryBtn.addEventListener('click', ()=>{ play('save'); summaryPopup.style.display='none'; summaryPopup.setAttribute('aria-hidden','true'); doReset(); });
 
   downloadCsv.addEventListener('click', ()=>{ play('click'); downloadAchievementsCsv(); });
 
@@ -763,7 +958,7 @@
     if(v.startsWith('.')) v = '0'+v;
     restPerRepSecInput.value = v;
   });
-  customExerciseNameInput.addEventListener('change', ()=> saveState());
+  
   modeSelect.addEventListener('change', ()=>{ updateUI(); saveState(); updateTotalDisplay(); });
 
   maxInput.addEventListener('change', clampMaxInput);
@@ -779,6 +974,7 @@
   // init
   loadState();
   loadMute();
+  resetBtn.textContent = 'R e s e t';
   clampMaxInput();
   totalReps = 0; updateTotalDisplay();
   updateUI();
