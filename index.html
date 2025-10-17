@@ -4,6 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
 <title>Pyramid Counter — Polished + Achievements</title>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<link rel="apple-touch-icon" href="IMG/IMG_7105.PNG" />
 <style>
   :root{
     --card-w:420px;
@@ -19,7 +21,7 @@
   }
   html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;color:#eef2f3;-webkit-font-smoothing:antialiased}
   .center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:env(safe-area-inset-top) 14px 14px;box-sizing:border-box;}
-  .card{width:100%;max-width:var(--card-w);border-radius:16px;padding:10px 12px 18px;box-sizing:border-box;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));border:1px solid var(--outline);box-shadow:0 18px 50px rgba(0,0,0,0.65);position:relative;}
+  .card{width:100%;max-width:var(--card-w);border-radius:16px;padding:10px 12px 18px;box-sizing:border-box;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));border:1px solid var(--outline);box-shadow:0 18px 50px rgba(0,0,0,0.65), 0 6px 18px rgba(0,0,0,0.6), inset 0 4px 14px rgba(255,255,255,0.03);position:relative;}
 
   /* Top bar */
   .topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 4px;}
@@ -43,9 +45,14 @@
   .ring-svg{position:absolute;width:calc(var(--btn-size) + 40px);height:calc(var(--btn-size) + 40px);left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
   .ring-svg circle{transition:stroke 120ms linear, stroke-dashoffset 120ms linear;stroke-width:var(--ring-w);stroke-linecap:round}
   .ring-svg path{transition:stroke 120ms linear, stroke-dashoffset 120ms linear;stroke-linecap:round}
-  button.big{width:var(--btn-size);height:var(--btn-size);border:none;font-size:30px;font-weight:800;color:#fff;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));box-shadow:0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), inset 0 4px 14px rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;transition:transform 140ms, box-shadow 140ms; clip-path: polygon(50% 0%, 100% 86.6%, 0% 86.6%);}
+  button.big{width:var(--btn-size);height:var(--btn-size);border:none;font-size:30px;font-weight:800;color:#fff;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));box-shadow:0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), inset 0 4px 14px rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;transition:transform 140ms, box-shadow 140ms; clip-path: polygon(50% 0%, 100% 86.6%, 0% 86.6%); text-align:center; white-space:normal; line-height:1.05;}
   button.big:active{transform:translateY(4px) scale(.99);box-shadow:0 10px 18px rgba(0,0,0,0.5), inset 0 2px 8px rgba(255,255,255,0.02)}
   button.big.disabled{opacity:.78;pointer-events:none}
+  /* Smaller size when using stacked start label */
+  button.big.stacked{ font-size:24px; }
+  button.big.stacked .start-label{ position: relative; top: 35px; text-transform: uppercase; }
+  button.big.stacked .start-top{ display:block; font-size:65%; }
+  button.big.stacked .start-bottom{ display:block; font-size:110%; }
 
   /* Instruction */
   .instruction{width:100%;text-align:center;font-weight:800;font-size:28px;color:#fff;margin-top:8px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:8px}
@@ -108,6 +115,9 @@
     :root{--card-w:94vw}
     .instruction{font-size:22px}
     button.big{width:calc(var(--btn-size) * 1.15);height:calc(var(--btn-size) * 1.15);font-size:34px}
+    button.big.stacked{ font-size:26px; }
+    button.big.stacked .start-top{ font-size:65%; }
+    button.big.stacked .start-bottom{ font-size:110%; }
     .btn-area{width:calc(var(--btn-size) + 160px);height:calc(var(--btn-size) + 160px)}
     .ring-svg{width:calc(var(--btn-size) + 160px);height:calc(var(--btn-size) + 160px)}
     #maxInput{ width:66px; }
@@ -257,13 +267,16 @@
             <summary style="font-weight:800; cursor:pointer">How it works / How to use it</summary>
             <div style="margin-top:8px">
               <ul>
-                <li><strong>Pick your max number</strong> in the top inputs (for example 10). That sets how high the pyramid goes.</li>
-                <li><strong>Choose your exercise</strong> (for example squats or push-ups). You can also enter a custom name.</li>
-                <li><strong>Manual mode</strong>: Tap the big button to start. Do the reps shown. Tap again when you finish that set. The app advances the pyramid and adds to your total.</li>
-                <li><strong>Auto mode</strong>: Press Auto and the app runs each step with a countdown (exercise + rest) until the whole pyramid is done.</li>
-                <li><strong>Settings</strong>: Set your level (this adjusts timing), seconds per rep, and rest time. You can also mute/unmute sounds with the speaker icon.</li>
-                <li><strong>Reset</strong>: Use Reset if you want to clear the session (elapsed time and totals).</li>
-                <li><strong>Achievements</strong>: After finishing, save your session, view past sessions, or download them as a CSV file.</li>
+                <li><strong>Pick your max number</strong> at the top (e.g., 10). This sets the pyramid peak.</li>
+                <li><strong>Choose exercise</strong> from the dropdown.</li>
+                <li><strong>Manual mode</strong>: Tap the big button to start. Follow the rep count on the button. After each set, rest is shown and you can advance when ready.</li>
+                <li><strong>Auto mode (armed)</strong>: Tap Auto to arm it (you'll see Armed). Then press the big button to start. The app runs steps automatically with rest between sets. You can Pause/Resume from the Auto button.</li>
+                <li><strong>Level-based rest</strong>: Rest time per step scales by reps and level:
+                  Athlete = reps × 1.5s • Intermediate = reps × 3s • Low = reps × 5s • Beginner = reps × 7s.</li>
+                <li><strong>Adjust timing anytime</strong>: In Settings you can change <em>Custom seconds-per-rep</em> and <em>Rest seconds per rep</em> at any time. If a rest value is set, it overrides the level-based defaults.</li>
+                <li><strong>Sounds</strong>: Toggle sound via the speaker icon.</li>
+                <li><strong>Reset</strong>: Clears the current workout, timers, and totals.</li>
+                <li><strong>Achievements</strong>: After finishing, save your session, view past sessions, or download CSV.</li>
               </ul>
             </div>
           </details>
@@ -324,6 +337,18 @@
           <div class="confirm-actions">
             <button id="cancelReset" class="btn secondary">Cancel</button>
             <button id="confirmReset" class="btn primary">Confirm Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEVEL SUGGESTION OVERLAY -->
+      <div id="levelSuggest" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="confirm-panel">
+          <h3>Suggested level</h3>
+          <p id="levelSuggestText">Based on your profile, we suggest: -</p>
+          <div class="confirm-actions">
+            <button id="denyLevel" class="btn secondary">Keep Current</button>
+            <button id="acceptLevel" class="btn primary">Apply Suggestion</button>
           </div>
         </div>
       </div>
@@ -420,6 +445,12 @@
   const downloadCsv = document.getElementById('downloadCsv');
   const closeAch = document.getElementById('closeAch');
 
+  // Level suggestion overlay elements
+  const levelSuggest = document.getElementById('levelSuggest');
+  const levelSuggestText = document.getElementById('levelSuggestText');
+  const acceptLevel = document.getElementById('acceptLevel');
+  const denyLevel = document.getElementById('denyLevel');
+
   // User modal elements
   const userPopup = document.getElementById('userPopup');
   const userSexSelect = document.getElementById('userSex');
@@ -428,6 +459,7 @@
   const userWeightKgInput = document.getElementById('userWeightKg');
   const saveUserBtn = document.getElementById('saveUser');
   const closeUserBtn = document.getElementById('closeUser');
+  let pendingSuggestedLevel = null;
 
   // SFX
   const MUTE_KEY = 'pyr_sfx_mute_v1';
@@ -456,6 +488,7 @@
   let current = 0;
   let dir = 1;
   let autoRunning = false;
+  let autoArmed = false;
   let autoPaused = false;
   let autoPhase = null; // 'exercise' | 'rest'
   let autoSeq = [];
@@ -513,7 +546,12 @@
   function baseSecondsPerRepForMode(){ const m = modeSelect.value; if(m==='squats') return 3.0; if(m==='pushups') return 2.0; if(m==='pullups') return 2.5; if(m==='situps') return 2.5; if(m==='burpees') return 3.0; if(m==='custom'){ const v=parseFloat(customSecondsPerRepInput.value); return (isFinite(v)&&v>0)?v:2.0 } return 2.0; }
   function levelMultiplier(){ switch(userLevel){ case 'athlete':return .75; case 'intermediate':return 1; case 'low':return 1.2; case 'beginner':return 1.45; default:return 1; } }
   function exerciseSecondsForNumber(n){ return baseSecondsPerRepForMode() * levelMultiplier() * n; }
-  function restSecondsForNumber(n){ const rUnit = parseFloat(restPerRepSecInput.value); const r = (isFinite(rUnit)&&rUnit>0)?rUnit:10; const lvl = (userLevel==='athlete')?0.8:(userLevel==='beginner')?1.4:(userLevel==='low')?1.2:1.0; return r*lvl*n; }
+  function restSecondsForNumber(n){
+    const v = parseFloat(restPerRepSecInput.value);
+    if (isFinite(v) && v > 0) return v * n; // user override
+    const perRep = (userLevel==='athlete')?1.5:(userLevel==='intermediate')?3:(userLevel==='low')?5:7;
+    return perRep * n;
+  }
 
   // basic calorie estimate
   // Use approximate MET values per exercise type:
@@ -554,7 +592,8 @@
       countdownLabel.classList.toggle('resting-label', resting);
       countdownLabel.classList.toggle('idle-rest', !resting);
       bigBtn.classList.remove('disabled');
-      bigBtn.textContent = current===0? 'Start' : String(current);
+      if(current===0){ bigBtn.classList.add('stacked'); bigBtn.innerHTML = '<span class="start-label"><span class="start-top">Press to</span><span class="start-bottom">Start</span></span>'; }
+      else { bigBtn.classList.remove('stacked'); bigBtn.textContent = String(current); }
     } else {
       bigBtn.classList.add('disabled');
       bigBtn.textContent = current===0? '—' : String(current);
@@ -563,7 +602,7 @@
     updateLevelDisplay();
     updateTotalDisplay();
     // toggle auto button visual state
-    if(autoRunning || autoPaused){ autoBtn.classList.add('primary'); autoBtn.classList.remove('secondary'); }
+    if(autoRunning || autoPaused || autoArmed){ autoBtn.classList.add('primary'); autoBtn.classList.remove('secondary'); }
     else { autoBtn.classList.remove('primary'); autoBtn.classList.add('secondary'); }
   }
 
@@ -723,7 +762,7 @@
   function blinkIntervalForLevel(){ switch(userLevel){ case 'athlete': return 1500; case 'intermediate': return 1800; case 'low': return 2100; case 'beginner': return 2400; default: return 1800; } }
   function blinkOnce(){ bigBtn.classList.add('blink'); screenFlash.classList.add('screen-flash'); play('repetition'); setTimeout(()=>{ bigBtn.classList.remove('blink'); screenFlash.classList.remove('screen-flash'); }, Math.min(600, blinkPlan.interval*0.6)); }
   function stopBlinking(){ blinkActive=false; if(exerciseTimer){ clearTimeout(exerciseTimer); exerciseTimer=null; } }
-  function scheduleNextBlink(){ if(!blinkActive) return; if(blinkPlan.done >= blinkPlan.total){ const n = (blinkContext==='auto')? autoSeq[autoIdx] : current; play('stepComplete'); if(blinkContext==='auto'){ totalReps += n; updateTotalDisplay(); beginRestPhase(); } else { totalReps += n; updateTotalDisplay(); startManualRest(n); } blinkActive=false; return; } const delay = (blinkPlan.done===0? 1000 : blinkPlan.interval); // 1s delay before first blink
+  function scheduleNextBlink(){ if(!blinkActive) return; if(blinkPlan.done >= blinkPlan.total){ const n = (blinkContext==='auto')? autoSeq[autoIdx] : current; setTimeout(()=>{ play('stepComplete'); }, 1500); if(blinkContext==='auto'){ totalReps += n; updateTotalDisplay(); beginRestPhase(); } else { totalReps += n; updateTotalDisplay(); startManualRest(n); } blinkActive=false; return; } const delay = (blinkPlan.done===0? 1000 : blinkPlan.interval); // 1s delay before first blink
     exerciseTimer = setTimeout(()=>{ if(!blinkActive) return; blinkOnce(); blinkPlan.done++; scheduleNextBlink(); }, delay); }
   function blinkRepsThenRest(n){ blinkPlan = { total: n, done: 0, interval: blinkIntervalForLevel() }; blinkActive=true; scheduleNextBlink(); }
   function continueBlinking(){ blinkActive=true; scheduleNextBlink(); }
@@ -738,7 +777,7 @@
     if(exerciseTimer){ clearTimeout(exerciseTimer); exerciseTimer=null; }
     if(restTimer){ clearTimeout(restTimer); restTimer=null; }
     if(manualTimer){ clearInterval(manualTimer); manualTimer=null; }
-    autoRunning=false; autoPaused=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00';
+    autoRunning=false; autoPaused=false; autoArmed=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00';
     // reset max to default 5
     max = 5; maxInput.value = '5';
     prog.style.strokeDashoffset = TRI_LEN; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start';
@@ -864,14 +903,22 @@
   }
 
   // events wiring
-  bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; if(manualFinished) return; play('click'); manualAdvance_StartOrNext(); });
+  bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; if(manualFinished) return; 
+    // If Auto is armed, start auto on main button press
+    if(autoArmed && !autoRunning && !autoPaused){ play('click'); startAuto(); autoArmed=false; autoBtn.textContent='Pause'; updateUI(); return; }
+    play('click'); manualAdvance_StartOrNext(); });
 
   resetBtn.addEventListener('click', ()=>{ play('reset'); resetConfirm.style.display = 'block'; resetConfirm.setAttribute('aria-hidden','false'); });
   confirmReset.addEventListener('click', ()=>{ play('save'); resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); doReset(); });
   cancelReset.addEventListener('click', ()=>{ play('click'); resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); });
 
   autoBtn.addEventListener('click', ()=>{ play('auto');
-    if(!autoRunning && !autoPaused){ startAuto(); }
+    if(!autoRunning && !autoPaused){
+      // Toggle armed state; actual start happens on big button press
+      autoArmed = !autoArmed;
+      autoBtn.textContent = autoArmed ? 'Armed' : 'Auto';
+      updateUI();
+    }
     else if(autoRunning){ pauseAuto(); }
     else if(autoPaused){ resumeAuto(); }
   });
@@ -902,6 +949,8 @@
     const hCm = parseFloat(userHeightCmInput.value);
     const wKg = parseFloat(userWeightKgInput.value);
     applyAccentByGender(gender);
+    // Save non-level fields immediately
+    saveState();
     // simple BMI-based level suggestion
     if(isFinite(hCm) && hCm>0 && isFinite(wKg) && wKg>0){
       const hM = hCm/100;
@@ -911,13 +960,33 @@
       else if(bmi < 25) lvl = 'intermediate';
       else if(bmi < 30) lvl = 'low';
       else lvl = 'beginner';
-      userLevel = lvl;
-      selectLevelRadio(lvl);
-      updateLevelDisplay();
-      saveState();
+      pendingSuggestedLevel = lvl;
+      levelSuggestText.textContent = `Based on your profile, we suggest: ${lvl.charAt(0).toUpperCase()+lvl.slice(1)}. Apply?`;
+      levelSuggest.style.display='block';
+      levelSuggest.setAttribute('aria-hidden','false');
     }
     userPopup.style.display='none';
     userPopup.setAttribute('aria-hidden','true');
+  });
+
+  acceptLevel.addEventListener('click', ()=>{
+    play('save');
+    if(pendingSuggestedLevel){
+      userLevel = pendingSuggestedLevel;
+      selectLevelRadio(userLevel);
+      updateLevelDisplay();
+      saveState();
+    }
+    levelSuggest.style.display='none';
+    levelSuggest.setAttribute('aria-hidden','true');
+    pendingSuggestedLevel = null;
+  });
+
+  denyLevel.addEventListener('click', ()=>{
+    play('click');
+    levelSuggest.style.display='none';
+    levelSuggest.setAttribute('aria-hidden','true');
+    pendingSuggestedLevel = null;
   });
 
   helpIcon.addEventListener('click', ()=>{ play('help'); helpPopup.style.display='block'; helpPopup.setAttribute('aria-hidden','false'); });
