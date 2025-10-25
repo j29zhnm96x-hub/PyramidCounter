@@ -18,19 +18,19 @@
 <style>
   :root{
     --card-w:420px;
-    --bg-1:#07090c; --bg-2:#05111a;
-    --muted:#9fa6ad;
-    --accent-a:#0b84ff; --accent-b:#2aa0ff;
-    --outline:rgba(255,255,255,0.06);
-    --glass:rgba(255,255,255,0.02);
-    --input-bg: rgba(255,255,255,0.03);
-    --input-border: rgba(255,255,255,0.08);
+    --bg-1:#0f172a; --bg-2:#1e293b;
+    --muted:#9fb5cf;
+    --accent-a:#22d3ee; --accent-b:#3b82f6;
+    --outline:rgba(255,255,255,0.12);
+    --glass:rgba(255,255,255,0.06);
+    --input-bg: rgba(255,255,255,0.12);
+    --input-border: rgba(255,255,255,0.18);
     --ring-w:4;
-    --btn-size:150px;
+    --btn-size:180px;
   }
   html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;color:#eef2f3;-webkit-font-smoothing:antialiased}
   .center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:env(safe-area-inset-top) 14px 14px;box-sizing:border-box;}
-  .card{width:100%;max-width:var(--card-w);border-radius:16px;padding:10px 12px 18px;box-sizing:border-box;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));border:1px solid var(--outline);box-shadow:0 18px 50px rgba(0,0,0,0.65), 0 6px 18px rgba(0,0,0,0.6), inset 0 4px 14px rgba(255,255,255,0.03);position:relative;}
+  .card{width:100%;max-width:var(--card-w);border-radius:16px;padding:10px 12px 18px;box-sizing:border-box;background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));border:1px solid var(--outline);box-shadow:0 18px 50px rgba(0,0,0,0.45), 0 6px 18px rgba(0,0,0,0.4), inset 0 4px 14px rgba(255,255,255,0.04);position:relative;}
 
   /* Top bar */
   .topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 4px;}
@@ -38,23 +38,23 @@
   .icons-left{justify-content:flex-start}
   .icons-center{flex:1;display:flex;justify-content:center}
   .icons-right{justify-content:flex-end}
-  .icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--outline);background:rgba(255,255,255,0.02);cursor:pointer;font-size:16px;box-shadow:0 6px 14px rgba(0,0,0,0.45);transition:transform 120ms, background 120ms}
+  .icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--outline);background:rgba(255,255,255,0.12);cursor:pointer;font-size:16px;box-shadow:0 6px 14px rgba(0,0,0,0.35);transition:transform 120ms, background 120ms}
   .icon:active{transform:translateY(2px) scale(.98);}
 
   /* Inputs */
   .inputs-row{display:flex;align-items:center;gap:12px;padding:6px 6px 10px;justify-content:center;flex-wrap:wrap;}
   .input-col{display:flex;flex-direction:column;gap:6px;align-items:center}
   .input-label{font-size:13px;color:var(--muted);letter-spacing:0.2px;text-align:center}
-  input[type=number], select{padding:9px 10px;border-radius:10px;border:1px solid var(--input-border);background:var(--input-bg);color:#fff;font-size:15px;box-shadow:inset 0 4px 10px rgba(0,0,0,0.45)}
+  input[type=number], select{padding:9px 10px;border-radius:10px;border:1px solid var(--input-border);background:var(--input-bg);color:#fff;font-size:16px;box-shadow:inset 0 4px 10px rgba(0,0,0,0.35)}
   #maxInput{ width:56px; text-align:center; font-weight:700; letter-spacing:0.6px; }
 
   /* Main area */
   .main{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:4px;margin-bottom:4px;flex-direction:column}
-  .btn-area{position:relative; width:calc(var(--btn-size) + 60px); height:calc(var(--btn-size) + 60px); display:flex;align-items:center;justify-content:center;margin-top:6px;}
-  .ring-svg{position:absolute;width:calc(var(--btn-size) + 40px);height:calc(var(--btn-size) + 40px);left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
+  .btn-area{position:relative; width:var(--btn-size); height:var(--btn-size); display:flex;align-items:center;justify-content:center;margin-top:6px;}
+  .ring-svg{position:absolute;width:var(--btn-size);height:var(--btn-size);left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
   .ring-svg circle{transition:stroke 120ms linear, stroke-dashoffset 120ms linear;stroke-width:var(--ring-w);stroke-linecap:round}
   .ring-svg path{transition:stroke 120ms linear, stroke-dashoffset 120ms linear;stroke-linecap:round}
-  button.big{width:var(--btn-size);height:var(--btn-size);border:none;font-size:30px;font-weight:800;color:#fff;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));box-shadow:0 22px 40px rgba(2,6,23,0.6), 0 6px 18px rgba(0,0,0,0.6), inset 0 4px 14px rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;transition:transform 140ms, box-shadow 140ms; clip-path: polygon(50% 0%, 100% 86.6%, 0% 86.6%); text-align:center; white-space:normal; line-height:1.05;}
+  button.big{width:var(--btn-size);height:var(--btn-size);border:none;font-size:112px;font-weight:900;color:#fff;background:linear-gradient(180deg,var(--accent-a),var(--accent-b));box-shadow:0 22px 40px rgba(2,6,23,0.5), 0 6px 18px rgba(0,0,0,0.5), inset 0 4px 14px rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;transition:transform 140ms, box-shadow 140ms; clip-path: polygon(50% 0%, 100% 86.6%, 0% 86.6%); text-align:center; white-space:normal; line-height:1.05;}
   button.big:active{transform:translateY(4px) scale(.99);box-shadow:0 10px 18px rgba(0,0,0,0.5), inset 0 2px 8px rgba(255,255,255,0.02)}
   button.big.disabled{opacity:.78;pointer-events:none}
   /* Smaller size when using stacked start label */
@@ -70,18 +70,18 @@
   @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 
   /* Digital */
-  .digital{width:calc(100% - 24px);margin:12px auto 0;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.04));border:1px solid var(--outline);text-align:center}
+  .digital{width:calc(100% - 24px);margin:36px auto 0;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));border:1px solid var(--outline);text-align:center}
   .digital .time{font-size:20px;font-weight:800}
   .subtitle{font-size:12px;color:var(--muted);margin-top:4px}
   .subrow{display:flex;gap:8px;align-items:stretch;justify-content:center;margin-top:10px}
-  .small-box{flex:1;min-width:0;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:3/2}
+  .small-box{flex:1;min-width:0;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.12);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:3/2}
   .small-title{font-size:15.6px;color:var(--muted);margin-bottom:4px}
   .small-val{font-weight:800;font-size:15px}
   .small-sub{font-size:11px;color:var(--muted);margin-top:4px}
   #totalLabel{display:none}
-  .step{ text-align:center;color:var(--muted);font-size:13px;margin-top:8px }
+  .step{ text-align:center;color:var(--muted);font-size:13px;margin-top:6px; margin-bottom:14px }
 
-  .actions{display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;margin-top:10px}
+  .actions{display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;margin-top:6px}
   .btn{padding:8px 12px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
   .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06)}
   .btn.primary{background:linear-gradient(180deg,var(--accent-a),var(--accent-b));color:#fff;border:1px solid rgba(255,255,255,0.06)}
@@ -191,7 +191,7 @@
       <div class="inputs-row">
         <div class="input-col">
           <div class="input-label">Max rep</div>
-          <input id="maxInput" type="number" inputmode="numeric" min="1" max="99" value="5" aria-label="Maximum pyramid number" />
+          <input id="maxInput" type="number" inputmode="numeric" min="1" max="20" value="5" aria-label="Maximum pyramid number" />
         </div>
         <div class="input-col">
           <div class="input-label">Exercise type</div>
@@ -224,8 +224,8 @@
               </linearGradient>
             </defs>
             <!-- Equilateral triangle around the button -->
-            <path id="baseRing" d="M100 20 L180 160 L20 160 Z" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-            <path id="prog" d="M100 20 L180 160 L20 160 Z" fill="none" stroke="url(#rg)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <path id="baseRing" d="M100 0 L200 173.2 L0 173.2 Z" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <path id="prog" d="M100 0 L200 173.2 L0 173.2 Z" fill="none" stroke="url(#rg)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
 
           <button id="bigBtn" class="big" aria-label="Advance pyramid">Start</button>
@@ -328,7 +328,7 @@
 
             <div>
               <strong>Rest seconds per rep</strong><br>
-              <input id="restPerRepSec" type="number" inputmode="decimal" min="1" step="0.5" value="10"/>
+              <input id="restPerRepSec" type="number" inputmode="decimal" min="1" step="0.5" placeholder="seconds per rep"/>
             </div>
 
             
@@ -472,25 +472,171 @@
 
   // SFX
   const MUTE_KEY = 'pyr_sfx_mute_v1';
-  const sfx = {
-    click: new Audio('SFX/click-button.mp3'),
-    help: new Audio('SFX/help-button.mp3'),
-    stepStart: new Audio('SFX/step-start.mp3'),
-    stepComplete: new Audio('SFX/step-complete.mp3'),
-    finish: new Audio('SFX/finish-jingle.mp3'),
-    repetition: new Audio('SFX/repetition.mp3'),
-    auto: new Audio('SFX/auto.mp3'),
-    reset: new Audio('SFX/reset.mp3'),
-    save: new Audio('SFX/save.mp3'),
-    error: new Audio('SFX/error.mp3')
+  const sfxSrc = {
+    click: 'SFX/click-button.mp3',
+    help: 'SFX/help-button.mp3',
+    stepStart: 'SFX/step-start.mp3',
+    stepComplete: 'SFX/step-complete.mp3',
+    finish: 'SFX/finish-jingle.mp3',
+    repetition: 'SFX/repetition.mp3',
+    auto: 'SFX/auto.mp3',
+    tick: 'SFX/stopwatch_ticking.mp3',
+    reset: 'SFX/reset.mp3',
+    save: 'SFX/save.mp3',
+    error: 'SFX/error.mp3'
   };
-  Object.values(sfx).forEach(a=>{ a.preload='auto'; });
+  // Pre-register English counting voice files 1..20 (try multiple path formats)
+  for(let i=1;i<=20;i++){
+    sfxSrc['eng_'+i] = `SFX/English Counting/eng_${i}.mp3`;
+  }
+  const sfxPool = {};
+  const sfxPoolMax = { repetition: 6, click: 3, stepStart: 2, stepComplete: 2, finish: 2, auto: 2, reset: 2, save: 2, help: 2, error: 2 };
+  const sfxNext = {};
   let sfxMuted = false;
-  function setMutedAll(m){ Object.values(sfx).forEach(a=> a.muted = m); }
+  let audioPrimed = false;
+  function ensurePool(name){
+    if(!sfxPool[name]){
+      const max = name.startsWith('eng_') ? 6 : (sfxPoolMax[name] || 2);
+      const arr = [];
+      for(let i=0;i<max;i++){
+        const a = new Audio(sfxSrc[name]);
+        a.preload = 'auto';
+        if(name==='tick') a.loop = true;
+        a.muted = sfxMuted;
+        // fallback for paths with/without encoded space (try the opposite encoding once)
+        a.addEventListener('error', ()=>{
+          try{
+            const src = sfxSrc[name]||'';
+            const alt = src.includes('%20') ? src.replace(/%20/g,' ') : src.replace(/ /g,'%20');
+            if(alt && alt !== a.src){ a.src = alt; a.load && a.load(); }
+          }catch(e){}
+        }, { once:true });
+        arr.push(a);
+      }
+      sfxPool[name] = arr;
+      sfxNext[name] = 0;
+    }
+    return sfxPool[name];
+  }
+  function setMutedAll(m){
+    Object.keys(sfxSrc).forEach(name=>{
+      const pool = ensurePool(name);
+      pool.forEach(a=> a.muted = m);
+    });
+  }
   function updateSpeakerIcon(){ speakerIcon.textContent = sfxMuted ? '🔇' : '🔊'; }
   function loadMute(){ sfxMuted = (localStorage.getItem(MUTE_KEY) === '1'); setMutedAll(sfxMuted); updateSpeakerIcon(); }
   function saveMute(){ localStorage.setItem(MUTE_KEY, sfxMuted ? '1' : '0'); }
-  function play(name){ const a = sfx[name]; if(!a) return; try{ a.currentTime = 0; a.play(); }catch(e){} }
+  function play(name){
+    if(!sfxSrc[name]) {
+      console.log('No audio source for:', name);
+      return;
+    }
+    
+    const pool = ensurePool(name);
+    let a = pool.find(p => p.paused || p.ended);
+    if(!a){
+      const idx = (sfxNext[name]||0) % pool.length;
+      sfxNext[name] = (idx + 1) % pool.length;
+      a = pool[idx];
+    }
+    
+    if(!a) {
+      console.log('No audio element available for:', name);
+      return;
+    }
+    
+    try{
+      a.muted = sfxMuted;
+      a.currentTime = 0;
+      console.log('Playing audio:', name, 'muted:', a.muted, 'src:', a.src);
+      const pr = a.play();
+      if(pr && typeof pr.then === 'function') {
+        pr.then(()=>console.log('Audio played successfully:', name))
+          .catch(e=>console.log('Audio play failed:', name, e));
+      }
+    }catch(e){
+      console.log('Audio play error:', name, e);
+    }
+  }
+  function playAndGet(name){
+    if(!sfxSrc[name]) return null;
+    const pool = ensurePool(name);
+    let a = pool.find(p => p.paused || p.ended);
+    if(!a){
+      const idx = (sfxNext[name]||0) % pool.length;
+      sfxNext[name] = (idx + 1) % pool.length;
+      a = pool[idx];
+    }
+    try{
+      a.muted = sfxMuted;
+      a.currentTime = 0;
+      const pr = a.play();
+      if(pr && typeof pr.catch === 'function') pr.catch(()=>{});
+    }catch(e){}
+    return a;
+  }
+
+  // Test function to check if voice files exist
+  function testVoiceFiles(){
+    console.log('Testing voice files...');
+    for(let i=1; i<=5; i++){
+      const key = 'eng_'+i;
+      const path = sfxSrc[key];
+      console.log('Testing:', key, 'at path:', path);
+      
+      const testAudio = new Audio(path);
+      testAudio.addEventListener('loadstart', ()=>console.log(key, 'loading started'));
+      testAudio.addEventListener('canplay', ()=>console.log(key, 'can play'));
+      testAudio.addEventListener('error', (e)=>console.log(key, 'error:', e));
+      testAudio.load();
+    }
+  }
+  
+  function primeCountingVoices(){
+    // Create pools and try to start/stop briefly to unlock playback on mobile
+    console.log('Priming counting voices...');
+    
+    // First test if files exist
+    testVoiceFiles();
+    
+    try{
+      for(let i=1;i<=10;i++){ // Prime first 10 for now
+        const key = 'eng_'+i;
+        if(!sfxSrc[key]) continue;
+        console.log('Priming voice:', key, 'path:', sfxSrc[key]);
+        const pool = ensurePool(key);
+        const a = pool && pool[0];
+        if(a){
+          console.log('Audio element created for:', key, 'src:', a.src);
+          const prevMuted = a.muted;
+          a.muted = true; // Keep muted during priming
+          const pr = a.play();
+          if(pr && pr.then){
+            pr.then(()=>console.log('Primed successfully:', key))
+              .catch(e=>console.log('Prime failed:', key, e));
+          }
+          setTimeout(()=>{ try{ a.pause(); a.currentTime = 0; a.muted = prevMuted; }catch(e){} }, 100);
+        }
+      }
+      console.log('Voice priming complete');
+    }catch(e){
+      console.log('Priming error:', e);
+    }
+  }
+
+  function startTicking(){
+    if(!sfxSrc['tick']) return;
+    const pool = ensurePool('tick');
+    const a = pool[0];
+    if(!a) return;
+    try{ a.muted = sfxMuted; if(a.paused){ a.currentTime = 0; const pr = a.play(); if(pr && pr.catch) pr.catch(()=>{}); } }catch(e){}
+  }
+  function stopTicking(){
+    const pool = sfxPool['tick'];
+    if(!pool) return;
+    pool.forEach(a=>{ try{ a.pause(); a.currentTime = 0; }catch(e){} });
+  }
 
   // State
   let max = Math.max(1, parseInt(maxInput.value) || 5);
@@ -545,8 +691,8 @@
   }
 
   // persistence
-  function loadState(){ try{ const s = JSON.parse(localStorage.getItem(STATE_KEY) || '{}'); if(typeof s.current === 'number'){ current = s.current; dir = s.dir || 1; } if(s.userLevel) userLevel = s.userLevel; if(s.customSecondsPerRep) customSecondsPerRepInput.value = s.customSecondsPerRep; if(s.restPerRepSec) restPerRepSecInput.value = s.restPerRepSec; if(s.user){ userSexSelect.value = s.user.sex||'male'; userAgeInput.value = s.user.age||''; userHeightCmInput.value = s.user.heightCm||''; userWeightKgInput.value = s.user.weightKg||''; applyAccentByGender(userSexSelect.value); } levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} updateLevelDisplay(); }
-  function saveState(){ const s = { current, dir, userLevel, customSecondsPerRep: customSecondsPerRepInput.value, restPerRepSec: restPerRepSecInput.value, user: { sex: userSexSelect.value||'', age: userAgeInput.value||'', heightCm: userHeightCmInput.value||'', weightKg: userWeightKgInput.value||'' } }; try{ localStorage.setItem(STATE_KEY, JSON.stringify(s)); } catch(e) {} }
+  function loadState(){ try{ const s = JSON.parse(localStorage.getItem(STATE_KEY) || '{}'); if(typeof s.current === 'number'){ current = s.current; dir = s.dir || 1; } if(s.userLevel) userLevel = s.userLevel; if(s.user){ userSexSelect.value = s.user.sex||'male'; userAgeInput.value = s.user.age||''; userHeightCmInput.value = s.user.heightCm||''; userWeightKgInput.value = s.user.weightKg||''; applyAccentByGender(userSexSelect.value); } levelRadios.forEach(r=>{ if(r.value===userLevel) r.checked=true; }); }catch(e){} updateLevelDisplay(); }
+  function saveState(){ const s = { current, dir, userLevel, user: { sex: userSexSelect.value||'', age: userAgeInput.value||'', heightCm: userHeightCmInput.value||'', weightKg: userWeightKgInput.value||'' } }; try{ localStorage.setItem(STATE_KEY, JSON.stringify(s)); } catch(e) {} }
 
   function loadAchievements(){ try{ const raw = localStorage.getItem(ACH_KEY); return raw ? JSON.parse(raw) : []; }catch(e){return [];} }
   function saveAchievements(arr){ try{ localStorage.setItem(ACH_KEY, JSON.stringify(arr)); }catch(e){} }
@@ -623,7 +769,7 @@
   // manual stopwatch
   function startManualStopwatch(){ stopManualStopwatch(); manualStart = performance.now(); manualElapsedSec = 0; countdownEl.textContent = fmtSecondsMMSS(0); countdownLabel.textContent = ''; countdownLabel.classList.remove('resting-label'); manualTimer = setInterval(()=>{ const elapsedMs = performance.now()-manualStart; const elapsedSec = Math.floor(elapsedMs/1000); if(elapsedSec !== manualElapsedSec){ manualElapsedSec = elapsedSec; countdownEl.textContent = fmtSecondsMMSS(manualElapsedSec); } },200); }
   function stopManualStopwatch(){ if(manualTimer){ clearInterval(manualTimer); manualTimer=null; } }
-  function startManualRest(n){ if(manualRestTimer){ clearInterval(manualRestTimer); manualRestTimer=null; } manualRestRemainingMs = Math.max(300, Math.round(restSecondsForNumber(n)*1000)); countdownLabel.textContent = 'PLEASE REST FOR'; countdownLabel.classList.add('resting-label'); countdownLabel.classList.remove('idle-rest'); function tick(){ manualRestRemainingMs = Math.max(0, manualRestRemainingMs-200); countdownEl.textContent = fmtSecondsMMSS(Math.ceil(manualRestRemainingMs/1000)); if(manualRestRemainingMs>0){ manualRestTimer = setTimeout(tick,200); } else { countdownLabel.classList.remove('resting-label'); countdownLabel.classList.add('idle-rest'); manualAwaitNext = true; } } tick(); }
+  function startManualRest(n){ if(manualRestTimer){ clearTimeout(manualRestTimer); manualRestTimer=null; } manualRestRemainingMs = Math.max(300, Math.round(restSecondsForNumber(n)*1000)); countdownLabel.textContent = 'PLEASE REST FOR'; countdownLabel.classList.add('resting-label'); countdownLabel.classList.remove('idle-rest'); startTicking(); function tick(){ manualRestRemainingMs = Math.max(0, manualRestRemainingMs-200); countdownEl.textContent = fmtSecondsMMSS(Math.ceil(manualRestRemainingMs/1000)); if(manualRestRemainingMs>0){ manualRestTimer = setTimeout(tick,200); } else { stopTicking(); countdownLabel.classList.remove('resting-label'); countdownLabel.classList.add('idle-rest'); manualAwaitNext = true; } } tick(); }
 
   // manual flow
   // Manual mirroring auto with skippable rest/blink
@@ -632,7 +778,7 @@
     // start manual flow
     if(current===0){ current=1; dir=1; if(!overallTimer) startOverallTimer(); updateUI(); manualBeginExercisePhase(); return; }
     // if currently resting, skip to next step immediately
-    if(manualRestRemainingMs>0){ if(manualRestTimer){ clearTimeout(manualRestTimer); manualRestTimer=null; } manualRestRemainingMs = 0; countdownLabel.textContent=''; countdownLabel.classList.remove('resting-label'); countdownLabel.classList.add('idle-rest'); manualAwaitNext = true; }
+    if(manualRestRemainingMs>0){ if(manualRestTimer){ clearTimeout(manualRestTimer); manualRestTimer=null; } stopTicking(); manualRestRemainingMs = 0; countdownLabel.textContent=''; countdownLabel.classList.remove('resting-label'); countdownLabel.classList.add('idle-rest'); manualAwaitNext = true; }
     // if awaiting next step after rest, start the next step now
     if(manualAwaitNext){ manualAwaitNext = false; advanceToNextStep(); return; }
     // if blinking is active in manual, skip to next step and count the set
@@ -674,10 +820,11 @@
   function pauseAuto(){
     if(!autoRunning) return;
     autoPaused = true; autoRunning = false; autoBtn.textContent='Resume';
-    if(exerciseTimer){ clearInterval(exerciseTimer); exerciseTimer=null; }
-    if(restTimer){ clearInterval(restTimer); restTimer=null; }
+    if(exerciseTimer){ clearTimeout(exerciseTimer); exerciseTimer=null; }
+    if(restTimer){ clearTimeout(restTimer); restTimer=null; }
     // Pause overall timer
     stopOverallTimer();
+    stopTicking();
     updateUI();
   }
 
@@ -692,11 +839,12 @@
 
   function finishAuto(){
     autoRunning = false; autoPaused = false; autoBtn.textContent='Auto';
-    if(exerciseTimer){ clearInterval(exerciseTimer); exerciseTimer=null; }
-    if(restTimer){ clearInterval(restTimer); restTimer=null; }
+    if(exerciseTimer){ clearTimeout(exerciseTimer); exerciseTimer=null; }
+    if(restTimer){ clearTimeout(restTimer); restTimer=null; }
     bigBtn.classList.remove('disabled');
     manualFinished = true;
     stopOverallTimer();
+    stopTicking();
     bigBtn.textContent = 'Done';
     bigBtn.classList.add('done-pulse');
     countdownEl.textContent = '00:00';
@@ -707,6 +855,7 @@
 
   function beginExercisePhase(){
     autoPhase = 'exercise';
+    stopTicking();
     const n = autoSeq[autoIdx];
     current = n; updateUI(); stepText.textContent = `Step ${autoIdx+1} of ${autoSeq.length}`; play('stepStart');
     // step-based ring (no within-step animation), just set color and offset
@@ -733,12 +882,13 @@
     restRemainingMs = rest;
     countdownLabel.textContent = 'PLEASE REST FOR';
     updateRestCountdown();
+    startTicking();
     function restTick(){
       if(!autoRunning){ return; }
       restRemainingMs = Math.max(0, restRemainingMs - 200);
       updateRestCountdown();
       if(restRemainingMs > 0){ restTimer = setTimeout(restTick, 200); }
-      else { autoIdx++; if(autoIdx >= autoSeq.length){ finishAuto(); } else { beginExercisePhase(); } }
+      else { stopTicking(); autoIdx++; if(autoIdx >= autoSeq.length){ finishAuto(); } else { beginExercisePhase(); } }
     }
     restTimer = setTimeout(restTick, 200);
     countdownLabel.classList.add('resting-label');
@@ -748,12 +898,13 @@
   function resumeRestPhase(){
     countdownLabel.textContent = 'PLEASE REST FOR';
     updateRestCountdown();
+    startTicking();
     function restTick(){
       if(!autoRunning){ return; }
       restRemainingMs = Math.max(0, restRemainingMs - 200);
       updateRestCountdown();
       if(restRemainingMs > 0){ restTimer = setTimeout(restTick, 200); }
-      else { autoIdx++; if(autoIdx >= autoSeq.length){ finishAuto(); } else { beginExercisePhase(); } }
+      else { stopTicking(); autoIdx++; if(autoIdx >= autoSeq.length){ finishAuto(); } else { beginExercisePhase(); } }
     }
     restTimer = setTimeout(restTick, 200);
     countdownLabel.classList.add('resting-label');
@@ -769,14 +920,43 @@
   let blinkContext = null; // 'auto' | 'manual'
   let blinkActive = false;
   function blinkIntervalForLevel(){ switch(userLevel){ case 'athlete': return 1500; case 'intermediate': return 1800; case 'low': return 2100; case 'beginner': return 2400; default: return 1800; } }
-  function blinkOnce(){ bigBtn.classList.add('blink'); screenFlash.classList.add('screen-flash'); play('repetition'); setTimeout(()=>{ bigBtn.classList.remove('blink'); screenFlash.classList.remove('screen-flash'); }, Math.min(600, blinkPlan.interval*0.6)); }
+  function blinkOnce(){ 
+    bigBtn.classList.add('blink'); 
+    screenFlash.classList.add('screen-flash'); 
+    
+    // Calculate which number to say (1, 2, 3, etc.)
+    const countIdx = Math.min(20, Math.max(1, blinkPlan.done + 1)); 
+    const voiceKey = 'eng_'+countIdx;
+    
+    console.log('Blink #' + countIdx + ' - trying voice:', voiceKey);
+    
+    // Always try to play the voice counting
+    if(sfxSrc[voiceKey]){
+      play(voiceKey);
+      console.log('Playing voice:', voiceKey);
+    } else {
+      console.log('Voice file not found:', voiceKey, '- using repetition');
+      play('repetition');
+    }
+    
+    setTimeout(()=>{ bigBtn.classList.remove('blink'); screenFlash.classList.remove('screen-flash'); }, Math.min(600, blinkPlan.interval*0.6)); 
+  }
   function stopBlinking(){ blinkActive=false; if(exerciseTimer){ clearTimeout(exerciseTimer); exerciseTimer=null; } }
-  function scheduleNextBlink(){ if(!blinkActive) return; if(blinkPlan.done >= blinkPlan.total){ const n = (blinkContext==='auto')? autoSeq[autoIdx] : current; setTimeout(()=>{ play('stepComplete'); }, 1500); if(blinkContext==='auto'){ totalReps += n; updateTotalDisplay(); beginRestPhase(); } else { totalReps += n; updateTotalDisplay(); startManualRest(n); } blinkActive=false; return; } const delay = (blinkPlan.done===0? 1000 : blinkPlan.interval); // 1s delay before first blink
+  function scheduleNextBlink(){ if(!blinkActive) return; if(blinkPlan.done >= blinkPlan.total){ const n = (blinkContext==='auto')? autoSeq[autoIdx] : current; 
+      // Wait 1s after the last blink, then play stepComplete, then proceed when it ends
+      setTimeout(()=>{
+        const a = playAndGet('stepComplete');
+        const proceed = ()=>{ if(blinkContext==='auto'){ totalReps += n; updateTotalDisplay(); beginRestPhase(); } else { totalReps += n; updateTotalDisplay(); startManualRest(n); } blinkActive=false; };
+        if(a && typeof a.addEventListener==='function'){ a.addEventListener('ended', proceed, { once: true }); }
+        else { setTimeout(proceed, 800); }
+      }, 1000);
+      return; }
+    const delay = (blinkPlan.done===0? 1000 : blinkPlan.interval); // 1s delay before first blink
     exerciseTimer = setTimeout(()=>{ if(!blinkActive) return; blinkOnce(); blinkPlan.done++; scheduleNextBlink(); }, delay); }
   function blinkRepsThenRest(n){ blinkPlan = { total: n, done: 0, interval: blinkIntervalForLevel() }; blinkActive=true; scheduleNextBlink(); }
   function continueBlinking(){ blinkActive=true; scheduleNextBlink(); }
 
-  function manualBeginExercisePhase(){ const n = current; const pct = Math.max(0, Math.min(1, (n / Math.max(1, max)))); prog.style.strokeDashoffset = TRI_LEN * (1 - pct); prog.style.stroke = colorFor(n, max); blinkContext='manual'; play('stepStart'); countdownLabel.textContent='PLEASE REST FOR'; countdownLabel.classList.add('idle-rest'); countdownLabel.classList.remove('resting-label'); blinkRepsThenRest(n); }
+  function manualBeginExercisePhase(){ const n = current; const pct = Math.max(0, Math.min(1, (n / Math.max(1, max)))); prog.style.strokeDashoffset = TRI_LEN * (1 - pct); prog.style.stroke = colorFor(n, max); blinkContext='manual'; stopTicking(); play('stepStart'); countdownLabel.textContent='PLEASE REST FOR'; countdownLabel.classList.add('idle-rest'); countdownLabel.classList.remove('resting-label'); blinkRepsThenRest(n); }
   function advanceToNextStep(){ if(dir===1 && current<max){ current=current+1; updateUI(); manualBeginExercisePhase(); return; } if(dir===1 && current===max){ dir=-1; if(max>1){ current=current+dir; updateUI(); manualBeginExercisePhase(); return; } else { finishManual(); return; } } if(dir===-1 && current>1){ current=current+dir; updateUI(); manualBeginExercisePhase(); return; } if(dir===-1 && current===1){ finishManual(); return; } }
 
   // reset
@@ -786,19 +966,23 @@
     if(exerciseTimer){ clearTimeout(exerciseTimer); exerciseTimer=null; }
     if(restTimer){ clearTimeout(restTimer); restTimer=null; }
     if(manualTimer){ clearInterval(manualTimer); manualTimer=null; }
+    stopTicking();
     autoRunning=false; autoPaused=false; autoArmed=false; autoBtn.textContent='Auto'; current=0; dir=1; manualFinished=false; countdownEl.textContent='00:00';
     // reset max to default 5
     max = 5; maxInput.value = '5';
     prog.style.strokeDashoffset = TRI_LEN; bigBtn.classList.remove('disabled'); bigBtn.textContent='Start';
     stopOverallTimer(); resetOverallTimer();
-    totalReps = 0; updateTotalDisplay(); updateUI();
+    totalReps = 0; updateTotalDisplay();
+    customSecondsPerRepInput.value = '';
+    restPerRepSecInput.value = '';
+    updateUI();
   }
 
   // clamp input
   function clampMaxInput(){
     let v = parseInt(maxInput.value, 10);
     if (!isFinite(v) || v < 1) v = 1;
-    if (v > 99) v = 99;
+    if (v > 20) v = 20;
     max = v;
     maxInput.value = String(v);
     if (current > max) current = max;
@@ -912,7 +1096,7 @@
   }
 
   // events wiring
-  bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(autoRunning) return; if(manualFinished) return; 
+  bigBtn.addEventListener('pointerdown', (ev)=>{ ev.preventDefault(); const rc = document.getElementById('rippleContainer'); const r=document.createElement('div'); r.className='ripple'; const rect = ev.currentTarget.getBoundingClientRect(); const x=(ev.clientX-rect.left)||rect.width/2; const y=(ev.clientY-rect.top)||rect.height/2; r.style.left=x+'px'; r.style.top=y+'px'; r.style.width='16px'; r.style.height='16px'; rc.appendChild(r); r.addEventListener('animationend', ()=> r.remove()); if(!audioPrimed){ audioPrimed=true; primeCountingVoices(); } if(autoRunning) return; if(manualFinished) return; 
     // If Auto is armed, start auto on main button press
     if(autoArmed && !autoRunning && !autoPaused){ play('click'); startAuto(); autoArmed=false; autoBtn.textContent='Pause'; updateUI(); return; }
     play('click'); manualAdvance_StartOrNext(); });
@@ -921,7 +1105,7 @@
   confirmReset.addEventListener('click', ()=>{ play('save'); resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); doReset(); });
   cancelReset.addEventListener('click', ()=>{ play('click'); resetConfirm.style.display='none'; resetConfirm.setAttribute('aria-hidden','true'); });
 
-  autoBtn.addEventListener('click', ()=>{ play('auto');
+  autoBtn.addEventListener('click', ()=>{ if(!audioPrimed){ audioPrimed=true; primeCountingVoices(); } play('auto');
     if(!autoRunning && !autoPaused){
       // Toggle armed state; actual start happens on big button press
       autoArmed = !autoArmed;
