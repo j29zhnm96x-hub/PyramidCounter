@@ -485,9 +485,9 @@
     save: 'SFX/save.mp3',
     error: 'SFX/error.mp3'
   };
-  // Pre-register English counting voice files 1..20 (try multiple path formats)
+  // Pre-register English counting voice files 1..20
   for(let i=1;i<=20;i++){
-    sfxSrc['eng_'+i] = `SFX/English Counting/eng_${i}.mp3`;
+    sfxSrc['eng_'+i] = `SFX/EnglishCounting/eng_${i}.mp3`;
   }
   const sfxPool = {};
   const sfxPoolMax = { repetition: 6, click: 3, stepStart: 2, stepComplete: 2, finish: 2, auto: 2, reset: 2, save: 2, help: 2, error: 2 };
