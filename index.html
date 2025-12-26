@@ -884,9 +884,17 @@
     // if awaiting next step after rest, start the next step now
     if(manualAwaitNext){ manualAwaitNext = false; advanceToNextStep(); return; }
     // if blinking is active in manual, skip to next step and count the set
-    if(blinkActive && blinkContext==='manual'){ stopBlinking(); totalReps += current; updateTotalDisplay(); startManualRest(current); return; }
+    if(blinkActive && blinkContext==='manual'){
+      stopBlinking();
+      totalReps += current; updateTotalDisplay();
+      if(isLastManualStep()) finishManual();
+      else startManualRest(current);
+      return;
+    }
     // otherwise, complete current set and go to rest
-    totalReps += current; updateTotalDisplay(); startManualRest(current);
+    totalReps += current; updateTotalDisplay();
+    if(isLastManualStep()) finishManual();
+    else startManualRest(current);
   }
 
   function finishManual(){
@@ -1025,6 +1033,15 @@
   let blinkTimer = null;
   let blinkFinishTimer = null;
   let blinkToken = 0;
+
+  function isLastAutoStep(){
+    return Array.isArray(autoSeq) && autoSeq.length > 0 && autoIdx === autoSeq.length - 1;
+  }
+  function isLastManualStep(){
+    // Last step is the final "1" on the way down, or the only step when max==1.
+    if(max === 1 && current === 1) return true;
+    return (dir === -1 && current === 1);
+  }
   function blinkIntervalForLevel(){ switch(userLevel){ case 'athlete': return 1500; case 'intermediate': return 1800; case 'low': return 2100; case 'beginner': return 2400; default: return 1800; } }
   function blinkOnce(){ 
     bigBtn.classList.add('blink'); 
@@ -1068,9 +1085,13 @@
         const proceed = ()=>{
           if(!blinkActive || token !== blinkToken) return;
           if(blinkContext==='auto'){
-            totalReps += n; updateTotalDisplay(); beginRestPhase();
+            totalReps += n; updateTotalDisplay();
+            if(isLastAutoStep()) finishAuto();
+            else beginRestPhase();
           } else {
-            totalReps += n; updateTotalDisplay(); startManualRest(n);
+            totalReps += n; updateTotalDisplay();
+            if(isLastManualStep()) finishManual();
+            else startManualRest(n);
           }
           blinkActive = false;
         };
